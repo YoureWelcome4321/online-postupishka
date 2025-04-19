@@ -17,7 +17,7 @@ const DolphinAnimationReverse = () => {
     >
       {/* Изображение дельфина */}
       <img 
-        src="/logo1.png" // Убедитесь, что файл с изображением дельфина находится в папке public
+        src="/dolphin.png" // Убедитесь, что файл с изображением дельфина находится в папке public
         alt="Dolphin Animation Reverse" 
         className="w-full" 
       />
