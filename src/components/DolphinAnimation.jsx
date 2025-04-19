@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const DolphinAnimation = () => {
   return (
     <motion.div
-      className="absolute mt-13 w-24 md:w-36 lg:w-48 z-1"
+      className="absolute w-12 md:w-24 lg:w-48 z-1"
       initial={{ x: '550%', rotate: 0 }} // Начальная позиция за правым краем экрана
       animate={{ 
         x: '-100%', // Конечная позиция за левым краем экрана
@@ -20,7 +20,7 @@ const DolphinAnimation = () => {
       <img 
         src="/logo1.png" // Убедитесь, что файл с изображением дельфина находится в папке public
         alt="Dolphin Animation" 
-        className="w-full" 
+        className="w-full z-10" 
       />
     </motion.div>
   );
