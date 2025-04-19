@@ -8,3 +8,7 @@
   background-size: 200% 200%;
   animation: gradientAnimation 5s ease infinite;
 }
+
+body{
+  overflow-x: hidden;
+}
