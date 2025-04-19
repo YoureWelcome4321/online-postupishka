@@ -48,9 +48,9 @@ const App = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              href='https://t.me/online_postupishka_bot'
+              href='https://t.me/postupishka_bot'
             >
-              <a href='https://t.me/online_postupishka_bot' className="relative z-10">Начать сейчас</a>
+              <a href='https://t.me/postupishka_bot' className="relative z-10">Начать сейчас</a>
             </motion.button>
           </div>
         </header>
@@ -283,9 +283,9 @@ const App = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              href='https://t.me/online_postupishka_bot' 
+              href='https://t.me/postupishka_bot' 
             >
-              <a href='https://t.me/online_postupishka_bot' className="relative z-10">Начать бесплатно</a>
+              <a href='https://t.me/postupishka_bot' className="relative z-10">Начать бесплатно</a>
             </motion.button>
           </motion.div>
         </section>
