@@ -243,7 +243,7 @@ const App = () => {
                 transition={{ duration: 0.8 }}
               >
                 <img 
-                  src="/image-Photoroom (10).png" 
+                  src="/phone.png" 
                   alt="Telegram бот интерфейс"
                   className="w-[60%] rounded-3xl transition-transform duration-500"
                 />
