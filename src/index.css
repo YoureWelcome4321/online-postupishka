@@ -9,12 +9,10 @@
   animation: gradientAnimation 5s ease infinite;
 }
 
+
+
 body{
+  width: 100%;
   overflow-x: hidden;
 }
 
-
-
-@viewport {
-  user-zoom: fixed;
-}
