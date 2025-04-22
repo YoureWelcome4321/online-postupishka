@@ -1,31 +1,39 @@
 import React from "react";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const DolphinAnimation = () => {
+function DolphinAnimation() {
   return (
-    <motion.div
-      className="absolute w-24 md:w-36 lg:w-48 z-1"
-      initial={{ x: '250%', rotate: 0 }} // Начальная позиция за правым краем экрана
-      animate={{ 
-        x: '-100%', // Конечная позиция за левым краем экрана
-        rotate: 360 // Полный оборот вокруг своей оси
-      }}
-      transition={{
-        duration: 8, // Длительность анимации (время прохода через экран)
-        repeat: Infinity, // Бесконечное повторение
-        ease: 'linear' // Линейное движение
+    <div
+      style={{
+
+        top: 0,
+        left: 0,
+        width: "100vw", // 100% ширины viewport
+        height: "100vh", // 100% высоты viewport
+        overflow: "hidden", // Скрываем всё, что выходит за пределы экрана
+        display: "flex",
+        justifyContent: "center", // Центрируем по горизонтали
+        alignItems: "center", // Центрируем по вертикали
       }}
     >
-      {/* Изображение дельфина */}
-      <img 
-        src="/dolphin.png" // Убедитесь, что файл с изображением дельфина находится в папке public
-        alt="Dolphin Animation" 
-        className="w-full z-10" 
+      <motion.img
+        src="/dolphin.png"
+        initial={{ x: "-100%", rotate: 0 }} // Начинаем с левой стороны экрана
+        animate={{ x: "100%", rotate: 0 }} // Двигаемся к правой стороне экрана
+        transition={{
+          duration: 5, // Увеличиваем длительность для более плавного движения
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
+        style={{
+          maxWidth: "100%", // Изображение не будет выходить за пределы экрана
+          maxHeight: "100%",
+          width: "auto", // Сохраняем пропорции изображения
+          height: "auto",
+        }}
       />
-    </motion.div>
+    </div>
   );
-};
-
-
+}
 
 export default DolphinAnimation;
