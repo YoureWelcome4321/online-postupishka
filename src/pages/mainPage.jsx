@@ -7,9 +7,11 @@ import {
   HiOutlineChatAlt2,
   HiOutlineClipboardList,
 } from "react-icons/hi";
+import { IoIosSunny,IoMdMoon } from "react-icons/io";
 import { motion } from "framer-motion";
 import DolphinAnimationReverse from "../components/DolphinAnimationReverse";
 import StressChart from "../components/StressChart";
+
 
 const MainPage = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -21,18 +23,18 @@ const MainPage = () => {
         <h1 className={`my-6 ml-2 ${isDarkMode ? "text-white" : "text-[#363e45]"}`}>Онлайн-Поступишка</h1>
         <button
           onClick={toggleTheme}
-          className={`ml-auto mr-5 px-4 py-2 rounded-full transition-colors ${
-            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#bedbff] hover:bg-blue-300"
+          className={`ml-auto  px-4 py-2 rounded-full transition-colors ${
+            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#066be7] hover:bg-blue-800"
           }`}
         >
-          {isDarkMode ? "🌙" : "☀️"}
+          {isDarkMode ? <IoIosSunny  className="text-white"/> : <IoMdMoon className="text-white"/>}
         </button>
       </div>
 
       <header className="relative pt-20 pb-20 overflow-hidden">
         <div className="container mx-auto relative z-10 text-center">
           <motion.h1
-            className={`text-6xl md:text-8xl font-black mb-8 ${isDarkMode ? "text-white" : "text-[#000]"}`}
+            className={`text-6xl md:text-8xl font-black mb-8 ${isDarkMode ? "text-white" : "text-[#262d32]"}`}
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -40,7 +42,7 @@ const MainPage = () => {
             Выбираем вуз<br />без страха
           </motion.h1>
           <motion.p
-            className={`text-xl md:text-3xl mb-12 font-medium ${isDarkMode ? "text-white" : "text-[#000]"}`}
+            className={`text-xl md:text-3xl mb-12 font-medium ${isDarkMode ? "text-white" : "text-[#262d32]"}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -48,7 +50,7 @@ const MainPage = () => {
             Ваш персональный гид в мире образования
           </motion.p>
           <motion.button
-            className={`relative ${isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#bedbff] hover:bg-blue-300"} transition-all text-white py-4 px-12 rounded-full font-bold`}
+            className={`relative ${isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#066be7] hover:bg-blue-800"} transition-all text-white py-4 px-12 rounded-full font-bold`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -59,7 +61,7 @@ const MainPage = () => {
 
       <section className="container mx-auto mt-10 px-4 mb-10">
         <motion.h2
-          className={`text-4xl md:text-5xl font-bold mb-8 text-center ${isDarkMode ? "text-white" : "text-[#000]"}`}
+          className={`text-4xl md:text-5xl font-bold mb-8 text-center ${isDarkMode ? "text-white" : "text-[#262d32]"}`}
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -71,7 +73,7 @@ const MainPage = () => {
 
       <section className="container mx-auto mt-25 px-4 mb-10">
         <motion.h2
-          className={`text-4xl md:text-5xl font-bold mb-8 text-center ${isDarkMode ? "text-white" : "text-[#000]"}`}
+          className={`text-4xl md:text-5xl font-bold mb-8 text-center ${isDarkMode ? "text-white" : "text-[#262d32]"}`}
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -101,7 +103,7 @@ const MainPage = () => {
               />
               <div className="relative z-10 space-y-4 text-center">
                 <motion.div
-                  className={`w-16 h-16 mx-auto mb-4 ${isDarkMode ? "text-[#7d88f3]" : "text-[#4a90e2]"}`}
+                  className={`w-16 h-16 mx-auto mb-4 ${isDarkMode ? "text-[#7d88f3]" : "text-[#066be7]"}`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 100 }}
@@ -225,7 +227,7 @@ const MainPage = () => {
             Станьте тем, кто будет уверен в своем будущем
           </motion.p>
           <motion.button
-            className={`relative ${isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#8ec0ff] hover:bg-[#4a90e2]"} transition-all text-white py-4 px-12 rounded-full font-bold`}
+            className={`relative ${isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#066be7] hover:bg-[#4a90e2]"} transition-all text-white py-4 px-12 rounded-full font-bold`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >

@@ -19,7 +19,7 @@ const StressChart = ({ isDarkMode }) => {
       {
         label: 'Количество ответов',
         data: [18, 20, 15, 9,5,6],
-        backgroundColor: isDarkMode ? '#6E7BF2' : '#8ec0ff',
+        backgroundColor: isDarkMode ? '#6E7BF2' : '#066be7',
         borderColor: isDarkMode ? '#fff' : '#363e45',
         borderWidth: 1,
       },

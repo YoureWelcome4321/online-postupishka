@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const DolphinAnimationReverse = () => {
   return (
     <motion.div
-      className=" mt-2  w-7 md:w-13 lg:w-14 z-1"
+      className=" mt-2  w-5 md:w-13 lg:w-14 z-1"
       initial={{ x: '0',rotate: 0 }} // Начальная позиция за левым краем экрана
       animate={{ 
         rotate: -360 // Полный оборот вокруг своей оси в обратную сторону
