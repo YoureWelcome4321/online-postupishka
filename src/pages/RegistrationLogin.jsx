@@ -12,6 +12,7 @@ import { MdOutlineClass } from "react-icons/md";
 import { motion } from "framer-motion";
 import DolphinAnimationReverse from "../components/DolphinAnimationReverse";
 import { ThemeContext } from "../ThemeContext";
+import HeaderNoButton from "../components/HeaderNoButtons";
 
 const RegistrationLogin = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -35,24 +36,6 @@ const RegistrationLogin = () => {
     transition: { duration: 0.4 },
   };
 
-  const filteredStack = egeData.filter((subject) =>
-    subject.toLowerCase().startsWith(stackSearch.toLowerCase())
-  );
-
-  const handleStackSelection = (subject) => {
-    if (!formData.stack.includes(subject)) {
-      setFormData((prev) => ({ ...prev, stack: [...prev.stack, subject] }));
-    }
-    setStackSearch("");
-  };
-
-  const removeStackItem = (subject) => {
-    setFormData((prev) => ({
-      ...prev,
-      stack: prev.stack.filter((item) => item !== subject),
-    }));
-  };
-
   return (
     <div
       className={`min-h-screen ${
@@ -62,19 +45,7 @@ const RegistrationLogin = () => {
       }`}
     >
       
-      <div className={`px-5 flex font-medium text-xl items-center ${isDarkMode ? "bg-black" : "bg-white"}`}>
-        <DolphinAnimationReverse isDarkMode={isDarkMode} />
-        <h1 className={`my-6 ml-2 ${isDarkMode ? "text-white" : "text-[#363e45]"}`}>Онлайн-Поступишка</h1>
-        <button
-          onClick={toggleTheme}
-          className={`ml-auto  px-4 py-2 rounded-full transition-colors ${
-            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#bedbff] hover:bg-blue-300"
-          }`}
-        >
-          {isDarkMode ? <IoIosSunny  className="text-white"/> : <IoMdMoon className="text-[#1e2939]"/>}
-        </button>
-      </div>
-
+      <HeaderNoButton/>
       
       <motion.div
         className="container mx-auto max-w-md mt-10 p-6 rounded-3xl"

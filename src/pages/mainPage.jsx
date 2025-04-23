@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "../ThemeContext";
 import {
@@ -7,29 +7,25 @@ import {
   HiOutlineChatAlt2,
   HiOutlineClipboardList,
 } from "react-icons/hi";
-import { IoIosSunny,IoMdMoon } from "react-icons/io";
 import { motion } from "framer-motion";
-import DolphinAnimationReverse from "../components/DolphinAnimationReverse";
 import StressChart from "../components/StressChart";
+import HeaderNoButton from "../components/HeaderNoButtons";
 
 
 const MainPage = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const [loginLink , buttonLink] = useState('/sign')
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token !== null){
+        buttonLink('/main')
+    }
+  },[])
 
   return (
     <div className={`${isDarkMode ? "bg-[#0e0e0e]" : "bg-[#f6f6f6]"} min-h-screen`}>
-      <div className={`px-5 flex font-medium text-xl items-center ${isDarkMode ? "bg-black" : "bg-white"}`}>
-        <DolphinAnimationReverse isDarkMode={isDarkMode} />
-        <h1 className={`my-6 ml-2 ${isDarkMode ? "text-white" : "text-[#363e45]"}`}>Онлайн-Поступишка</h1>
-        <button
-          onClick={toggleTheme}
-          className={`ml-auto  px-4 py-2 rounded-full transition-colors ${
-            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#bedbff] hover:bg-blue-300"
-          }`}
-        >
-          {isDarkMode ? <IoIosSunny  className="text-white"/> : <IoMdMoon className="text-[#1e2939]"/>}
-        </button>
-      </div>
+      <HeaderNoButton/>
 
       <header className="relative pt-20 pb-20 overflow-hidden">
         <div className="container mx-auto relative z-10 text-center">
@@ -54,7 +50,7 @@ const MainPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Link to="/main">Начать сейчас</Link>
+            <Link to={`${loginLink}`}>Начать сейчас</Link>
           </motion.button>
         </div>
       </header>
