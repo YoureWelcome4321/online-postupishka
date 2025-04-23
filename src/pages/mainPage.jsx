@@ -24,10 +24,10 @@ const MainPage = () => {
         <button
           onClick={toggleTheme}
           className={`ml-auto  px-4 py-2 rounded-full transition-colors ${
-            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#066be7] hover:bg-blue-800"
+            isDarkMode ? "bg-[#6E7BF2] hover:bg-[#3d37f0]" : "bg-[#bedbff] hover:bg-blue-300"
           }`}
         >
-          {isDarkMode ? <IoIosSunny  className="text-white"/> : <IoMdMoon className="text-white"/>}
+          {isDarkMode ? <IoIosSunny  className="text-white"/> : <IoMdMoon className="text-[#1e2939]"/>}
         </button>
       </div>
 

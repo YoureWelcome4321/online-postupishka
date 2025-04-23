@@ -8,3 +8,6 @@
   background-size: 200% 200%;
   animation: gradientAnimation 5s ease infinite;
 }
+body{
+  background-color: #f6f6f6;
+}
