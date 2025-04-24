@@ -45,10 +45,12 @@ const RegistrationLogin = () => {
     } else if (formRegistData.class > 11) {
       errors.class = "Класс не может быть больше 11";
     }
-    if (!formRegistData.telegram.trim()) {
-      errors.telegram = "Введите Telegram";
-    } else if (!validateTelegram(formRegistData.telegram)) {
-      errors.telegram = "Telegram должен начинаться с @";
+    if (formRegistData.telegram.trim()) {
+      if (!validateTelegram(formRegistData.telegram)) {
+        errors.telegram = "Telegram должен начинаться с @";
+      } else if (formRegistData.telegram.length > 32) {
+        errors.telegram = "Telegram не может быть длиннее 32 символов";
+      }
     }
     if (formRegistData.password.length < 6) {
       errors.password = "Пароль должен быть не менее 6 символов";
@@ -269,7 +271,7 @@ const RegistrationLogin = () => {
                   name="telegram"
                   value={formRegistData.telegram}
                   onChange={handleInputChange}
-                  placeholder="Телеграм"
+                  placeholder="Телеграм (Необязательное поле)"
                   className={`w-full pl-12 pr-4 py-3 rounded-lg ${
                     isDarkMode
                       ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
