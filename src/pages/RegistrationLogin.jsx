@@ -168,7 +168,7 @@ const RegistrationLogin = () => {
                   : ""
               }`}
             />
-            {/* Анимированное валидационное сообщение для имени */}
+            {/* Валидация имени */}
             {(isLogin ? signInErrors.identifier : registErrors.firstName) && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -208,7 +208,7 @@ const RegistrationLogin = () => {
                     registErrors.email ? "border-red-500" : ""
                   }`}
                 />
-                {/* Анимированное валидационное сообщение для email */}
+                {/* Валидация email */}
                 {registErrors.email && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -243,7 +243,7 @@ const RegistrationLogin = () => {
                     registErrors.class ? "border-red-500" : ""
                   }`}
                 />
-                {/* Анимированное валидационное сообщение для класса */}
+                {/*  Валидация класса */}
                 {registErrors.class && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -278,7 +278,7 @@ const RegistrationLogin = () => {
                     registErrors.telegram ? "border-red-500" : ""
                   }`}
                 />
-                {/* Анимированное валидационное сообщение для Telegram */}
+                {/*  Валидация Telegram */}
                 {registErrors.telegram && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -317,7 +317,7 @@ const RegistrationLogin = () => {
                   : ""
               }`}
             />
-            {/* Анимированное валидационное сообщение для пароля */}
+            {/*  Валидация для пароля */}
             {(isLogin ? signInErrors.password : registErrors.password) && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
