@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   HiOutlineUserCircle,
@@ -22,10 +22,12 @@ const RegistrationLogin = () => {
     telegram: "",
     password: ""
   });
+
   const [formSignInData, setFormSignInData] = useState({
     identifier: "",
     password: ""
   });
+
   const [registErrors, setRegistErrors] = useState({});
   const [signInErrors, setSignInErrors] = useState({});
   const [loginError, setLoginError] = useState(""); // Новое состояние для ошибки входа
@@ -72,6 +74,8 @@ const RegistrationLogin = () => {
     return Object.keys(errors).length === 0;
   };
 
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -94,6 +98,7 @@ const RegistrationLogin = () => {
             setLoginError(""); // Очистка ошибки при успешной авторизации
             localStorage.setItem('token', response.data.code);
             console.log(`token: ${response.data.code}`);
+            navigate('/profile')
           }
         }
       } else {
@@ -111,6 +116,7 @@ const RegistrationLogin = () => {
           );
           localStorage.setItem('token', response.data.code);
           console.log(`token: ${response.data.code}`);
+          navigate('/profile')
         }
       }
     } catch (error) {
@@ -126,7 +132,7 @@ const RegistrationLogin = () => {
 
   const handleSignInChange = (e) => {
     setSignInErrors({ ...signInErrors, [e.target.name]: "" });
-    setLoginError(""); // Очистка ошибки при изменении полей
+    setLoginError("");
     setFormSignInData({ ...formSignInData, [e.target.name]: e.target.value });
   };
 
@@ -383,8 +389,10 @@ const RegistrationLogin = () => {
             }`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            
           >
-            {isLogin ? "Войти" : "Зарегистрироваться"}
+            
+            {isLogin ? 'Войти' : 'Зарегистрироваться'}
             
           </motion.button>
           {isLogin && (
