@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   HiOutlineUserCircle,
   HiOutlineLockClosed,
@@ -27,11 +28,11 @@ const RegistrationLogin = () => {
   });
   const [registErrors, setRegistErrors] = useState({});
   const [signInErrors, setSignInErrors] = useState({});
+  const [loginError, setLoginError] = useState(""); // Новое состояние для ошибки входа
 
   // Функции валидации
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
-  const validateTelegram = (telegram) => /^@[a-zA-Z0-9_]+$/.test(telegram);
-
+  const validateTelegram = (telegram) => /^[a-zA-Z0-9_]+$/.test(telegram); // Только буквы, цифры и _
   const validateRegistration = () => {
     const errors = {};
     if (!formRegistData.firstName.trim()) errors.firstName = "Введите имя";
@@ -42,12 +43,12 @@ const RegistrationLogin = () => {
     }
     if (!formRegistData.class.trim()) {
       errors.class = "Введите класс";
-    } else if (formRegistData.class > 11) {
-      errors.class = "Класс не может быть больше 11";
+    } else if (formRegistData.class > 11 || formRegistData.class < 9) {
+      errors.class = "Класс должен быть от 9 до 11";
     }
     if (formRegistData.telegram.trim()) {
       if (!validateTelegram(formRegistData.telegram)) {
-        errors.telegram = "Telegram должен начинаться с @";
+        errors.telegram = "Введите Телеграм без @";
       } else if (formRegistData.telegram.length > 32) {
         errors.telegram = "Telegram не может быть длиннее 32 символов";
       }
@@ -71,12 +72,50 @@ const RegistrationLogin = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      if (validateSignIn()) console.log("Вход:", formSignInData);
-    } else {
-      if (validateRegistration()) console.log("Регистрация:", formRegistData);
+    try {
+      if (isLogin) {
+        if (validateSignIn()) {
+          const response = await axios.post(
+            "http://localhost:8080/api/auth",
+            {
+              ...formSignInData
+            },
+            {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          );
+          if (response.data.code == false) {
+            setLoginError("Неправильный логин или пароль"); // Установка ошибки
+          } else {
+            setLoginError(""); // Очистка ошибки при успешной авторизации
+            localStorage.setItem('token', response.data.code);
+            console.log(`token: ${response.data.code}`);
+          }
+        }
+      } else {
+        if (validateRegistration()) {
+          const response = await axios.post(
+            "http://localhost:8080/api/reg",
+            {
+              ...formRegistData
+            },
+            {
+              headers: {
+                "Content-Type": "application/json"
+              }
+            }
+          );
+          localStorage.setItem('token', response.data.code);
+          console.log(`token: ${response.data.code}`);
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка при регистрации:", error);
+      alert(`Произошла ошибка: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -87,6 +126,7 @@ const RegistrationLogin = () => {
 
   const handleSignInChange = (e) => {
     setSignInErrors({ ...signInErrors, [e.target.name]: "" });
+    setLoginError(""); // Очистка ошибки при изменении полей
     setFormSignInData({ ...formSignInData, [e.target.name]: e.target.value });
   };
 
@@ -113,6 +153,7 @@ const RegistrationLogin = () => {
               setIsLogin(true);
               setRegistErrors({});
               setSignInErrors({});
+              setLoginError(""); 
             }}
             className={`px-4 py-2 rounded-full font-medium transition-colors ${
               isDarkMode
@@ -131,6 +172,7 @@ const RegistrationLogin = () => {
               setIsLogin(false);
               setRegistErrors({});
               setSignInErrors({});
+              setLoginError(""); 
             }}
             className={`px-4 py-2 rounded-full font-medium transition-colors ${
               isDarkMode
@@ -185,7 +227,6 @@ const RegistrationLogin = () => {
               </motion.div>
             )}
           </div>
-
           {/* Поля регистрации */}
           {!isLogin && (
             <>
@@ -223,7 +264,6 @@ const RegistrationLogin = () => {
                   </motion.div>
                 )}
               </div>
-
               {/* Класс */}
               <div className="relative mb-4">
                 <MdOutlineClass
@@ -258,7 +298,6 @@ const RegistrationLogin = () => {
                   </motion.div>
                 )}
               </div>
-
               {/* Telegram */}
               <div className="relative mb-4">
                 <FaTelegramPlane
@@ -280,6 +319,7 @@ const RegistrationLogin = () => {
                     registErrors.telegram ? "border-red-500" : ""
                   }`}
                 />
+
                 {/*  Валидация Telegram */}
                 {registErrors.telegram && (
                   <motion.div
@@ -345,7 +385,11 @@ const RegistrationLogin = () => {
             whileTap={{ scale: 0.98 }}
           >
             {isLogin ? "Войти" : "Зарегистрироваться"}
+            
           </motion.button>
+          {isLogin && (
+            <p className=" mb-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">{loginError}</p>
+          )}
 
           {/* Ссылки и соцсети */}
           <div className="flex justify-between text-sm mb-6">
