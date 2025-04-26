@@ -98,7 +98,7 @@ const RegistrationLogin = () => {
             setLoginError(""); // Очистка ошибки при успешной авторизации
             localStorage.setItem('token', response.data.code);
             console.log(`token: ${response.data.code}`);
-            navigate('/profile')
+            navigate('/main')
           }
         }
       } else {
@@ -116,7 +116,7 @@ const RegistrationLogin = () => {
           );
           localStorage.setItem('token', response.data.code);
           console.log(`token: ${response.data.code}`);
-          navigate('/profile')
+          navigate('/main')
         }
       }
     } catch (error) {
