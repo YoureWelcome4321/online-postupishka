@@ -82,7 +82,7 @@ const RegistrationLogin = () => {
       if (isLogin) {
         if (validateSignIn()) {
           const response = await axios.post(
-            "http://localhost:8080/api/auth",
+            "https://postupi.vubni.com/api/auth",
             {
               ...formSignInData
             },
@@ -96,15 +96,15 @@ const RegistrationLogin = () => {
             setLoginError("Неправильный логин или пароль"); // Установка ошибки
           } else {
             setLoginError(""); // Очистка ошибки при успешной авторизации
-            localStorage.setItem('token', response.data.code);
-            console.log(`token: ${response.data.code}`);
+            localStorage.setItem('token', response.data.token);
+            console.log(`token: ${response.data.token}`);
             navigate('/main')
           }
         }
       } else {
         if (validateRegistration()) {
           const response = await axios.post(
-            "http://localhost:8080/api/reg",
+            "https://postupi.vubni.com/api/reg",
             {
               ...formRegistData
             },
@@ -114,8 +114,8 @@ const RegistrationLogin = () => {
               }
             }
           );
-          localStorage.setItem('token', response.data.code);
-          console.log(`token: ${response.data.code}`);
+          localStorage.setItem('token', response.data.token);
+          console.log(`token: ${response.data.token}`);
           navigate('/main')
         }
       }
