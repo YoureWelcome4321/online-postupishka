@@ -53,7 +53,7 @@ const HomePage = () => {
         
         {/* Основное содержимое */}
         <motion.div
-          className="max-w-sm p-6 bg-white"
+          className="max-w-full max-md:w-full p-6 bg-white"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -64,7 +64,7 @@ const HomePage = () => {
             boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
           }}
         >
-          <header className="mt-8 ">
+          <header className="mt-8 sm:w-full">
             <h1 className="text-2xl pl-2 font-bold">
               Здравствуйте, {profileData.first_name}!
             </h1>
