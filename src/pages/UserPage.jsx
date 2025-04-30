@@ -10,6 +10,7 @@ import { CgSmileMouthOpen, CgSmileNeutral, CgSmileSad, CgGym } from "react-icons
 import { PiSmileyAngry } from "react-icons/pi";
 import { ThemeContext } from "../ThemeContext";
 import HeaderNoButton from "../components/HeaderNoButtons";
+import Header from "../components/Header";
 import Profile from "../components/Profile";
 
 const HomePage = () => {
@@ -137,26 +138,12 @@ const HomePage = () => {
       ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white" 
       : "bg-[#f6f6f6] text-gray-800"}`}>
           <div className="flex justify-around items-center py-4">
-            <button
-              onClick={() => setShowProfile(true)}
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
-            >
-              <HiOutlineUserCircle size={24} />
-              <span className="text-xs mt-1">Профиль</span>
-            </button>
             <Link
               to="/trainers"
               className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
             >
               <CgGym size={24} />
               <span className="text-xs mt-1">Тренажёры</span>
-            </Link>
-            <Link
-              to="/psychologist"
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
-            >
-              <MdOutlinePsychologyAlt size={24} />
-              <span className="text-xs mt-1">Психолог</span>
             </Link>
             <Link
               to="/schedule"
@@ -172,13 +159,14 @@ const HomePage = () => {
               <IoAccessibilityOutline size={24} />
               <span className="text-xs mt-1">Специальности</span>
             </Link>
-            <Link
-              to="/materials"
+            <button
+              onClick={() => setShowProfile(true)}
               className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
             >
-              <IoDocumentOutline size={24} />
-              <span className="text-xs mt-1">Материалы</span>
-            </Link>
+              <HiOutlineUserCircle size={24} />
+              <span className="text-xs mt-1">Профиль</span>
+            </button>
+            
           </div>
         </nav>
 
