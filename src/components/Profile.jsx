@@ -109,17 +109,21 @@ export default function Profile({ onClose = () => {} }) {
   };
 
   return (
+
     <motion.div
-      className={`fixed mt-16 inset-0 sm:relative sm:mx-auto sm:my-8 sm:w-[50%] sm:rounded-xl transition-all duration-300 ${
-        isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      className={`absolute mt-16 inset-0 sm:relative sm:mx-auto sm:my-8 sm:w-[50%] sm:rounded-xl transition-all duration-300 ${
+        isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
       }`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       {/* Заголовок профиля */}
+      
       <div className="p-4 sm:p-6 flex justify-between items-center border-b sm:border-none">
-        <h1 className="text-xl sm:text-2xl font-bold">Профиль</h1>
+        <h1 className={`text-xl sm:text-2xl font-bold ${
+        isDarkMode ? " text-[#fff]" : "text-[#363e45]"
+      }`}>Профиль</h1>
         <div className="flex space-x-3 sm:space-x-5 text-blue-600">
           {/* Кнопка редактирования */}
           {isEditing ? (
@@ -145,12 +149,14 @@ export default function Profile({ onClose = () => {} }) {
             </motion.button>
           ) : (
             <motion.button
-              className="flex items-center p-2 rounded-lg text-blue-600 transition-all hover:bg-opacity-80"
+              className={`flex items-center p-2 rounded-lg ${
+                isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
+              } transition-all hover:bg-opacity-80`}
               onClick={() => setIsEditing(true)}
             >
               <FaRegPenToSquare
                 className={`text-lg mr-2 sm:text-xl ${
-                  isDarkMode ? "text-blue-400" : "text-blue-600"
+                  isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
                 }`}
               />
               Изменить
@@ -426,7 +432,7 @@ export default function Profile({ onClose = () => {} }) {
                         className={`w-40 px-3 py-1 rounded border ${
                           isDarkMode
                             ? "border-[#d1d5dc] bg-gray-800 text-white"
-                            : "border-[#d1d5dc] bg-white"
+                            : "border-[#d1d5dc] bg-white text-black"
                         }`}
                         disabled={!isEditing}
                         min="0"
@@ -489,6 +495,8 @@ export default function Profile({ onClose = () => {} }) {
           </span>
         </motion.button>
       </div>
+        
     </motion.div>
+     
   );
 }

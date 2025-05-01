@@ -49,11 +49,11 @@ const HomePage = () => {
       ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white" 
       : "bg-[#f6f6f6] text-gray-800"}`}>
       <HeaderNoButton />
-      <div className={`flex bg-white `}>
+      <div className={`flex ${isDarkMode?'bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a]':'bg-[#f6f6f6]'}`}>
         
         {/* Основное содержимое */}
         <motion.div
-          className="max-w-full max-md:w-full p-6 bg-white"
+          className="max-w-full max-md:w-full p-6 bg-[#f6f6f6]"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -170,7 +170,7 @@ const HomePage = () => {
         </nav>
 
         {/* Профиль */}
-        {showProfile && <Profile />}
+        {showProfile && <Profile  onClose={() => setShowProfile(false)}/>}
       </div>
     </div>
   );
