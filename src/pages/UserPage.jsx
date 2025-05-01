@@ -136,32 +136,32 @@ const HomePage = () => {
         {/* Мобильное меню */}
         <nav className={`fixed bottom-0 left-0 w-full  z-100 shadow-lg sm:hidden ${isDarkMode 
       ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white" 
-      : "bg-[#f6f6f6] text-gray-800"}`}>
+      : "bg-[#fff] text-[#363e45]"}`}>
           <div className="flex justify-around items-center py-4">
             <Link
               to="/trainers"
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
+              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
             >
               <CgGym size={24} />
               <span className="text-xs mt-1">Тренажёры</span>
             </Link>
             <Link
               to="/schedule"
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
+              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
             >
               <FaTasks size={24} />
               <span className="text-xs mt-1">Расписание</span>
             </Link>
             <Link
               to="/specialties"
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
+              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
             >
               <IoAccessibilityOutline size={24} />
               <span className="text-xs mt-1">Специальности</span>
             </Link>
             <button
               onClick={() => setShowProfile(true)}
-              className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-blue-500"
+              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
             >
               <HiOutlineUserCircle size={24} />
               <span className="text-xs mt-1">Профиль</span>

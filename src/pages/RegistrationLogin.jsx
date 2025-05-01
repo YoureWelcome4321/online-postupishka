@@ -207,6 +207,7 @@ const RegistrationLogin = () => {
               value={isLogin ? formSignInData.identifier : formRegistData.firstName}
               onChange={isLogin ? handleSignInChange : handleInputChange}
               placeholder={isLogin ? "Имя пользователя или email" : "Ваше имя"}
+              autoComplete="username"
               className={`w-full pl-12 pr-4 py-3 rounded-lg ${
                 isDarkMode
                   ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
@@ -355,6 +356,7 @@ const RegistrationLogin = () => {
               value={isLogin ? formSignInData.password : formRegistData.password}
               onChange={isLogin ? handleSignInChange : handleInputChange}
               placeholder="Пароль"
+              autoComplete="current-password"
               className={`w-full pl-12 pr-4 py-3 rounded-lg ${
                 isDarkMode
                   ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
