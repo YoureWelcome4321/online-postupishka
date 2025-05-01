@@ -64,7 +64,7 @@ const HomePage = () => {
             boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
           }}
         >
-          <header className="mt-8 sm:w-full">
+          <header className="mt-8 max-sm:mt-0 sm:w-full">
             <h1 className="text-2xl pl-2 font-bold">
               Здравствуйте, {profileData.first_name}!
             </h1>
