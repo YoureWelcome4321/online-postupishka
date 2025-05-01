@@ -59,29 +59,29 @@ const HomePage = () => {
           transition={{ duration: 0.6 }}
           style={{
             background: isDarkMode 
-              ? "linear-gradient(145deg, rgba(10,10,10,0.95) 0%, rgba(20,20,20,0.95) 50%, rgba(30,30,30,0.95) 100%)"
-              : "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.9) 100%)"
+              ? "#141414"
+              : "#fff"
           }}
         >
           <header className="mt-8 max-sm:mt-0 sm:w-full">
             <h1 className="text-2xl pl-2 font-bold">
               Здравствуйте, {profileData.first_name}!
             </h1>
-            <p className="text-lg text-[#363e45] pl-2">
+            <p className={`text-lg  ${isDarkMode?"text-white" : "text-[#363e45]"} pl-2`}>
               Как Ваше настроение сегодня?
             </p>
             <div className="flex justify-around mt-4 ">
-              <button className="bg-gray-200 text-4xl cursor-pointer rounded-full p-2">
-                <CgSmileMouthOpen />
+              <button className={`bg-gray-200  text-4xl cursor-pointer rounded-full p-2`}>
+                <CgSmileMouthOpen className={`text-[#363e45]`}/>
               </button>
               <button className="bg-gray-200 text-4xl cursor-pointer rounded-full p-2">
-                <CgSmileNeutral />
+                <CgSmileNeutral className={`text-[#363e45]`}/>
               </button>
               <button className="bg-gray-200 text-4xl cursor-pointer rounded-full p-2">
-                <CgSmileSad />
+                <CgSmileSad className={`text-[#363e45]`}/>
               </button>
               <button className="bg-gray-200 text-4xl cursor-pointer rounded-full p-2">
-                <PiSmileyAngry />
+                <PiSmileyAngry className={`text-[#363e45]`}/>
               </button>
             </div>
           </header>
@@ -134,33 +134,33 @@ const HomePage = () => {
 
         {/* Мобильное меню */}
         <nav className={`fixed bottom-0 left-0 w-full  z-100 shadow-lg sm:hidden ${isDarkMode 
-      ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white" 
-      : "bg-[#fff] text-[#363e45]"}`}>
+      ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] " 
+      : "bg-[#fff] "}`}>
           <div className="flex justify-around items-center py-4">
             <Link
               to="/trainers"
-              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
+              className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
               <CgGym size={24} />
               <span className="text-xs mt-1">Тренажёры</span>
             </Link>
             <Link
               to="/schedule"
-              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
+              className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
               <FaTasks size={24} />
               <span className="text-xs mt-1">Расписание</span>
             </Link>
             <Link
               to="/specialties"
-              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
+              className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
               <IoAccessibilityOutline size={24} />
               <span className="text-xs mt-1">Специальности</span>
             </Link>
             <button
               onClick={() => setShowProfile(true)}
-              className="flex flex-col items-center text-[#363e45] dark:text-[#363e45] hover:text-blue-500"
+              className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
               <HiOutlineUserCircle size={24} />
               <span className="text-xs mt-1">Профиль</span>
