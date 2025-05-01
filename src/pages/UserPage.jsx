@@ -60,8 +60,7 @@ const HomePage = () => {
           style={{
             background: isDarkMode 
               ? "linear-gradient(145deg, rgba(10,10,10,0.95) 0%, rgba(20,20,20,0.95) 50%, rgba(30,30,30,0.95) 100%)"
-              : "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.9) 100%)",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+              : "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.9) 100%)"
           }}
         >
           <header className="mt-8 max-sm:mt-0 sm:w-full">
