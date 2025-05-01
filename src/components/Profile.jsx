@@ -7,7 +7,6 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import axios from "axios";
 import { ThemeContext } from "../ThemeContext";
 
-
 export default function Profile({ onClose = () => {} }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [isEditing, setIsEditing] = useState(false);
@@ -109,7 +108,6 @@ export default function Profile({ onClose = () => {} }) {
   };
 
   return (
-
     <motion.div
       className={`absolute mt-16 inset-0 sm:relative sm:mx-auto sm:my-8 sm:w-[50%] sm:rounded-xl transition-all duration-300 ${
         isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
@@ -119,11 +117,15 @@ export default function Profile({ onClose = () => {} }) {
       exit={{ opacity: 0 }}
     >
       {/* Заголовок профиля */}
-      
-      <div className="p-4 sm:p-6 flex justify-between items-center border-b sm:border-none">
-        <h1 className={`text-xl sm:text-2xl font-bold ${
-        isDarkMode ? " text-[#fff]" : "text-[#363e45]"
-      }`}>Профиль</h1>
+
+      <div className="p-4 sm:p-6 flex justify-between items-center ">
+        <h1
+          className={`text-xl sm:text-2xl font-bold ${
+            isDarkMode ? " text-[#fff]" : "text-[#363e45]"
+          }`}
+        >
+          Профиль
+        </h1>
         <div className="flex space-x-3 sm:space-x-5 text-blue-600">
           {/* Кнопка редактирования */}
           {isEditing ? (
@@ -190,7 +192,7 @@ export default function Profile({ onClose = () => {} }) {
       </div>
 
       {/* Основной контент */}
-      <div className="p-4 sm:p-6 space-y-6 overflow-y-auto max-h-[80vh] sm:max-h-none">
+      <div className="p-4 max-sm:pb-20  sm:p-6 space-y-6 overflow-y-auto max-h-[80vh] sm-max:max-h-[160vh] ">
         {/* Личные данные */}
         <div className="space-y-4">
           {/* Имя */}
@@ -288,31 +290,6 @@ export default function Profile({ onClose = () => {} }) {
                 placeholder="Telegram аккаунт"
                 disabled={!isEditing}
               />
-              {isEditing && (
-                <button
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full bg-gray-200 dark:bg-gray-700"
-                  onClick={() => {
-                    if (navigator.clipboard) {
-                      navigator.clipboard.writeText(editableData.telegram);
-                      alert("Telegram-код скопирован!");
-                    }
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 sm:h-5 sm:w-5"
-                    viewBox="0 0 20 20"
-                    fill={isDarkMode ? "#94a3b8" : "#64748b"}
-                  >
-                    <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                    <path
-                      fillRule="evenodd"
-                      d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H4zm2 0h8a1 1 0 011 1v7a1 1 0 01-1 1H6a1 1 0 110-2V7a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              )}
             </div>
           </div>
         </div>
@@ -323,7 +300,9 @@ export default function Profile({ onClose = () => {} }) {
             <h2 className="text-base sm:text-lg font-semibold">Предметы ЕГЭ</h2>
             {isEditing && (
               <button
-                className={`text-sm sm:text-base ${isDarkMode? 'bg-[#6e7bf2]' : 'bg-blue-500'} text-white px-3 py-1 rounded-full hover:bg-blue-600 transition-colors`}
+                className={`text-sm sm:text-base ${
+                  isDarkMode ? "bg-[#6e7bf2]" : "bg-blue-500"
+                } text-white px-3 py-1 rounded-full hover:bg-blue-600 transition-colors`}
                 onClick={() => setShowSubjectList(!showSubjectList)}
               >
                 + Добавить предмет
@@ -352,7 +331,8 @@ export default function Profile({ onClose = () => {} }) {
                   const currentMath = editableData.subjects.find((s) =>
                     s.subject.includes("Математика")
                   );
-                  if (currentMath && currentMath.subject === subject) return null;
+                  if (currentMath && currentMath.subject === subject)
+                    return null;
                 }
                 return (
                   <button
@@ -433,7 +413,7 @@ export default function Profile({ onClose = () => {} }) {
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
                           isDarkMode
-                            ? "text-white"
+                            ? "text-white border-[#3f4753]"
                             : "border-[#d1d5dc] bg-white text-black"
                         }`}
                         disabled={!isEditing}
@@ -455,7 +435,7 @@ export default function Profile({ onClose = () => {} }) {
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
                           isDarkMode
-                            ? " text-white"
+                            ? " border-[#3f4753] text-white"
                             : "border-[#d1d5dc] bg-white text-black"
                         }`}
                         disabled={!isEditing}
@@ -468,7 +448,7 @@ export default function Profile({ onClose = () => {} }) {
                     <button onClick={() => handleDeleteSubject(index)}>
                       <FaTrashAlt
                         className={`text-lg sm:text-xl ${
-                          isDarkMode ? "text-blue-500" : "text-blue-600"
+                          isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
                         }`}
                       />
                     </button>
@@ -487,8 +467,8 @@ export default function Profile({ onClose = () => {} }) {
           onClick={handleLogout}
           style={{
             background: isDarkMode
-              ? "linear-gradient(145deg, #1e293b 0%, #334155 100%)"
-              : "linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%)",
+              ? "#222222"
+              : "#e5e7eb",
           }}
         >
           <IoIosLogOut className="mr-2 text-md sm:text-md" />
@@ -497,8 +477,6 @@ export default function Profile({ onClose = () => {} }) {
           </span>
         </motion.button>
       </div>
-        
     </motion.div>
-     
   );
 }
