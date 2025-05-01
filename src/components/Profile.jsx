@@ -128,15 +128,17 @@ export default function Profile({ onClose = () => {} }) {
           {/* Кнопка редактирования */}
           {isEditing ? (
             <motion.button
-              className="flex items-center p-2 text-blue-600 rounded-lg transition-all hover:bg-opacity-80"
+              className={`flex items-center p-2 ${
+                isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
+              } rounded-lg transition-all hover:bg-opacity-80`}
               onClick={() => setIsEditing(false)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600"
+                className="h-5 w-5 sm:h-6 sm:w-6 "
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke={isDarkMode ? "#4ade80" : "#3371fc"}
+                stroke={isDarkMode ? "#6e7bf2" : "#3371fc"}
               >
                 <path
                   strokeLinecap="round"
@@ -207,7 +209,7 @@ export default function Profile({ onClose = () => {} }) {
               onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
-                  ? "bg-gray-800 border-gray-600 text-white"
+                  ? "bg-[#222222] border-gray-600 text-white"
                   : "bg-white border-gray-300"
               }`}
               placeholder="Имя пользователя"
@@ -231,7 +233,7 @@ export default function Profile({ onClose = () => {} }) {
               onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
-                  ? "bg-gray-800 border-gray-600 text-white"
+                  ? "bg-[#222222] border-gray-600 text-white"
                   : "bg-white border-gray-300"
               }`}
               placeholder="Email"
@@ -255,7 +257,7 @@ export default function Profile({ onClose = () => {} }) {
               onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
-                  ? "bg-gray-800 border-gray-600 text-white"
+                  ? "bg-[#222222] border-gray-600 text-white"
                   : "bg-white border-gray-300"
               }`}
               placeholder="Класс"
@@ -280,7 +282,7 @@ export default function Profile({ onClose = () => {} }) {
                 onChange={handleChange}
                 className={`w-full px-3 py-2 rounded-md border ${
                   isDarkMode
-                    ? "bg-gray-800 border-gray-600 text-white"
+                    ? "bg-[#222222] border-gray-600 text-white"
                     : "bg-white border-gray-300"
                 }`}
                 placeholder="Telegram аккаунт"
@@ -321,7 +323,7 @@ export default function Profile({ onClose = () => {} }) {
             <h2 className="text-base sm:text-lg font-semibold">Предметы ЕГЭ</h2>
             {isEditing && (
               <button
-                className="text-sm sm:text-base bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600 transition-colors"
+                className={`text-sm sm:text-base ${isDarkMode? 'bg-[#6e7bf2]' : 'bg-blue-500'} text-white px-3 py-1 rounded-full hover:bg-blue-600 transition-colors`}
                 onClick={() => setShowSubjectList(!showSubjectList)}
               >
                 + Добавить предмет
@@ -392,7 +394,7 @@ export default function Profile({ onClose = () => {} }) {
                   key={index}
                   className={`flex items-center justify-between p-3 rounded-lg ${
                     isDarkMode
-                      ? "border-[#d1d5dc] bg-gray-800"
+                      ? "border-[#3f4753] bg-[#222222]"
                       : "border-[#d1d5dc] bg-white"
                   } border`}
                 >
@@ -429,9 +431,9 @@ export default function Profile({ onClose = () => {} }) {
                             handleSubjectChange(index, "currentScore", value);
                           }
                         }}
-                        className={`w-40 px-3 py-1 rounded border ${
+                        className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
                           isDarkMode
-                            ? "border-[#d1d5dc] bg-gray-800 text-white"
+                            ? "text-white"
                             : "border-[#d1d5dc] bg-white text-black"
                         }`}
                         disabled={!isEditing}
@@ -451,10 +453,10 @@ export default function Profile({ onClose = () => {} }) {
                             handleSubjectChange(index, "desiredScore", value);
                           }
                         }}
-                        className={`w-40 px-3 py-1 rounded border ${
+                        className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
                           isDarkMode
-                            ? "border-[#d1d5dc] bg-gray-800 text-white"
-                            : "border-[#d1d5dc] bg-white"
+                            ? " text-white"
+                            : "border-[#d1d5dc] bg-white text-black"
                         }`}
                         disabled={!isEditing}
                         min="0"
