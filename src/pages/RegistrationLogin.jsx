@@ -104,7 +104,7 @@ const RegistrationLogin = () => {
       } else {
         if (validateRegistration()) {
           const response = await axios.post(
-            "https://postupi.vubni.com/api/reg",
+            "https://api.online-postupishka.ru/reg",
             {
               ...formRegistData
             },

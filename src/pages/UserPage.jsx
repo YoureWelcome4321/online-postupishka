@@ -28,7 +28,7 @@ const HomePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://postupi.vubni.com/api/profile",
+        "https://api.online-postupishka.ru/profile",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

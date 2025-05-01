@@ -16,7 +16,12 @@ export default function Profile({ onClose = () => {} }) {
     email: "",
     class: "",
     username: "",
-    subjects: [],
+    subjects: [
+    {
+      subject: "",
+      current_score: 0,
+      desired_score: 0
+    }],
   });
 
   const [editableData, setEditableData] = useState({
@@ -24,15 +29,17 @@ export default function Profile({ onClose = () => {} }) {
     email: "",
     class: "",
     telegram: "",
-    subjects: [{ subject: "Русский язык", currentScore: "", desiredScore: "" }],
+    subjects: [{ subject: "Русский язык", current_score: "", desired_score: "" }],
   });
+
+  console.log(profileData)
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://postupi.vubni.com/api/profile",
+          "https://api.online-postupishka.ru/profile",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setProfileData(response.data);
@@ -43,6 +50,29 @@ export default function Profile({ onClose = () => {} }) {
     fetchProfile();
   }, []);
 
+
+
+
+    const sendEditedProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.patch(
+          "https://api.online-postupishka.ru/profile",
+          editableData,
+          { 
+            headers: { 
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+
+          }
+        );
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Ошибка отправки профиля:", error);
+      }
+    };
+
   useEffect(() => {
     const initialData = {
       firstName: profileData.first_name || "",
@@ -52,10 +82,10 @@ export default function Profile({ onClose = () => {} }) {
       subjects: profileData.subjects?.length
         ? profileData.subjects.map((s) => ({
             ...s,
-            currentScore: String(s.currentScore),
-            desiredScore: String(s.desiredScore),
+            current_score: s.current_score,
+            desired_score: s.desired_score,
           }))
-        : [{ subject: "Русский язык", currentScore: "", desiredScore: "" }],
+        : [{ subject: "Русский язык", current_score: "", desired_score: "" }],
     };
     setEditableData(initialData);
   }, [profileData]);
@@ -85,7 +115,7 @@ export default function Profile({ onClose = () => {} }) {
         ...prev,
         subjects: [
           ...filteredSubjects,
-          { subject, currentScore: "", desiredScore: "" },
+          { subject, current_score: "", desired_score: "" },
         ],
       }));
     } else {
@@ -94,7 +124,7 @@ export default function Profile({ onClose = () => {} }) {
           ...prev,
           subjects: [
             ...prev.subjects,
-            { subject, currentScore: "", desiredScore: "" },
+            { subject, current_score: "", desired_score: "" },
           ],
         }));
       }
@@ -133,7 +163,10 @@ export default function Profile({ onClose = () => {} }) {
               className={`flex items-center p-2 ${
                 isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
               } rounded-lg transition-all hover:bg-opacity-80`}
-              onClick={() => setIsEditing(false)}
+              onClick={() => {
+                setIsEditing(false);
+                sendEditedProfile(); 
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -401,14 +434,14 @@ export default function Profile({ onClose = () => {} }) {
                       <input
                         type="number"
                         placeholder="Текущий балл"
-                        value={subj.currentScore}
+                        value={subj.current_score}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (
                             value === "" ||
                             (Number(value) >= 0 && Number(value) <= 100)
                           ) {
-                            handleSubjectChange(index, "currentScore", value);
+                            handleSubjectChange(index, "current_score", value);
                           }
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
@@ -423,14 +456,14 @@ export default function Profile({ onClose = () => {} }) {
                       <input
                         type="number"
                         placeholder="Желаемый балл"
-                        value={subj.desiredScore}
+                        value={subj.desired_score}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (
                             value === "" ||
                             (Number(value) >= 0 && Number(value) <= 100)
                           ) {
-                            handleSubjectChange(index, "desiredScore", value);
+                            handleSubjectChange(index, "desired_score", value);
                           }
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
