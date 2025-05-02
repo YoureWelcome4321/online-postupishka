@@ -16,6 +16,7 @@ import Profile from "../components/Profile";
 const HomePage = () => {
   const [showProfile, setShowProfile] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
+  const [showAlert, setAlert] = useState(false);
   const [profileData, setProfileData] = useState({
     first_name: "",
     email: "",
@@ -49,6 +50,7 @@ const HomePage = () => {
       ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white" 
       : "bg-[#f6f6f6] text-gray-800"}`}>
       <HeaderNoButton />
+      {showAlert && <AreYouSure  onClose={() => setAlert(false)}/>}
       <div className={`flex ${isDarkMode?'bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a]':'bg-[#f6f6f6]'}`}>
         
         {/* Основное содержимое */}
@@ -89,42 +91,42 @@ const HomePage = () => {
           <nav className="my-8 min-h-1.5 space-y-4  max-sm:hidden">
             <button
               onClick={() => setShowProfile(true)}
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 w-full cursor-pointer ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} p-2 transition-all rounded-lg`}
             >
               <HiOutlineUserCircle className="mr-2 text-xl" />
               Личный кабинет
             </button>
             <Link
               to="/trainers"
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
             >
               <CgGym className="mr-2 text-xl" />
               Тренажёры
             </Link>
             <Link
               to="/psychologist"
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
             >
               <MdOutlinePsychologyAlt className="mr-2 text-xl" />
               Психолог
             </Link>
             <Link
               to="/schedule"
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
             >
               <FaTasks className="mr-2 text-xl" />
               Помощь с расписанием
             </Link>
             <Link
               to="/specialties"
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
             >
               <IoAccessibilityOutline className="mr-2 text-xl" />
               Подбор специальности
             </Link>
             <Link
               to="/materials"
-              className="flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#dbeafe] p-2 hover:text-[#193cb8] transition-all rounded-lg"
+              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
             >
               <IoDocumentOutline className="mr-2 text-xl" />
               Полезные материалы для поступления

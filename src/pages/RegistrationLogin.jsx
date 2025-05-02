@@ -43,7 +43,7 @@ const RegistrationLogin = () => {
     } else if (!validateEmail(formRegistData.email)) {
       errors.email = "Некорректный email";
     }
-    if (!formRegistData.class.trim()) {
+    if (!formRegistData.class) {
       errors.class = "Введите класс";
     } else if (formRegistData.class > 11 || formRegistData.class < 9) {
       errors.class = "Класс должен быть от 9 до 11";
@@ -92,14 +92,6 @@ const RegistrationLogin = () => {
               }
             }
           );
-          if (response.data.code == false) {
-            setLoginError("Неправильный логин или пароль"); // Установка ошибки
-          } else {
-            setLoginError(""); // Очистка ошибки при успешной авторизации
-            localStorage.setItem('token', response.data.token);
-            console.log(`token: ${response.data.token}`);
-            navigate('/main')
-          }
         }
       } else {
         if (validateRegistration()) {
@@ -115,19 +107,23 @@ const RegistrationLogin = () => {
             }
           );
           localStorage.setItem('token', response.data.token);
-          console.log(`token: ${response.data.token}`);
+          console.log(formRegistData);
           navigate('/main')
         }
       }
     } catch (error) {
+      setLoginError("Неверный логин или пароль");
       console.error("Ошибка при регистрации:", error);
-      alert(`Произошла ошибка: ${error.response?.data?.message || error.message}`);
     }
   };
 
   const handleInputChange = (e) => {
-    setRegistErrors({ ...registErrors, [e.target.name]: "" });
-    setFormRegistData({ ...formRegistData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    const processedValue = name === "class" ? parseInt(value, 10) : value;
+  
+    setRegistErrors({ ...registErrors, [name]: "" });
+    setFormRegistData((prev) => ({ ...prev, [name]: processedValue }));
   };
 
   const handleSignInChange = (e) => {
@@ -206,7 +202,7 @@ const RegistrationLogin = () => {
               name={isLogin ? "identifier" : "firstName"}
               value={isLogin ? formSignInData.identifier : formRegistData.firstName}
               onChange={isLogin ? handleSignInChange : handleInputChange}
-              placeholder={isLogin ? "Имя пользователя или email" : "Ваше имя"}
+              placeholder={isLogin ? "Логин или email" : "Логин"}
               autoComplete="username"
               className={`w-full pl-12 pr-4 py-3 rounded-lg ${
                 isDarkMode
@@ -279,7 +275,7 @@ const RegistrationLogin = () => {
                   }`}
                 />
                 <input
-                  type="text"
+                  type="number"
                   name="class"
                   value={formRegistData.class}
                   onChange={handleInputChange}
@@ -386,7 +382,7 @@ const RegistrationLogin = () => {
           {/* Кнопка отправки */}
           <motion.button
             type="submit"
-            className={`w-full bg-gradient-to-r from-[#6E7BF2] to-[#4a90e2] hover:from-[#3d37f0] hover:to-[#2d66d4] text-white py-3 rounded-full font-bold mb-6 shadow-lg ${
+            className={`w-full bg-gradient-to-r from-[#6E7BF2] to-[#4a90e2] hover:from-[#3d37f0] hover:to-[#2d66d4] text-white py-3 rounded-full font-bold mb-1 shadow-lg ${
               isDarkMode ? "" : "shadow-blue-200"
             }`}
             whileHover={{ scale: 1.02 }}
@@ -398,7 +394,7 @@ const RegistrationLogin = () => {
             
           </motion.button>
           {isLogin && (
-            <p className=" mb-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">{loginError}</p>
+            <p className=" my-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">{loginError}</p>
           )}
 
           {/* Ссылки и соцсети */}

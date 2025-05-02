@@ -4,24 +4,28 @@ import { FaTasks, FaTrashAlt } from "react-icons/fa";
 import { useState, useContext, useNavigate, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaRegPenToSquare } from "react-icons/fa6";
+import { TiDeleteOutline } from "react-icons/ti";
 import axios from "axios";
 import { ThemeContext } from "../ThemeContext";
+import AreYouSure from "./AreYouSure";
 
 export default function Profile({ onClose = () => {} }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [isEditing, setIsEditing] = useState(false);
   const [showSubjectList, setShowSubjectList] = useState(false);
+  const [showAlert, setAlert] = useState(false);
   const [profileData, setProfileData] = useState({
     first_name: "",
     email: "",
     class: "",
     username: "",
     subjects: [
-    {
-      subject: "",
-      current_score: 0,
-      desired_score: 0
-    }],
+      {
+        subject: "Русский язык",
+        current_score: 0,
+        desired_score: 100,
+      },
+    ],
   });
 
   const [editableData, setEditableData] = useState({
@@ -29,10 +33,12 @@ export default function Profile({ onClose = () => {} }) {
     email: "",
     class: "",
     telegram: "",
-    subjects: [{ subject: "Русский язык", current_score: "", desired_score: "" }],
+    subjects: [
+      { subject: "Русский язык", current_score: "", desired_score: "" },
+    ],
   });
 
-  console.log(profileData)
+  console.log(profileData);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -50,28 +56,38 @@ export default function Profile({ onClose = () => {} }) {
     fetchProfile();
   }, []);
 
+  const sendEditedProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.patch(
+        "https://api.online-postupishka.ru/profile",
+        editableData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Ошибка отправки профиля:", error);
+    }
+  };
 
-
-
-    const sendEditedProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.patch(
-          "https://api.online-postupishka.ru/profile",
-          editableData,
-          { 
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json"
-            }
-
-          }
-        );
-        setIsEditing(false);
-      } catch (error) {
-        console.error("Ошибка отправки профиля:", error);
-      }
-    };
+  const handleDeleteAccount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete("https://api.online-postupishka.ru/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.removeItem("token");
+      window.location.href = "/sign";
+    } catch (error) {
+      console.error("Ошибка удаления профиля:", error);
+      alert(`Ошибка: ${error.response?.data?.message || error.message}`);
+    }
+  };
 
   useEffect(() => {
     const initialData = {
@@ -115,7 +131,7 @@ export default function Profile({ onClose = () => {} }) {
         ...prev,
         subjects: [
           ...filteredSubjects,
-          { subject, current_score: "", desired_score: "" },
+          { subject, current_score: "0", desired_score: "100" },
         ],
       }));
     } else {
@@ -124,7 +140,7 @@ export default function Profile({ onClose = () => {} }) {
           ...prev,
           subjects: [
             ...prev.subjects,
-            { subject, current_score: "", desired_score: "" },
+            { subject, current_score: "0", desired_score: "100" },
           ],
         }));
       }
@@ -165,7 +181,7 @@ export default function Profile({ onClose = () => {} }) {
               } rounded-lg transition-all hover:bg-opacity-80`}
               onClick={() => {
                 setIsEditing(false);
-                sendEditedProfile(); 
+                sendEditedProfile();
               }}
             >
               <svg
@@ -225,7 +241,7 @@ export default function Profile({ onClose = () => {} }) {
       </div>
 
       {/* Основной контент */}
-      <div className="p-4 max-sm:pb-20  sm:p-6 space-y-6 overflow-y-auto max-h-[80vh] sm-max:max-h-[160vh] ">
+      <div className="p-4 max-sm:pb-20  sm:p-6 space-y-6 overflow-y-auto max-h-[80vh] sm:max-h-none ">
         {/* Личные данные */}
         <div className="space-y-4">
           {/* Имя */}
@@ -234,7 +250,7 @@ export default function Profile({ onClose = () => {} }) {
               htmlFor="firstName"
               className="text-base sm:text-lg font-medium block mb-2"
             >
-              Имя
+              Логин
             </label>
             <input
               type="text"
@@ -247,7 +263,7 @@ export default function Profile({ onClose = () => {} }) {
                   ? "bg-[#222222] border-gray-600 text-white"
                   : "bg-white border-gray-300"
               }`}
-              placeholder="Имя пользователя"
+              placeholder="Логин пользователя"
               disabled={!isEditing}
             />
           </div>
@@ -494,22 +510,42 @@ export default function Profile({ onClose = () => {} }) {
 
         {/* Кнопка выхода */}
         <motion.button
-          className="float-right flex items-center justify-center p-3 sm:p-2 rounded-lg transition-colors mb-4 sm:mb-0"
+          className="float-right flex max-sm:w-[47%] items-center justify-center p-3 sm:p-2 rounded-lg transition-colors mb-4 sm:mb-0"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleLogout}
           style={{
-            background: isDarkMode
-              ? "#222222"
-              : "#e5e7eb",
+            background: isDarkMode ? "#222222" : "#e5e7eb",
           }}
         >
-          <IoIosLogOut className="mr-2 text-md sm:text-md" />
+          <IoIosLogOut className="mr-2 text-md max-sm:text-4xl sm:text-md" />
           <span className="text-md sm:text-md font-medium">
             Выйти из аккаунта
           </span>
         </motion.button>
+        <motion.button
+          className="float-right max-sm:float-start max-sm:w-[47%] flex items-center justify-center mr-4 p-3 sm:p-2 rounded-lg transition-colors mb-4 sm:mb-0"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setAlert(true)}
+          style={{
+            background: isDarkMode ? "#222222" : "#e5e7eb",
+          }}
+        >
+          <TiDeleteOutline className="mr-2 text-md max-sm:text-4xl sm:text-md" />
+          <span className="text-md sm:text-md font-medium">
+            Удалить профиль
+          </span>
+        </motion.button>
       </div>
+      {showAlert && (
+        <AreYouSure
+          onClose={() => setAlert(false)}
+          onConfirm={handleDeleteAccount}
+          message="Вы уверены?"
+          fullScreen
+        />
+      )}
     </motion.div>
   );
 }
