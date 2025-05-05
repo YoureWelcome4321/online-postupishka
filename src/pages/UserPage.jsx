@@ -12,9 +12,11 @@ import { ThemeContext } from "../ThemeContext";
 import HeaderNoButton from "../components/HeaderNoButtons";
 import Header from "../components/Header";
 import Profile from "../components/Profile";
+import Profession from "../components/Profession";
 
 const HomePage = () => {
   const [showProfile, setShowProfile] = useState(false);
+  const [showSpecialties, setShowSpecialties] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
   const [showAlert, setAlert] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -117,13 +119,13 @@ const HomePage = () => {
               <FaTasks className="mr-2 text-xl" />
               Помощь с расписанием
             </Link>
-            <Link
-              to="/specialties"
-              className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
+            <button
+              onClick={() => setShowSpecialties(true)}
+              className={`flex items-center py-2 w-full cursor-pointer ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} p-2 transition-all rounded-lg`}
             >
-              <IoAccessibilityOutline className="mr-2 text-xl" />
-              Подбор специальности
-            </Link>
+              < IoAccessibilityOutline className="mr-2 text-xl"  />
+              Профориентация
+            </button>
             <Link
               to="/materials"
               className={`flex items-center py-2 p-2 ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} transition-all rounded-lg`}
@@ -153,13 +155,13 @@ const HomePage = () => {
               <FaTasks size={24} />
               <span className="text-xs mt-1">Расписание</span>
             </Link>
-            <Link
-              to="/specialties"
+            <button
+              onClick={() => setShowSpecialties(true)}
               className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
-              <IoAccessibilityOutline size={24} />
-              <span className="text-xs mt-1">Специальности</span>
-            </Link>
+              < IoAccessibilityOutline size={24} />
+              <span className="text-xs mt-1">Профориентация</span>
+            </button>
             <button
               onClick={() => setShowProfile(true)}
               className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
@@ -171,8 +173,8 @@ const HomePage = () => {
           </div>
         </nav>
 
-        {/* Профиль */}
         {showProfile && <Profile  onClose={() => setShowProfile(false)}/>}
+        {showSpecialties && <Profession  onClose={() => setShowSpecialties(false)}/>}
       </div>
     </div>
   );

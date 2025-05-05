@@ -1,8 +1,8 @@
 import React from "react";
 import { IoIosLogOut } from "react-icons/io";
-import { FaTasks, FaTrashAlt } from "react-icons/fa";
-import { useState, useContext, useNavigate, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
+import { FaTrashAlt } from "react-icons/fa";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { TiDeleteOutline } from "react-icons/ti";
 import axios from "axios";
@@ -13,7 +13,10 @@ export default function Profile({ onClose = () => {} }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [isEditing, setIsEditing] = useState(false);
   const [showSubjectList, setShowSubjectList] = useState(false);
+  const [changePassword, setNewPassword] = useState(false);
+  const [validate, setValidate] = useState(false);
   const [showAlert, setAlert] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const [profileData, setProfileData] = useState({
     first_name: "",
     email: "",
@@ -31,14 +34,12 @@ export default function Profile({ onClose = () => {} }) {
   const [editableData, setEditableData] = useState({
     firstName: "",
     email: "",
+    password_old: "",
+    password_new: "",
     class: "",
     telegram: "",
-    subjects: [
-      { subject: "Русский язык", current_score: "", desired_score: "" },
-    ],
+    subjects: [{ subject: "", current_score: "", desired_score: "" }],
   });
-
-  console.log(profileData);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -71,7 +72,12 @@ export default function Profile({ onClose = () => {} }) {
       );
       setIsEditing(false);
     } catch (error) {
-      console.error("Ошибка отправки профиля:", error);
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 400) {
+          setPasswordError("Введен неверный пароль, смена пароля отменена");
+        }
+      }
     }
   };
 
@@ -94,6 +100,8 @@ export default function Profile({ onClose = () => {} }) {
       firstName: profileData.first_name || "",
       email: profileData.email || "",
       class: profileData.class || "",
+      password_old: editableData.password_old || "",
+      password_new: editableData.password_new || "",
       telegram: profileData.username || "",
       subjects: profileData.subjects?.length
         ? profileData.subjects.map((s) => ({
@@ -108,6 +116,7 @@ export default function Profile({ onClose = () => {} }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setEditableData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -162,8 +171,6 @@ export default function Profile({ onClose = () => {} }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      {/* Заголовок профиля */}
-
       <div className="p-4 sm:p-6 flex justify-between items-center ">
         <h1
           className={`text-xl sm:text-2xl font-bold ${
@@ -182,6 +189,9 @@ export default function Profile({ onClose = () => {} }) {
               onClick={() => {
                 setIsEditing(false);
                 sendEditedProfile();
+                setPasswordError("");
+                setNewPassword(false);
+                setValidate(false);
               }}
             >
               <svg
@@ -205,7 +215,10 @@ export default function Profile({ onClose = () => {} }) {
               className={`flex items-center p-2 rounded-lg ${
                 isDarkMode ? "text-[#6e7bf2]" : "text-blue-600"
               } transition-all hover:bg-opacity-80`}
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setIsEditing(true);
+                setPasswordError("");
+              }}
             >
               <FaRegPenToSquare
                 className={`text-lg mr-2 sm:text-xl ${
@@ -240,9 +253,7 @@ export default function Profile({ onClose = () => {} }) {
         </div>
       </div>
 
-      {/* Основной контент */}
       <div className="p-4 max-sm:pb-20  sm:p-6 space-y-6 overflow-y-auto max-h-[80vh] sm:max-h-none ">
-        {/* Личные данные */}
         <div className="space-y-4">
           {/* Имя */}
           <div>
@@ -291,6 +302,114 @@ export default function Profile({ onClose = () => {} }) {
               disabled={!isEditing}
             />
           </div>
+          {/* Пароль */}
+          <div>
+            <label
+              htmlFor="password"
+              className="text-base sm:text-lg font-medium block mb-2"
+            >
+              Пароль
+            </label>
+            {isEditing ? (
+              <div className="flex flex-col">
+                {changePassword && (
+                  <div className="mt-2 space-y-4">
+                    <input
+                      type="password"
+                      id="current-password"
+                      name="password_old"
+                      onChange={handleChange}
+                      className={`w-full px-3 py-2 rounded-md border ${
+                        isDarkMode
+                          ? "bg-[#222222] border-gray-600 text-white"
+                          : "bg-white border-gray-300"
+                      }`}
+                      placeholder="Текущий пароль"
+                      disabled={!isEditing}
+                    />
+                    <input
+                      type="password"
+                      id="new-password"
+                      name="password_new"
+                      onChange={handleChange}
+                      className={`mb-5 w-full px-3 py-2 rounded-md border ${
+                        isDarkMode
+                          ? "bg-[#222222] border-gray-600 text-white"
+                          : "bg-white border-gray-300"
+                      }`}
+                      placeholder="Новый пароль"
+                      disabled={!isEditing}
+                    />
+                  </div>
+                )}
+                <button
+                  className={`text-sm sm:text-base ${
+                    isDarkMode
+                      ? "bg-[#6e7bf2] hover:bg-[#3d37f0]"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } text-white px-4 py-2 rounded-lg transition-colors`}
+                  onClick={() => {
+                    if (changePassword) {
+                      setValidate(false);
+
+                      if (editableData.password_old === '' && editableData.password_new === '' ){
+                        setNewPassword(false)
+                        setValidate(false)
+                      }
+
+                      else if (
+                        !editableData.password_old ||
+                        !editableData.password_new
+                      ) {
+                        setValidate(true);
+                        return;
+                      }
+
+                      else if (editableData.password_new.length < 6) {
+                        setValidate(true);
+                        return;
+                      }
+
+
+                      setIsEditing(false);
+                      sendEditedProfile();
+                    } else {
+                      setNewPassword(true);
+                    }
+                  }}
+                >
+                  {changePassword ? "Сохранить новый пароль" : "Сменить пароль"}
+                </button>
+
+                {validate && (
+                  <p className="my-2 ml-2 flex items-center space-x-2 text-red-500 text-sm w-full">
+                    {editableData.password_new?.length < 6
+                      ? "Пароль должен быть не менее 6 символов"
+                      : "Заполните все поля"}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value="Online-Postupishka"
+                className={`w-full px-3 py-2 rounded-md border ${
+                  isDarkMode
+                    ? "bg-[#222222] border-gray-600 text-white"
+                    : "bg-white border-gray-300"
+                }`}
+                placeholder="Пароль"
+                disabled={!isEditing}
+              />
+            )}
+            {passwordError && (
+              <p className="my-2 ml-2 flex items-center space-x-2 text-red-500 text-sm w-full">
+                {passwordError}
+              </p>
+            )}
+          </div>
 
           {/* Класс */}
           <div>
@@ -300,20 +419,71 @@ export default function Profile({ onClose = () => {} }) {
             >
               Класс
             </label>
-            <input
-              type="number"
-              id="class"
-              name="class"
-              value={editableData.class}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 rounded-md border ${
-                isDarkMode
-                  ? "bg-[#222222] border-gray-600 text-white"
-                  : "bg-white border-gray-300"
-              }`}
-              placeholder="Класс"
-              disabled={!isEditing}
-            />
+            {!isEditing ? (
+              <input
+                type="text"
+                name="class"
+                placeholder="Класс"
+                className={`w-full px-3 py-2 rounded-md border ${
+                  isDarkMode
+                    ? "bg-[#222222] border-gray-600 text-white"
+                    : "bg-white border-gray-300"
+                }`}
+                value={editableData.class}
+                disabled={!isEditing}
+              />
+            ) : (
+              <div className="flex space-x-4">
+                <div>
+                  <input
+                    type="radio"
+                    id="class9"
+                    name="class"
+                    className="peer hidden"
+                    value="9"
+                    onChange={handleChange}
+                  />
+                  <label
+                    className="ml-1  bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    htmlFor="class9"
+                  >
+                    9 класс
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="class10"
+                    name="class"
+                    className="peer hidden"
+                    value="10"
+                    onChange={handleChange}
+                  />
+                  <label
+                    className="ml-1 bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    htmlFor="class10"
+                  >
+                    10 класс
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="class11"
+                    className="peer hidden"
+                    name="class"
+                    value="11"
+                    onChange={handleChange}
+                  />
+                  <label
+                    className="ml-1  bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    htmlFor="class11"
+                  >
+                    11 класс
+                  </label>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Telegram */}
@@ -373,9 +543,6 @@ export default function Profile({ onClose = () => {} }) {
                 "История",
                 "Обществознание",
               ].map((subject) => {
-                const hasMath = editableData.subjects.some((s) =>
-                  s.subject.includes("Математика")
-                );
                 if (subject.includes("Математика")) {
                   const currentMath = editableData.subjects.find((s) =>
                     s.subject.includes("Математика")
@@ -448,7 +615,7 @@ export default function Profile({ onClose = () => {} }) {
                     </div>
                     <div className="flex space-x-4 mt-3 ">
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Текущий балл"
                         value={subj.current_score}
                         onChange={(e) => {
@@ -470,7 +637,7 @@ export default function Profile({ onClose = () => {} }) {
                         max="100"
                       />
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Желаемый балл"
                         value={subj.desired_score}
                         onChange={(e) => {

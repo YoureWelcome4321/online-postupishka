@@ -30,11 +30,11 @@ const RegistrationLogin = () => {
 
   const [registErrors, setRegistErrors] = useState({});
   const [signInErrors, setSignInErrors] = useState({});
-  const [loginError, setLoginError] = useState(""); // Новое состояние для ошибки входа
+  const [loginError, setLoginError] = useState(""); 
+  const [emailError, setEmailError] = useState(""); 
 
   // Функции валидации
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
-  const validateTelegram = (telegram) => /^[a-zA-Z0-9_]+$/.test(telegram); // Только буквы, цифры и _
   const validateRegistration = () => {
     const errors = {};
     if (!formRegistData.firstName.trim()) errors.firstName = "Введите имя";
@@ -47,13 +47,6 @@ const RegistrationLogin = () => {
       errors.class = "Введите класс";
     } else if (formRegistData.class > 11 || formRegistData.class < 9) {
       errors.class = "Класс должен быть от 9 до 11";
-    }
-    if (formRegistData.telegram.trim()) {
-      if (!validateTelegram(formRegistData.telegram)) {
-        errors.telegram = "Введите Телеграм без @";
-      } else if (formRegistData.telegram.length > 32) {
-        errors.telegram = "Telegram не может быть длиннее 32 символов";
-      }
     }
     if (formRegistData.password.length < 6) {
       errors.password = "Пароль должен быть не менее 6 символов";
@@ -82,7 +75,7 @@ const RegistrationLogin = () => {
       if (isLogin) {
         if (validateSignIn()) {
           const response = await axios.post(
-            "https://postupi.vubni.com/api/auth",
+            "https://api.online-postupishka.ru/auth",
             {
               ...formSignInData
             },
@@ -92,6 +85,8 @@ const RegistrationLogin = () => {
               }
             }
           );
+          localStorage.setItem('token', response.data.token);
+          navigate('/main')
         }
       } else {
         if (validateRegistration()) {
@@ -107,12 +102,19 @@ const RegistrationLogin = () => {
             }
           );
           localStorage.setItem('token', response.data.token);
-          console.log(formRegistData);
           navigate('/main')
         }
       }
     } catch (error) {
-      setLoginError("Неверный логин или пароль");
+      if (error.response) {
+        const {status} = error.response;
+        if (status === 401){
+            setLoginError("Неверный логин или пароль");
+        } else if (status === 409){
+          setEmailError("Данная почта уже зарегистрирована")
+        }
+      }
+
       console.error("Ошибка при регистрации:", error);
     }
   };
@@ -129,6 +131,7 @@ const RegistrationLogin = () => {
   const handleSignInChange = (e) => {
     setSignInErrors({ ...signInErrors, [e.target.name]: "" });
     setLoginError("");
+    setEmailError("")
     setFormSignInData({ ...formSignInData, [e.target.name]: e.target.value });
   };
 
@@ -156,6 +159,7 @@ const RegistrationLogin = () => {
               setRegistErrors({});
               setSignInErrors({});
               setLoginError(""); 
+              setEmailError("")
             }}
             className={`px-4 py-2 rounded-full font-medium transition-colors ${
               isDarkMode
@@ -175,6 +179,7 @@ const RegistrationLogin = () => {
               setRegistErrors({});
               setSignInErrors({});
               setLoginError(""); 
+              setEmailError("")
             }}
             className={`px-4 py-2 rounded-full font-medium transition-colors ${
               isDarkMode
@@ -266,6 +271,9 @@ const RegistrationLogin = () => {
                     <span>{registErrors.email}</span>
                   </motion.div>
                 )}
+                {!isLogin && (
+                  <p className="my-2 ml-2 flex items-center space-x-2 text-red-500 text-sm w-full"> {emailError}</p>
+                )}
               </div>
               {/* Класс */}
               <div className="relative mb-4">
@@ -300,42 +308,7 @@ const RegistrationLogin = () => {
                     <span>{registErrors.class}</span>
                   </motion.div>
                 )}
-              </div>
-              {/* Telegram */}
-              <div className="relative mb-4">
-                <FaTelegramPlane
-                  className={`absolute left-4 flex mt-4.5 z-10  ${
-                    isDarkMode ? "text-white/70" : "text-gray-400"
-                  }`}
-                />
-                <input
-                  type="text"
-                  name="telegram"
-                  value={formRegistData.telegram}
-                  onChange={handleInputChange}
-                  placeholder="Телеграм (Необязательное поле)"
-                  className={`w-full pl-12 pr-4 py-3 rounded-lg ${
-                    isDarkMode
-                      ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
-                      : "bg-white focus:bg-gray-50"
-                  } border border-transparent focus:border-[#6E7BF2] transition-all ${
-                    registErrors.telegram ? "border-red-500" : ""
-                  }`}
-                />
-
-                {/*  Валидация Telegram */}
-                {registErrors.telegram && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="mt-2 ml-2 flex items-center space-x-2 text-red-500 text-xs w-full"
-                  >
-                    <span className="block w-2 h-2 rounded-full bg-red-500" />
-                    <span>{registErrors.telegram}</span>
-                  </motion.div>
-                )}
-              </div>
+              </div>  
             </>
           )}
 
@@ -398,7 +371,7 @@ const RegistrationLogin = () => {
           )}
 
           {/* Ссылки и соцсети */}
-          <div className="flex justify-between text-sm mb-6">
+          <div className="flex justify-between text-sm mt-3 mb-6">
             <Link
               to="/forgot-password"
               className={`hover:underline ${

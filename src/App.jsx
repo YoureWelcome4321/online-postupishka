@@ -4,8 +4,8 @@ import MainPage from "./pages/mainPage";
 import UserPage from "./pages/UserPage";
 
 import RegistrationLogin from "./pages/RegistrationLogin";
+import Profession from "./components/Profession";
 import { ThemeProvider } from "./ThemeContext";
-
 function App() {
   return (
     <ThemeProvider>
