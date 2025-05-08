@@ -1,88 +1,107 @@
-import React, { useState } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import HeaderNoButton from "./HeaderNoButtons";
+import axios from "axios";
+import { motion } from "framer-motion";
 import { FaGraduationCap, FaRegLightbulb, FaChartLine } from 'react-icons/fa';
+import { ThemeContext } from "../ThemeContext";
 
 export default function Profession() {
+  const { isDarkMode } = useContext(ThemeContext);
   const [stage, setStage] = useState('welcome'); // welcome, test, result
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [progress, setProgress] = useState(0);
+  const [questionsData, setQuestionsData] = useState({
+    question: "Какие ещё предметы, кроме русского языка, ты планируешь сдавать на ЕГЭ?",
+    counts_remaind: "9",
+  });
+  const [userAnswer, setAnswer] = useState({ answer: "" });
 
-  // Список вопросов
-  const questions = [
-    "Какие виды деятельности вызывают у вас интерес?",
-    "Какие предметы в школе вам давались легче всего?",
-    "Какие качества вы цените в себе больше всего?",
-    "Что бы вы хотели изменить в мире вокруг себя?",
-    "Какие профессии ваших родственников/друзей вызывают у вас уважение?",
-    "Какие у вас есть хобби и чем они вам нравятся?",
-    "Какой тип работы вы представляете для себя в будущем?",
-    "Какие навыки вы хотели бы развить в ближайшие 5 лет?",
-    "Как вы представляете свой идеальный рабочий день?",
-    "Что для вас важнее всего в профессиональной деятельности?"
-  ];
-
-  // Обработчик ввода ответа
   const handleAnswerChange = (e) => {
-    setAnswers({
-      ...answers,
-      [currentQuestion]: e.target.value
-    });
-    
-    // Обновляем прогресс
-    const filledAnswers = Object.values(answers).filter(answer => answer.trim()).length;
-    setProgress(Math.round((filledAnswers / questions.length) * 100));
+    const { value } = e.target;
+    setAnswer((prev) => ({ ...prev, answer: value }));
   };
-
-  // Переход к следующему вопросу
+  
   const nextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setStage('result');
+    handleGetQuestion();
+  };
+  
+  const resetQuestionsData = () => {
+    setQuestionsData({
+      question: "",
+      counts_remaind: "",
+    });
+  };
+
+  const handleGetQuestion = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "https://api.online-postupishka.ru/specialization/questio",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        }
+      );
+      setQuestionsData(response.data);
+    } catch (error) {
+      if (error.response?.status === 400) {
+        setStage('result');
+      }
     }
   };
 
-  // Переход к предыдущему вопросу
-  const prevQuestion = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
+  const handleSendAnswer = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "https://api.online-postupishka.ru/specialization/answer",
+        userAnswer,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Ошибка отправки ответа:", error);
     }
   };
 
-  // Отображение результата
   const renderResult = () => {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Ваш профориентационный портрет</h2>
-          <p className="text-gray-600">На основе ваших ответов</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Ваш профориентационный портрет</h2>
+          <p className="text-gray-600 text-sm sm:text-base">На основе ваших ответов</p>
         </div>
 
-        <div className="space-y-4">
-          {questions.map((q, index) => (
-            <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-              <p className="font-medium text-gray-800">Вопрос {index + 1}:</p>
-              <p className="text-gray-700 mt-1 italic">"{q}"</p>
-              <p className="text-gray-900 mt-2 font-medium">Ваш ответ: {answers[index] || "Не отвечено"}</p>
+        <div className="space-y-3 sm:space-y-4 max-h-[60vh] overflow-y-auto">
+          {Object.entries(answers).map(([key, value]) => (
+            <div key={key} className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-100">
+              <p className="font-medium text-gray-800 text-sm sm:text-base">Вопрос {parseInt(key)+1}:</p>
+              <p className="text-gray-700 mt-1 italic text-xs sm:text-sm">"{value.question}"</p>
+              <p className="text-gray-900 mt-2 font-medium text-sm sm:text-base">Ваш ответ: {value.answer || "Не отвечено"}</p>
             </div>
           ))}
         </div>
 
-        <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
-          <h3 className="text-xl font-semibold text-blue-800 mb-3">Анализ вашего потенциала</h3>
-          <p className="text-gray-700 mb-4">
-            На основе ваших ответов можно сделать вывод, что вы склонны к профессиям, 
+        <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-100 mt-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-blue-800 mb-2 sm:mb-3">Анализ вашего потенциала</h3>
+          <p className="text-gray-700 mb-3 text-sm sm:text-base">
+            На основе ваших ответов можно сделать вывод, что вы склонны к профессиям,
             связанным с вашими интересами и сильными сторонами. Ваши ключевые склонности:
           </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2">
-            <li>Любовь к знаниям и обучению</li>
-            <li>Склонность к аналитической деятельности</li>
-            <li>Творческий подход к решению задач</li>
-            <li>Стремление к социальному взаимодействию</li>
+          <ul className="list-disc list-inside text-gray-700 space-y-1 sm:space-y-2 pl-4">
+            <li className="text-sm sm:text-base">Любовь к знаниям и обучению</li>
+            <li className="text-sm sm:text-base">Склонность к аналитической деятельности</li>
+            <li className="text-sm sm:text-base">Творческий подход к решению задач</li>
+            <li className="text-sm sm:text-base">Стремление к социальному взаимодействию</li>
           </ul>
-          <p className="text-gray-700 mt-4">
-            Рекомендуется обсудить полученные результаты с профессиональным психологом для более точной 
+          <p className="text-gray-700 mt-3 sm:mt-4 text-sm sm:text-base">
+            Рекомендуется обсудить полученные результаты с профессиональным психологом для более точной
             интерпретации и составления индивидуального плана развития.
           </p>
         </div>
@@ -90,98 +109,193 @@ export default function Profession() {
     );
   };
 
-  // Приветственный экран
-  const renderWelcome = () => {
-    return (
-      <div className="text-center space-y-6 py-8">
-        <div className="flex justify-center">
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-full text-white">
-            <FaGraduationCap size={40} />
-          </div>
+ const renderWelcome = () => {
+  return (
+    <div 
+      className={`
+        min-h-screen
+        absolute sm:relative inset-0 
+        flex flex-col sm:my-0 sm:pt-0 my-16 pt-12
+        px-4 sm:px-6 lg:px-8
+        transition-all duration-500 ease-in-out
+        ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}
+        ${stage === 'welcome' ? "opacity-100" : "opacity-0"}
+      `}
+    >
+      {/* Анимированная иконка с параллакс-эффектом */}
+      <motion.div 
+        className="flex justify-center mb-6 sm:mb-8"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      >
+        <div className="relative group">
+          {/* Анимированный градиентный фон */}
+          <motion.div 
+            className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-500"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ repeat: Infinity, duration: 4 }}
+          ></motion.div>
+          
+          {/* Основная иконка с плавным увеличением */}
+          <motion.div 
+            className="relative bg-gradient-to-r from-blue-500 to-indigo-600 p-3 sm:p-4 rounded-full text-white z-10"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <FaGraduationCap 
+              size={32} 
+              className="transition-transform duration-300 group-hover:rotate-12"
+            />
+          </motion.div>
         </div>
-        
-        <h1 className="text-3xl font-bold text-gray-800">Профориентационный тест</h1>
-        
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-          <p className="text-gray-700 mb-4">
+      </motion.div>
+      
+      {/* Анимированный заголовок */}
+      <motion.h1 
+        className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center mb-4 sm:mb-6 px-2"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.8 }}
+      >
+        Профориентационный тест
+      </motion.h1>
+      
+      {/* Адаптивная карточка с контентом */}
+      <motion.div 
+        className={`
+          ${isDarkMode ? "bg-gray-800" : "bg-white"} 
+          rounded-2xl shadow-xl border 
+          ${isDarkMode ? "border-gray-700" : "border-gray-100"}
+          mx-auto w-full max-w-sm sm:max-w-md
+          transform transition-all duration-300 hover:shadow-2xl
+        `}
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.6, duration: 1 }}
+      >
+        {/* Описание */}
+        <div className="p-4 sm:p-6">
+          <p className={`mb-6 text-sm sm:text-base leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
             Этот тест поможет вам лучше понять свои профессиональные склонности и интересы.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-blue-600 flex justify-center mb-2">
-                <FaRegLightbulb size={24} />
+          {/* Иконки с эффектами */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
+            {/* Элемент 1 */}
+            <motion.div 
+              className={`
+                ${isDarkMode ? "bg-blue-900/30" : "bg-blue-50"} 
+                p-2 rounded-xl flex flex-col items-center justify-center
+                transition-all duration-300 hover:scale-105 hover:shadow-md
+              `}
+              whileHover={{ y: -5 }}
+            >
+              <div className={`text-blue-500 mb-1 ${isDarkMode ? "text-blue-400" : "text-blue-600"} transition-transform duration-300`}>
+                <FaRegLightbulb size={18} />
               </div>
-              <p className="text-sm text-center">Определите свои сильные стороны</p>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-green-600 flex justify-center mb-2">
-                <FaChartLine size={24} />
+              <p className="text-xs text-center px-1">Определите свои сильные стороны</p>
+            </motion.div>
+            
+            {/* Элемент 2 */}
+            <motion.div 
+              className={`
+                ${isDarkMode ? "bg-green-900/30" : "bg-green-50"} 
+                p-2 rounded-xl flex flex-col items-center justify-center
+                transition-all duration-300 hover:scale-105 hover:shadow-md
+              `}
+              whileHover={{ y: -5 }}
+            >
+              <div className={`text-green-500 mb-1 ${isDarkMode ? "text-green-400" : "text-green-600"} transition-transform duration-300`}>
+                <FaChartLine size={18} />
               </div>
-              <p className="text-sm text-center">Оцените свои потенциальные возможности</p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-purple-600 flex justify-center mb-2">
-                <FaGraduationCap size={24} />
+              <p className="text-xs text-center px-1">Оцените свои потенциальные возможности</p>
+            </motion.div>
+            
+            {/* Элемент 3 */}
+            <motion.div 
+              className={`
+                ${isDarkMode ? "bg-purple-900/30" : "bg-purple-50"} 
+                p-2 rounded-xl flex flex-col items-center justify-center
+                transition-all duration-300 hover:scale-105 hover:shadow-md
+              `}
+              whileHover={{ y: -5 }}
+            >
+              <div className={`text-purple-500 mb-1 ${isDarkMode ? "text-purple-400" : "text-purple-600"} transition-transform duration-300`}>
+                <FaGraduationCap size={18} />
               </div>
-              <p className="text-sm text-center">Выберите подходящую профессиональную траекторию</p>
-            </div>
+              <p className="text-xs text-center px-1">Выберите подходящую профессиональную траекторию</p>
+            </motion.div>
           </div>
           
-          <button 
-            onClick={() => setStage('test')}
-            className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300"
+          {/* Кнопка с улучшенной анимацией */}
+          <motion.button 
+            onClick={() => {setStage('test'); handleGetQuestion();}}
+            className={`
+              w-full px-4 py-3 sm:px-6 sm:py-3
+              bg-gradient-to-r from-blue-500 to-indigo-600 
+              text-white rounded-xl shadow-md
+              hover:shadow-xl transform hover:-translate-y-0.5
+              transition-all duration-300 text-sm sm:text-base
+              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
+              relative overflow-hidden
+            `}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            Начать тест
-          </button>
+            <span className="relative z-10">Начать тест</span>
+            <span className="absolute inset-0 bg-white bg-opacity-20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out"></span>
+          </motion.button>
         </div>
-      </div>
-    );
-  };
+      </motion.div>
 
-  // Экран тестирования
+      {/* Дополнительный текст на десктопе */}
+      <motion.div 
+        className="hidden sm:block mt-8 text-center text-xs text-gray-500"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
+      >
+        Пройдите тест за 5-7 минут и получите персонализированные рекомендации
+      </motion.div>
+    </div>
+  );
+};
+
   const renderTest = () => {
     return (
-      <div className="space-y-6">
-        {/* Прогресс */}
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-          <div 
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+      <div className={`absolute sm:pt-0 sm:my-0 my-16 px-8 pt-8  inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
+        isDarkMode ? "bg-[#ce6767] text-white" : "bg-white text-gray-900"
+      }`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}>
 
-        <div className="mb-4">
-          <span className="font-medium text-gray-700">Вопрос {currentQuestion + 1} из {questions.length}</span>
+        <div className="mb-2 sm:mb-4">
+          <span className="font-medium text-gray-700 text-xl sm:text-base">Осталось вопросов: {questionsData.counts_remaind}</span>
         </div>
         
-        <h2 className="text-xl font-medium text-gray-800 mb-4">{questions[currentQuestion]}</h2>
+        <h2 className="text-2xl sm:text-xl font-medium text-gray-800 mb-3 sm:mb-4">{questionsData.question}</h2>
         
         <textarea
-          value={answers[currentQuestion] || ""}
+          value={userAnswer.answer}
           onChange={handleAnswerChange}
-          className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+          className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm sm:text-base"
           placeholder="Введите ваш ответ здесь..."
+          rows={4}
         ></textarea>
         
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-4 sm:mt-8">
           <button
-            onClick={prevQuestion}
-            disabled={currentQuestion === 0}
-            className={`px-4 py-2 rounded-lg ${
-              currentQuestion === 0 
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            } transition duration-200`}
+            onClick={() => {
+              handleSendAnswer();
+              resetQuestionsData();
+              setAnswer({ answer: "" });
+              nextQuestion();
+            }}
+            className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-md transform hover:-translate-y-0.5 transition duration-300 text-sm sm:text-base"
           >
-            Назад
-          </button>
-          
-          <button
-            onClick={nextQuestion}
-            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-md transform hover:-translate-y-0.5 transition duration-300"
-          >
-            {currentQuestion === questions.length - 1 ? "Завершить" : "Далее"}
+            Далее
           </button>
         </div>
       </div>
@@ -189,11 +303,13 @@ export default function Profession() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      {/* Метатеги для мобильных устройств */}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      
+      <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
         <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
-          <div className="p-8">
+          <div className="p-4 sm:p-6">
             {stage === 'welcome' && renderWelcome()}
             {stage === 'test' && renderTest()}
             {stage === 'result' && renderResult()}
