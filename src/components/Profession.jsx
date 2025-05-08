@@ -264,18 +264,18 @@ export default function Profession() {
 
   const renderTest = () => {
     return (
-      <div className={`absolute sm:pt-0 sm:my-0 my-16 px-8 pt-8  inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
-        isDarkMode ? "bg-[#ce6767] text-white" : "bg-white text-gray-900"
+      <div className={`min-h-screen absolute sm:pt-0 sm:my-0 my-16 px-8 pt-8  inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
+        isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
       }`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}>
 
         <div className="mb-2 sm:mb-4">
-          <span className="font-medium text-gray-700 text-xl sm:text-base">Осталось вопросов: {questionsData.counts_remaind}</span>
+          <span className="font-medium  text-xl sm:text-base">Осталось вопросов: {questionsData.counts_remaind}</span>
         </div>
         
-        <h2 className="text-2xl sm:text-xl font-medium text-gray-800 mb-3 sm:mb-4">{questionsData.question}</h2>
+        <h2 className="text-2xl sm:text-xl font-medium mb-3 sm:mb-4">{questionsData.question}</h2>
         
         <textarea
           value={userAnswer.answer}
