@@ -88,7 +88,7 @@ export default function Profession() {
   };
 
   const handleEndTest = async() => {
-    console.log('Ошибка')
+    console.log('Все ок')
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
