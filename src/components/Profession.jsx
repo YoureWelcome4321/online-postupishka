@@ -12,10 +12,28 @@ export default function Profession() {
   const [answers, setAnswers] = useState({});
   const [progress, setProgress] = useState(0);
   const [questionsData, setQuestionsData] = useState({
-    question: "Какие ещё предметы, кроме русского языка, ты планируешь сдавать на ЕГЭ?",
-    counts_remaind: "9",
+    question: "",
   });
+
+
   const [userAnswer, setAnswer] = useState({ answer: "" });
+  const [counter ,setCounter] = useState(1)
+
+  const [results, getResults] = useState({
+    information: true,
+    university: "",
+    directions: [
+      ""
+    ],
+    features: [
+      ""
+    ],
+    scores: {
+      avg: "",
+      bud: "",
+      min: ""
+    }
+  })
 
   const handleAnswerChange = (e) => {
     const { value } = e.target;
@@ -29,7 +47,6 @@ export default function Profession() {
   const resetQuestionsData = () => {
     setQuestionsData({
       question: "",
-      counts_remaind: "",
     });
   };
 
@@ -37,7 +54,7 @@ export default function Profession() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/questio",
+        "https://api.online-postupishka.ru/specialization/question",
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -69,6 +86,27 @@ export default function Profession() {
       console.error("Ошибка отправки ответа:", error);
     }
   };
+
+  const handleEndTest = async() => {
+    console.log('Ошибка')
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "https://api.online-postupishka.ru/specialization/result",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        }
+      );
+      getResults(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error("Ошибка получения результатов:", error);
+    }
+  }
+
+
 
   const renderResult = () => {
     return (
@@ -272,7 +310,7 @@ export default function Profession() {
       exit={{ opacity: 0 }}>
 
         <div className="mb-2 sm:mb-4">
-          <span className="font-medium  text-xl sm:text-base">Осталось вопросов: {questionsData.counts_remaind}</span>
+          <span className="font-medium  text-xl sm:text-base">Вопрос {counter} из 11</span>
         </div>
         
         <h2 className="text-2xl sm:text-xl font-medium mb-3 sm:mb-4">{questionsData.question}</h2>
@@ -292,10 +330,16 @@ export default function Profession() {
               resetQuestionsData();
               setAnswer({ answer: "" });
               nextQuestion();
+              setCounter(counter+1);
+              if (counter >= 11) {
+                setCounter(1);
+                console.log('Закончили');
+                handleEndTest();
+              }
             }}
             className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-md transform hover:-translate-y-0.5 transition duration-300 text-sm sm:text-base"
           >
-            Далее
+            { counter >= 11 ? 'Завершить' : 'Далее'}  
           </button>
         </div>
       </div>
@@ -303,7 +347,7 @@ export default function Profession() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen mx-24 p-4">
       {/* Метатеги для мобильных устройств */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       

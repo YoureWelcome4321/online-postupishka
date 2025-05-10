@@ -120,7 +120,7 @@ const HomePage = () => {
               Помощь с расписанием
             </Link>
             <button
-              onClick={() => setShowSpecialties(true)}
+              onClick={() => {setShowSpecialties(true),setShowProfile(false)}}
               className={`flex items-center py-2 w-full cursor-pointer ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} p-2 transition-all rounded-lg`}
             >
               < IoAccessibilityOutline className="mr-2 text-xl"  />
