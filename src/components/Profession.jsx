@@ -9,38 +9,46 @@ import UniversityCard from "./UniversityCard";
 export default function Profession() {
   const { isDarkMode } = useContext(ThemeContext);
   const [stage, setStage] = useState('welcome');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [progress, setProgress] = useState(0);
   const [questionsData, setQuestionsData] = useState({
     question: "",
     counts_remaind: 0
   });
   const [userAnswer, setAnswer] = useState({ answer: "" });
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([
+
+    {
+      "directions": [
+        "Инфа",
+        "Byaf",
+        "ddfdf",
+      ],
+      "features": [
+        "sdsdd",
+        "sdsds",
+        "fdfdf",
+      ],
+      "scores": {
+        "min": 23,
+        "bud": 123,
+        "avg": 300
+      },
+      "information": true,
+      "university": "Мой университет"
+    }
+  ]);
   const [loadingStatus, setLoadingStatus] = useState('idle');
+  const [pollingInterval, setPollingInterval] = useState(null);
 
   const handleAnswerChange = (e) => {
     const { value } = e.target;
     setAnswer((prev) => ({ ...prev, answer: value }));
   };
 
-  const nextQuestion = () => {
-    handleGetQuestion();
-  };
-
-  const resetQuestionsData = () => {
-    setQuestionsData({
-      question: "",
-      counts_remaind: 0
-    });
-  };
-
   const handleGetQuestion = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/question ",
+        "https://api.online-postupishka.ru/specialization/questio ",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuestionsData(response.data);
@@ -56,7 +64,7 @@ export default function Profession() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "https://api.online-postupishka.ru/specialization/answer ",
+        "https://api.online-postupishka.ru/specialization/answe ",
         userAnswer,
         {
           headers: {
@@ -70,42 +78,56 @@ export default function Profession() {
     }
   };
 
-  const handleEndTest = async () => {
-    setLoadingStatus('loading');
+  const checkResults = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/result ",
+        "https://api.online-postupishka.ru/specialization/resul ",
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       if (response.data.status === 'done') {
-        setResults(response.data);
-        console.log(response.data)
+        clearInterval(pollingInterval);
+        setResults(response.data.result);
         setLoadingStatus('success');
       }
     } catch (error) {
-      console.error("Ошибка получения результатов:", error);
-      setResults([{
-        information: false,
-        university: "Ошибка загрузки",
-        directions: ["Нет данных"],
-        features: ["Нет информации"],
-        scores: { avg: 0, bud: 0, min: 0 }
-      }]);
+      clearInterval(pollingInterval);
+      console.error("Ошибка опроса:", error);
       setLoadingStatus('error');
     }
   };
 
+  const handleEndTest = async () => {
+    setLoadingStatus('loading');
+    
+    const interval = setInterval(checkResults, 30000);
+    setPollingInterval(interval);
+    
+    await checkResults();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pollingInterval) clearInterval(pollingInterval);
+    };
+  }, [pollingInterval]);
+
   const renderResult = () => {
     return (
-      <div className="space-y-4 sm:space-y-6">
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-            Рекомендуемые вам ВУЗы
+      <div className={`min-h-screen
+          absolute sm:relative inset-0 
+          flex flex-col sm:my-0 sm:pt-0 my-16 pt-8 
+          px-4 sm:px-6 lg:px-8
+          transition-all duration-500 ease-in-out
+          ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"} space-y-8 sm:space-y-6`}>
+        <div className={`text-center  ${isDarkMode ? " text-white" : " text-gray-900"} space-y-4 sm:space-y-6`}>
+          <h2 className="text-2xl sm:text-3xl font-bold  mb-2">
+            Самые подходящие ВУЗы для вас:
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base">На основе ваших ответов</p>
+          <p className=" text-lg sm:text-base">На основе ваших ответов</p>
         </div>
-
+        
         {loadingStatus === 'loading' && (
           <div className="flex justify-center items-center h-40">
             <svg className="animate-spin h-8 w-8 text-blue-500" viewBox="0 0 24 24">
@@ -114,18 +136,18 @@ export default function Profession() {
             </svg>
           </div>
         )}
-
-        {loadingStatus === 'success' && results.length > 0 ? (
+        
+       {/*  {loadingStatus === 'success' && results.length > 0 ? ( */}
           <div className="space-y-4">
             {results.map((university, index) => (
               <UniversityCard key={index} results={university} />
             ))}
           </div>
-        ) : (
+        {/* ) : (
           <div className="text-center text-gray-500">
             Нет рекомендаций по вашему профилю
           </div>
-        )}
+        )}  */}
 
         {loadingStatus === 'error' && (
           <div className="text-center text-red-500">
@@ -145,8 +167,7 @@ export default function Profession() {
           flex flex-col sm:my-0 sm:pt-0 my-16 pt-12
           px-4 sm:px-6 lg:px-8
           transition-all duration-500 ease-in-out
-          ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}
-          ${stage === 'welcome' ? "opacity-100" : "opacity-0"}
+          ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"}
         `}
       >
         <motion.div 
@@ -173,7 +194,7 @@ export default function Profession() {
             </motion.div>
           </div>
         </motion.div>
-
+  
         <motion.h1 
           className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center mb-4 sm:mb-6 px-2"
           initial={{ y: 20, opacity: 0 }}
@@ -182,7 +203,7 @@ export default function Profession() {
         >
           Профориентационный тест
         </motion.h1>
-
+  
         <motion.div 
           className={`
             ${isDarkMode ? "bg-gray-800" : "bg-white"} 
@@ -199,7 +220,7 @@ export default function Profession() {
             <p className={`mb-6 text-sm sm:text-base leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
               Этот тест поможет вам лучше понять свои профессиональные склонности и интересы.
             </p>
-
+  
             <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
               <motion.div 
                 className={`
@@ -214,7 +235,7 @@ export default function Profession() {
                 </div>
                 <p className="text-xs text-center px-1">Определите свои сильные стороны</p>
               </motion.div>
-
+  
               <motion.div 
                 className={`
                   ${isDarkMode ? "bg-green-900/30" : "bg-green-50"} 
@@ -228,7 +249,7 @@ export default function Profession() {
                 </div>
                 <p className="text-xs text-center px-1">Оцените свои потенциальные возможности</p>
               </motion.div>
-
+  
               <motion.div 
                 className={`
                   ${isDarkMode ? "bg-purple-900/30" : "bg-purple-50"} 
@@ -243,7 +264,7 @@ export default function Profession() {
                 <p className="text-xs text-center px-1">Выберите подходящую профессиональную траекторию</p>
               </motion.div>
             </div>
-
+  
             <motion.button 
               onClick={() => {setStage('test'); handleGetQuestion();}}
               className={`
@@ -263,7 +284,7 @@ export default function Profession() {
             </motion.button>
           </div>
         </motion.div>
-
+  
         <motion.div 
           className="hidden sm:block mt-8 text-center text-xs text-gray-500"
           initial={{ opacity: 0 }}
@@ -275,6 +296,7 @@ export default function Profession() {
       </div>
     );
   };
+  
 
   const renderTest = () => {
     return (
@@ -301,15 +323,15 @@ export default function Profession() {
           placeholder="Введите ваш ответ здесь..."
           rows={4}
         />
-        
         <div className="flex justify-between mt-4 sm:mt-8">
           <motion.button 
-            onClick={() => {
-              handleSendAnswer();
-              resetQuestionsData();
+            onClick={async () => {
+              await handleSendAnswer();
               setAnswer({ answer: "" });
-              nextQuestion();
-              if (questionsData.counts_remaind <= 1) {
+              
+              if (questionsData.counts_remaind > 1) {
+                handleGetQuestion();
+              } else {
                 handleEndTest();
                 setStage('result');
               }
@@ -329,10 +351,10 @@ export default function Profession() {
     <div className="min-h-screen mx-auto p-4">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
-        <div className={`bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100 ${
-          isDarkMode ? "dark:bg-gray-800 dark:text-white" : ""
+        <div className={` rounded-2xl overflow-hidden  ${
+          isDarkMode ? "bg-[#141414]" : "bg-white"
         }`}>
-          <div className="p-4 sm:p-6">
+          <div className={`p-4 sm:p-6  `}>
             {stage === 'welcome' && renderWelcome()}
             {stage === 'test' && renderTest()}
             {stage === 'result' && renderResult()}
