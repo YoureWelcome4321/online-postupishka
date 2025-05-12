@@ -192,7 +192,7 @@ const UniversityCard = () => {
                       >
                         <div className="text-[10px] uppercase tracking-wider font-medium">
                           {key === 'min' && 'Мин. балл'}
-                          {key === 'avg' && 'Ср. балл поступивших'}
+                          {key === 'avg' && 'Ср. балл'}
                           {key === 'bud' && 'Бюджет'}
                         </div>
                         <div className="text-xl font-bold mt-1">

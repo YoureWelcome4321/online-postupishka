@@ -92,7 +92,7 @@ const HomePage = () => {
 
           <nav className="my-8 min-h-1.5 space-y-4  max-sm:hidden">
             <button
-              onClick={() => setShowProfile(true)}
+              onClick={() => {setShowProfile(true);setShowSpecialties(false)}}
               className={`flex items-center py-2 w-full cursor-pointer ${isDarkMode ? 'hover:bg-gray-100 dark:hover:bg-[#6e7bf2] ' :'hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]'} p-2 transition-all rounded-lg`}
             >
               <HiOutlineUserCircle className="mr-2 text-xl" />
@@ -163,7 +163,7 @@ const HomePage = () => {
               <span className="text-xs mt-1">Профориентация</span>
             </button>
             <button
-              onClick={() => setShowProfile(true)}
+              onClick={() => {setShowProfile(true);setShowSpecialties(false)}}
               className={`flex flex-col items-center  ${isDarkMode?"text-white" : "text-[#363e45]"} hover:text-blue-500`}
             >
               <HiOutlineUserCircle size={24} />
