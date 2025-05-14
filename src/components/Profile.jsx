@@ -164,7 +164,7 @@ export default function Profile({ onClose = () => {} }) {
 
   return (
     <motion.div
-      className={`absolute mt-18 inset-0 sm:relative sm:mx-auto sm:my-8 sm:w-[50%] sm:rounded-xl transition-all duration-300 ${
+      className={`absolute mt-18 inset-0 sm:relative sm:mx-auto sm:my-4 sm:w-[50%] sm:rounded-2xl transition-all duration-300 ${
         isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
       }`}
       initial={{ opacity: 0 }}

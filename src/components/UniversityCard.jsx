@@ -40,14 +40,13 @@ const UniversityCard = () => {
   ])
   const [selectedUniversities, setSelectedUniversities] = useState([]);
 
-  // Обновление при изменении слайда/направления
+
   useEffect(() => {
     if (results.length > 0) {
       updateSelectedUniversity();
     }
   }, [currentSlide, selectedDirection, results]);
 
-  // Обновление состояния выбранного университета
   const updateSelectedUniversity = () => {
     const university = results[currentSlide];
     const direction = university.directions[selectedDirection];
@@ -67,13 +66,13 @@ const UniversityCard = () => {
   };
 
   // Отправка данных на сервер
-  const handleSendUniversity = async (data) => {
+  const handleSendUniversity = async () => {
     try {
       setIsSubmitting(true);
       const token = localStorage.getItem("token");
       await axios.post(
-        "https://api.online-postupishka.ru/university/add ",
-        data,
+        "https://api.online-postupishka.ru/university/add",
+        selectedUniversity,
         { 
           headers: { 
             Authorization: `Bearer ${token}`,
@@ -81,6 +80,8 @@ const UniversityCard = () => {
           } 
         }
       );
+      /* console.log(selectedUniversity)
+      console.log('Все ок') */
     } catch (error) {
       console.error("Ошибка отправки данных:", error);
       alert("Не удалось сохранить направление. Попробуйте позже.");
