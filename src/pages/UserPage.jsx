@@ -13,6 +13,7 @@ import HeaderNoButton from "../components/HeaderNoButtons";
 import Header from "../components/Header";
 import Profile from "../components/Profile";
 import Profession from "../components/Profession";
+import { Welcome } from "../components/ProfessionComponents/WelcomeProfession";
 
 const HomePage = () => {
   const [showProfile, setShowProfile] = useState(false);

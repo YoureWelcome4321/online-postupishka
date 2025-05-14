@@ -4,14 +4,14 @@ import { useContext } from "react";
 import { ThemeContext } from "../../ThemeContext"; 
 import UniversityCard from "../UniversityCard";
 
-export const Result = ({ results, loadingStatus, onClose }) => {
+export const Result = ({ results, loadingStatus,  onClose = () => {}  }) => {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
     <div
       className={`
-          min-h-screen absolute sm:relative inset-0 
-          flex flex-col sm:my-0 sm:pt-0 my-16 pt-4 
+          min-h-screen  absolute sm:relative inset-0 
+          flex flex-col sm:my-0 sm:pt-0 my-18 pt-4 
           px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out
           ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"}
           space-y-8 sm:space-y-6
@@ -19,7 +19,7 @@ export const Result = ({ results, loadingStatus, onClose }) => {
     >
       {/* Кнопка закрытия */}
       <motion.button
-        className="p-2 self-end mb-0 rounded-full transition-colors"
+        className="p-2 self-end my-3 rounded-full transition-colors"
         onClick={onClose}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -40,12 +40,10 @@ export const Result = ({ results, loadingStatus, onClose }) => {
         </svg>
       </motion.button>
 
-      {/* Заголовок */}
-      <div className="text-center space-y-4 sm:space-y-2 mb-8">
+      <div className="text-center  sm:space-y-2 mb-4">
         <h2 className="text-2xl sm:text-3xl font-bold mb-2">
           Самые подходящие ВУЗы для вас:
         </h2>
-        <p className="text-lg sm:text-base">На основе ваших ответов</p>
       </div>
 
       {/* Состояние загрузки */}

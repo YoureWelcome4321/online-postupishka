@@ -4,15 +4,18 @@ import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
 import { Result } from "./ProfessionComponents/ResultProfession";
 import { Welcome } from "./ProfessionComponents/WelcomeProfession";
+import HomePage from "../pages/UserPage";
 
-export default function Profession({ onClose = () => {} }) {
+export default function Profession({onClose = () => {}} ) {
   const { isDarkMode } = useContext(ThemeContext);
-  const [stage, setStage] = useState("welcome");
   const [questionsData, setQuestionsData] = useState({
     question: "",
     counts_remaind: 0,
   });
+
+  const [showWelcome, setShowWelcome] = useState(true);
   const [userAnswer, setAnswer] = useState({ answer: "" });
+  const [stage, setStage] = useState("welcome");
   const [results, setResults] = useState([
     {
       directions: ["Инфа", "Byaf", "ddfdf"],
@@ -49,6 +52,7 @@ export default function Profession({ onClose = () => {} }) {
       }
     }
   };
+
 
   const handleSendAnswer = async () => {
     try {
@@ -108,24 +112,29 @@ export default function Profession({ onClose = () => {} }) {
     <Result
       results={results}
       loadingStatus={loadingStatus}
-      onClose={() => setStage('welcome')}
+      onClose={onClose}
     />
   );
 };
 
-  const renderWelcome = () => {
-    return (
-      <Welcome
-      setStage={setStage} 
-      handleGetQuestion={handleGetQuestion}
-      />
+
+
+const renderWelcome = () => {
+  return (
+    showWelcome && (
+      <Welcome 
+        setStage={setStage} 
+        handleGetQuestion={handleGetQuestion} 
+        onClose={onClose}
+      />   
     )
-  };
+  );
+};
 
   const renderTest = () => {
     return (
       <motion.div
-        className={`min-h-screen absolute sm:pt-0 sm:my-0 my-16 px-8 pt-8 inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
+        className={`min-h-screen absolute sm:pt-0 sm:my-0 my-18 px-8 pt-8 inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
           isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
         }`}
         initial={{ opacity: 0 }}
@@ -196,16 +205,17 @@ export default function Profession({ onClose = () => {} }) {
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
-      <div className=" max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-32">
+      <div className="min-h-screen max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl ">
         <div
           className={` rounded-2xl overflow-hidden  ${
             isDarkMode ? "bg-[#141414]" : "bg-white"
           }`}
         >
-          <div className={`p-4 sm:p-6  `}>
+          <div className={` w-full p-4 sm:p-6  `}>
             {stage === "welcome" && renderWelcome()}
             {stage === "test" && renderTest()}
             {stage === "result" && renderResult()}
+            {stage === "main" && renderMain()}
           </div>
         </div>
       </div>

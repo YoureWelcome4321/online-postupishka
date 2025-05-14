@@ -3,7 +3,6 @@ import {motion } from "framer-motion";
 import {useState, useContext } from "react";
 import { ThemeContext } from "../../ThemeContext";
 import { FaGraduationCap, FaRegLightbulb, FaChartLine } from "react-icons/fa";
-import axios from "axios";
 
 export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => {
     const { isDarkMode } = useContext(ThemeContext);
@@ -13,16 +12,16 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
     return (
       <div
         className={`
-          min-h-screen
+          min-h-screen 
           absolute sm:relative inset-0 
-          flex flex-col sm:my-0 sm:pt-0 my-16 pt-12
+          flex flex-col sm:my-0 sm:pt-0 my-18 pt-8
           px-4 sm:px-6 lg:px-8
           transition-all duration-500 ease-in-out
           ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"}
         `}
       >
         <motion.button
-          className="p-2 rounded-full  transition-colors"
+          className="p-2 rounded-full mt-0 transition-colors"
           onClick={onClose}
         >
           <svg
