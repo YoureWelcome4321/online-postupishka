@@ -121,7 +121,7 @@ const UniversityCard = () => {
     `}>
       <div className="flex items-center">
       <div className={`
-         px-3 py-1 rounded-full ml-3 w-[22%] text-center text-xs flex items-center
+         px-3 py-1 rounded-full ml-3 w-[22%] text-center justify-center text-xs flex items-center
         ${isDarkMode ? 'bg-[#3d37f0]' : 'bg-blue-600'}
         text-white z-10
       `}>
