@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../ThemeContext";
 import axios from "axios";
 
 const UniversityCard = () => {

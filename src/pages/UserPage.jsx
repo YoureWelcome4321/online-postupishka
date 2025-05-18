@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -18,6 +18,7 @@ import { ThemeContext } from "../ThemeContext";
 import HeaderNoButton from "../components/HeaderNoButtons";
 import Profile from "../components/Profile";
 import Profession from "../components/Profession";
+import Schedule  from "../components/Schedule";
 
 const HomePage = () => {
   const [materials] = useState([
@@ -37,6 +38,7 @@ const HomePage = () => {
 
   const [showProfile, setShowProfile] = useState(false);
   const [showSpecialties, setShowSpecialties] = useState(false);
+  const [showSchedule , setShowSchedule] = useState(false)
   const { isDarkMode } = useContext(ThemeContext);
   const [showAlert, setAlert] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -154,6 +156,7 @@ const HomePage = () => {
               onClick={() => {
                 setShowProfile(true);
                 setShowSpecialties(false);
+                setShowSchedule(false)
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -186,20 +189,22 @@ const HomePage = () => {
               <MdOutlinePsychologyAlt className="mr-2 text-xl" />
               Психолог
             </Link>
-            <Link
-              to="/schedule"
-              className={`flex items-center py-2 p-2 ${
+            <button
+              onClick={() => {
+                setShowSpecialties(false), setShowProfile(false),setShowSchedule(true)
+              }}
+              className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
                   ? "hover:bg-gray-100 dark:hover:bg-[#6e7bf2] "
                   : "hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]"
-              } transition-all rounded-lg`}
+              } p-2 transition-all rounded-lg`}
             >
               <FaTasks className="mr-2 text-xl" />
               Помощь с расписанием
-            </Link>
+            </button>
             <button
               onClick={() => {
-                setShowSpecialties(true), setShowProfile(false);
+                setShowSpecialties(true), setShowProfile(false) , setShowSchedule(false);
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -320,6 +325,7 @@ const HomePage = () => {
                       onClick={() => {
                         setShowSpecialties(true);
                         setShowProfile(false);
+                        setShowSchedule(false)
                       }}
                       className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                         isDarkMode
@@ -392,17 +398,17 @@ const HomePage = () => {
               <CgGym size={24} />
               <span className="text-xs mt-1">Тренажёры</span>
             </Link>
-            <Link
-              to="/schedule"
+            <button
+              onClick={() => {setShowSchedule(true),setShowProfile(false),setShowSpecialties(false)}}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
               } hover:text-blue-500`}
             >
               <FaTasks size={24} />
               <span className="text-xs mt-1">Расписание</span>
-            </Link>
+            </button>
             <button
-              onClick={() => setShowSpecialties(true)}
+              onClick={() => {setShowSpecialties(true),setShowProfile(false),setShowSchedule(false)}}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
               } hover:text-blue-500`}
@@ -414,6 +420,7 @@ const HomePage = () => {
               onClick={() => {
                 setShowProfile(true);
                 setShowSpecialties(false);
+                setShowSchedule(false)
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -434,10 +441,11 @@ const HomePage = () => {
             }}
           />
         )}
+        {showSchedule && <Schedule onClose={() => setShowSchedule(false)}/>}
       </div>
 
       {/*Блок Цели */}
-      {!showProfile && !showSpecialties && (
+      {!showProfile && !showSpecialties && !showSchedule && (
         <>
           <motion.div
             className="pb-18 sm:hidden"

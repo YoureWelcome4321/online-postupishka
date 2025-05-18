@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useContext } from "react";
 import { ThemeContext } from "../../ThemeContext"; 
-import UniversityCard from "../UniversityCard";
+import UniversityCard from "./UniversityCard";
 
 export const Result = ({ results, loadingStatus,  onClose = () => {}  }) => {
   const { isDarkMode } = useContext(ThemeContext);

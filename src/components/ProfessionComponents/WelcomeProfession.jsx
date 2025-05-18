@@ -81,7 +81,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
       className={`
         min-h-screen 
         absolute sm:relative inset-0 
-        flex flex-col sm:my-0 sm:pt-0 my-18 pt-8
+        flex flex-col sm:my-0 sm:pt-0 my-18 pt-4
         px-4 sm:px-6 lg:px-8
         transition-all duration-500 ease-in-out
         ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"}
