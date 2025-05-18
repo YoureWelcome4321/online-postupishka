@@ -1,6 +1,7 @@
 import React, { useState ,useContext} from "react";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
+import { useSwipeable } from "react-swipeable";
 
 const Schedule = ({onClose = () => {}}) => {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0); 
@@ -77,12 +78,27 @@ const Schedule = ({onClose = () => {}}) => {
     }
   ];
 
+  const handleNextDay = () => {
+    setSelectedDayIndex((prev) => (prev + 1) % 7);
+  };
+
+  const handlePrevDay = () => {
+    setSelectedDayIndex((prev) => (prev - 1 + 7) % 7);
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNextDay,
+    onSwipedRight: handlePrevDay,
+    trackMouse: true,
+  });
+
   const daysOfWeek = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
 
   const currentWeek = allSchedule[0]; 
 
   return (
     <motion.div
+      {...swipeHandlers}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
