@@ -164,16 +164,16 @@ export default function Profile({ onClose = () => {} }) {
 
   return (
     <motion.div
-      className={`absolute mt-18 inset-0 sm:relative sm:mx-auto sm:my-4 sm:w-[50%] sm:rounded-2xl transition-all duration-300 ${
+      className={`absolute mt-18 inset-0 sm:relative sm:mx-auto sm:my-4 sm:w-[50%] sm:rounded-2xl transition-all  ${
         isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
       }`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
     >
       <div className="p-4 sm:p-6 flex justify-between items-center ">
         <h1
-          className={`text-xl sm:text-2xl font-bold ${
+          className={`text-2xl sm:text-2xl font-bold ${
             isDarkMode ? " text-[#fff]" : "text-[#363e45]"
           }`}
         >

@@ -16,19 +16,7 @@ export default function Profession({onClose = () => {}} ) {
   const [showWelcome, setShowWelcome] = useState(true);
   const [userAnswer, setAnswer] = useState({ answer: "" });
   const [stage, setStage] = useState("welcome");
-  const [results, setResults] = useState([
-    {
-      directions: ["Инфа", "Byaf", "ddfdf"],
-      features: ["sdsdd", "sdsds", "fdfdf"],
-      scores: {
-        min: 23,
-        bud: 123,
-        avg: 300,
-      },
-      information: true,
-      university: "Мой университет",
-    },
-  ]);
+  const [results, setResults] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState("idle");
   const [pollingInterval, setPollingInterval] = useState(null);
 
@@ -137,9 +125,9 @@ const renderWelcome = () => {
         className={`min-h-screen absolute sm:pt-0 sm:my-0 my-18 px-8 pt-8 inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
           isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
         }`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
         <motion.button
           className="p-2 rounded-full  transition-colors"

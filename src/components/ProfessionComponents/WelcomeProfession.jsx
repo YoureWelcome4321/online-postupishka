@@ -9,16 +9,14 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
   const [isTimerComplete, setIsTimerComplete] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
 
-  // Константы для работы таймера
+
   const TIMER_KEY = "testTimerStart";
-  const TIMER_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней в миллисекундах
+  const TIMER_DURATION = 7 * 24 * 60 * 60 * 1000; 
 
   useEffect(() => {
-    // Проверяем сохраненное время старта
     const savedStartTime = localStorage.getItem(TIMER_KEY);
     
     if (!savedStartTime) {
-      // Первый запуск - показываем кнопку без таймера
       setIsTimerComplete(true);
       return;
     }
@@ -28,10 +26,8 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
     const timeElapsed = now - startTime;
 
     if (timeElapsed >= TIMER_DURATION) {
-      // Таймер завершен - активируем кнопку
       setIsTimerComplete(true);
     } else {
-      // Таймер активен - запускаем обратный отсчет
       const endTime = startTime + TIMER_DURATION;
       setRemainingTime(endTime - now);
       setShowTimer(true);
@@ -61,7 +57,6 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
   };
 
   const handleTestStart = () => {
-    // Сохраняем время начала таймера при запуске теста
     const now = Date.now();
     localStorage.setItem(TIMER_KEY, now);
     
@@ -108,10 +103,10 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
       </motion.button>
       
       <motion.div
-        className="flex justify-center mb-6 sm:mb-8"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
+        className="flex justify-center mb-6 sm:mb-8 rounded-xl"
+        initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       >
         <div className="relative group">
           <motion.div
@@ -151,7 +146,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
         `}
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.6, duration: 1 }}
+        transition={{ duration: 1 }}
       >
         <div className="p-4 sm:p-6">
           <p
