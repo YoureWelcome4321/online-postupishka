@@ -15,7 +15,7 @@ const Psychologist = () => {
         text: "У тебя есть проблема, поговорим об этом, вас встречает лига опасного интернета",
         sender: "bot",
         quickReplies: [
-          "Стресс перед экзаменом",
+          "Стресс",
           "Проблемы в школе",
           "Нехватка времени",
           "Выгорание",
@@ -110,7 +110,7 @@ const Psychologist = () => {
                       <button
                         key={index}
                         onClick={() => handleQuickReply(reply)}
-                        className={`${isDarkMode ? 'bg-[#615fff]' : 'bg-[#155dfc]'} text-white px-3 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
+                        className={`${isDarkMode ? 'bg-[#615fff]' : 'bg-[#155dfc]'} text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
                       >
                         {reply}
                       </button>

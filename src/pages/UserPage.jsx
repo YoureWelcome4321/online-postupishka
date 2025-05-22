@@ -189,7 +189,7 @@ const HomePage = () => {
                 setShowSpecialties(false);
                 setShowSchedule(false);
               }}
-              className={`flex items-center py-2 p-2 ${
+              className={`flex items-center w-full py-2 p-2 ${
                 isDarkMode
                   ? "hover:bg-gray-100 dark:hover:bg-[#6e7bf2] "
                   : "hover:bg-gray-100 dark:hover:bg-[#dbeafe]  hover:text-[#193cb8]"
