@@ -171,6 +171,7 @@ const HomePage = () => {
                 setShowProfile(true);
                 setShowSpecialties(false);
                 setShowSchedule(false);
+                setShowPsychologist(false)
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -200,8 +201,9 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowSpecialties(true),
-                  setShowProfile(false),
-                  setShowSchedule(false);
+                setShowProfile(false),
+                setShowSchedule(false);
+                setShowPsychologist(false)
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -225,7 +227,7 @@ const HomePage = () => {
             </Link>
           </nav>
         </motion.div>
-        {!showProfile && !showSpecialties && (
+        {!showProfile && !showSpecialties && !showPsychologist &&  (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -339,11 +341,12 @@ const HomePage = () => {
                           setShowSpecialties(true);
                           setShowProfile(false);
                           setShowSchedule(false);
+                          setShowPsychologist(false)
                         }}
                         className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                           isDarkMode
                             ? "bg-[#3d37f0] text-white"
-                            : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                            : "bg-[#1556f5] text-white"
                         } transition-colors`}
                       >
                         <span>Добавить цель (Пройти тест)</span>
@@ -404,8 +407,8 @@ const HomePage = () => {
               onClick={() => {
                 setShowPsychologist(true),
                 setShowSchedule(false),
-                  setShowProfile(false),
-                  setShowSpecialties(false);
+                setShowProfile(false),
+                setShowSpecialties(false);
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -417,8 +420,9 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowSchedule(true),
-                  setShowProfile(false),
-                  setShowSpecialties(false);
+                setShowProfile(false),
+                setShowSpecialties(false);
+                setShowPsychologist(false)
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -430,8 +434,9 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowSpecialties(true),
-                  setShowProfile(false),
-                  setShowSchedule(false);
+                setShowProfile(false),
+                setShowSchedule(false);
+                setShowPsychologist(false)
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -445,6 +450,7 @@ const HomePage = () => {
                 setShowProfile(true);
                 setShowSpecialties(false);
                 setShowSchedule(false);
+                setShowPsychologist(false);
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -456,12 +462,12 @@ const HomePage = () => {
           </div>
         </nav>
 
-        {showProfile && <Profile onClose={() => {setShowProfile(false) ;setShowSchedule(true)} }/>}
+        {showProfile && <Profile onClose={() => {setShowProfile(false)} }/>}
         {showSpecialties && (
           <Profession
             onClose={() => {
               setShowSpecialties(false);
-              setShowSchedule(true);
+              setShowPsychologist(false)
               getUniversities();
             }}
           />
@@ -471,7 +477,7 @@ const HomePage = () => {
       </div>
 
       {/*Блок Цели */}
-      {!showProfile && !showSpecialties && !showSchedule && (
+      {!showProfile && !showSpecialties && !showSchedule && !showPsychologist && (
         <>
           <motion.div
             className="pb-18 sm:hidden"
