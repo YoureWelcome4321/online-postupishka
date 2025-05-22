@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
+import { IoIosSend } from "react-icons/io";
 import {motion} from "framer-motion"
 
-const Psychologist = () => {
+const Psychologist = ({ onClose = () => {} }) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const { isDarkMode } = useContext(ThemeContext);
@@ -67,17 +68,38 @@ const Psychologist = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`absolute ${
-        isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6]"
-      } mt-18 inset-0 sm:relative my-18 w-full max-w-2xl  mx-auto  sm:p-6`}
+      className={`absolute  ${
+        isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6] sm:bg-[#fff]"
+      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative  w-full max-w-2xl  mx-auto  sm:p-6`}
     >
-      <div className="   rounded-xl shadow-lg overflow-hidden">
+      <div className="rounded-xl  overflow-hidden">
         <div
-          className={`${
+          className={`flex ${
             isDarkMode ? " bg-[#141414]" : "bg-[#f6f6f6]"
           } px-6 py-4`}
         >
           <h2 className="text-2xl  font-semibold">Ваш психолог:</h2>
+          <motion.button
+            className="p-2 ml-auto rounded-full transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onClose}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 sm:h-6 sm:w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke={isDarkMode ? "#e2e8f0" : "#334155"}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </motion.button>
         </div>
 
         {/* Chat box */}
@@ -88,7 +110,7 @@ const Psychologist = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`my-4 ${
+              className={`mb-4 ${
                 msg.sender === "user"
                   ? "flex justify-end"
                   : "flex justify-start"
@@ -121,11 +143,11 @@ const Psychologist = () => {
             </div>
           ))}
         </div>
-
+        <div className="mb-18">
         <div
           className={`p-4 ${
-            isDarkMode ? " bg-[#222222]" : "bg-[#fff]"
-          } border-t border-gray-200`}
+            isDarkMode ? " bg-[#222222] text-[#fff]" : "bg-[#fff] text-[#363e45]"
+          } `}
         >
           <div className="flex items-center gap-2">
             <input
@@ -138,23 +160,11 @@ const Psychologist = () => {
               onClick={handleSendMessage}
               className={`${isDarkMode ? 'bg-[#615fff]' : 'bg-[#155dfc]'} text-white p-3 rounded-full transition-colors`}
             >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22 2L11 13M22 2l-7 21-4-9-9-4 21-7z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <IoIosSend className="text-3xl"/>
             </button>
           </div>
         </div>
+      </div>
       </div>
     </motion.div>
   );
