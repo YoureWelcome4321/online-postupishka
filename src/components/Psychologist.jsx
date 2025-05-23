@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
 import { IoIosSend } from "react-icons/io";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion";
 
 const Psychologist = ({ onClose = () => {} }) => {
   const [input, setInput] = useState("");
@@ -69,15 +69,17 @@ const Psychologist = ({ onClose = () => {} }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className={`absolute  ${
-        isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6] sm:bg-[#fff]"
-      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative  w-full max-w-2xl  mx-auto  sm:p-6`}
+        isDarkMode
+          ? "text-white bg-[#141414]"
+          : "text-[#41384b] bg-[#f6f6f6] sm:bg-[#fff]"
+      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative   w-full max-w-2xl  mx-auto  sm:p-6`}
     >
-      <div className="rounded-xl  overflow-hidden">
-        <div
-          className={`flex ${
-            isDarkMode ? " bg-[#141414]" : "bg-[#f6f6f6]"
-          } px-6 py-4`}
-        >
+      <div
+        className={`rounded-xl ${
+          isDarkMode ? " bg-[#141414]" : "bg-[#f6f6f6]"
+        } overflow-hidden`}
+      >
+        <div className={`flex px-6 py-4`}>
           <h2 className="text-2xl  font-semibold">Ваш психолог:</h2>
           <motion.button
             className="p-2 ml-auto rounded-full transition-colors"
@@ -103,10 +105,7 @@ const Psychologist = ({ onClose = () => {} }) => {
         </div>
 
         {/* Chat box */}
-        <div
-          ref={chatBoxRef}
-          className="  min-h-[67vh] px-4 pb-4 overflow-y-auto"
-        >
+        <div ref={chatBoxRef} className="min-h-[57vh] px-4 pb-4 overflow-y-auto">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -119,7 +118,9 @@ const Psychologist = ({ onClose = () => {} }) => {
               <div
                 className={` rounded-xl ${
                   msg.sender === "user"
-                    ? isDarkMode ? "bg-[#615fff] " : "bg-[#155dfc] text-white"
+                    ? isDarkMode
+                      ? "bg-[#615fff] "
+                      : "bg-[#155dfc] text-white"
                     : isDarkMode
                     ? "bg-[#222222] shadow-sm rounded-xl"
                     : "bg-white shadow-sm rounded-xl "
@@ -132,7 +133,9 @@ const Psychologist = ({ onClose = () => {} }) => {
                       <button
                         key={index}
                         onClick={() => handleQuickReply(reply)}
-                        className={`${isDarkMode ? 'bg-[#615fff]' : 'bg-[#155dfc]'} text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
+                        className={`${
+                          isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
+                        } text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
                       >
                         {reply}
                       </button>
@@ -143,28 +146,32 @@ const Psychologist = ({ onClose = () => {} }) => {
             </div>
           ))}
         </div>
-        <div className="mb-18">
-        <div
-          className={`p-4 ${
-            isDarkMode ? " bg-[#222222] text-[#fff]" : "bg-[#fff] text-[#363e45]"
-          } `}
-        >
-          <div className="flex items-center gap-2">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Введите ваше сообщение..."
-              className="flex-1 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              onClick={handleSendMessage}
-              className={`${isDarkMode ? 'bg-[#615fff]' : 'bg-[#155dfc]'} text-white p-3 rounded-full transition-colors`}
-            >
-              <IoIosSend className="text-3xl"/>
-            </button>
+        <div className="mb-18 ">
+          <div
+            className={`p-4 ${
+              isDarkMode
+                ? " bg-[#222222] text-[#fff]"
+                : "bg-[#fff] text-[#363e45]"
+            } `}
+          >
+            <div className="flex items-center gap-2 ">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Введите ваше сообщение..."
+                className="flex-1 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                onClick={handleSendMessage}
+                className={`${
+                  isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
+                } text-white p-3 rounded-full transition-colors`}
+              >
+                <IoIosSend className="text-3xl" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </motion.div>
   );
