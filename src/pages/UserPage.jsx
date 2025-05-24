@@ -96,10 +96,11 @@ const HomePage = () => {
   useEffect(() => {
     getUser();
     getUniversities();
+
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1025) {
         setShowSchedule(true);
-      } else {
+      }else{
         setShowSchedule(false);
       }
     };
@@ -121,14 +122,14 @@ const HomePage = () => {
       <HeaderNoButton />
       {showAlert && <AreYouSure onClose={() => setAlert(false)} />}
       <div
-        className={`flex ${
+        className={`flex  ${
           isDarkMode
             ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a]"
             : "bg-[#f6f6f6]"
         }`}
       >
         <motion.div
-          className="max-w-full sm:w-[35%] max-md:w-full p-6 bg-[#f6f6f6]"
+          className="  max-[1025px]:w-full p-6 bg-[#f6f6f6]"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -165,7 +166,7 @@ const HomePage = () => {
             </div>
           </header>
 
-          <nav className="my-8 min-h-1.5 space-y-4  max-sm:hidden">
+          <nav className="my-8 min-h-1.5 space-y-4  max-[1025px]:hidden">
             <button
               onClick={() => {
                 setShowProfile(true);
@@ -232,10 +233,10 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-[50%] mx-6 p-6  hidden sm:flex "
+            className="w-[50%] mx-6 p-6  max-[1026px]:hidden min-[1027px]:flex "
           >
             <div
-              className={`rounded-xl sm:block  p-6 ${
+              className={`rounded-xl  sm:block  p-6 ${
                 isDarkMode ? "bg-[#141414]" : "bg-white"
               }`}
             >
@@ -355,6 +356,62 @@ const HomePage = () => {
                   )}
                 </div>
 
+                <div className="grid gap-1">
+                  <h2
+                    className={`text-2xl font-semibold mb-3 ${
+                      isDarkMode ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Ваши баллы:
+                  </h2>
+                  {profileData.subjects.map((subj) => {
+                    return (
+                      <div
+                        key={subj.subject}
+                        className={`p-4 rounded-xl shadow-md ${
+                          isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <p className="font-medium text-lg">{subj.subject}</p>
+                          <svg
+                            className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500 dark:text-blue-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                        <div className="">
+                          <div className="flex justify-center sm:justify-start space-x-4 mt-3 ">
+                            <h3>Текущий балл: {subj.current_score}</h3>
+
+                            <h3>Желаемый балл: {subj.desired_score}</h3>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <button
+                    onClick={() => {
+                      setShowProfile(true);
+                      setShowSchedule(false)
+                    }}
+                    className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
+                      isDarkMode
+                        ? "bg-[#3d37f0] "
+                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                    } p-2 transition-all rounded-lg`}
+                  >
+                    Добавить/изменить предметы
+                  </button>
+                </div>
                 {/* Полезные материалы */}
                 <div>
                   <h2
@@ -389,15 +446,6 @@ const HomePage = () => {
                     ))}
                   </div>
                 </div>
-                <div>
-                  <h2
-                    className={`text-2xl font-semibold mb-4 ${
-                      isDarkMode ? "text-white" : "text-gray-800"
-                    }`}
-                  >
-                    Ваши баллы:
-                  </h2>
-                </div>
               </div>
             </div>
           </motion.div>
@@ -405,7 +453,7 @@ const HomePage = () => {
 
         {/* Мобильное меню */}
         <nav
-          className={`fixed bottom-0 left-0 w-full  z-100 shadow-lg sm:hidden ${
+          className={`fixed bottom-0 left-0 w-full  z-100 shadow-lg  min-[1025px]:hidden ${
             isDarkMode
               ? "bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] "
               : "bg-[#fff] "
@@ -475,6 +523,9 @@ const HomePage = () => {
           <Profile
             onClose={() => {
               setShowProfile(false);
+              if (window.innerWidth >= 1025) {
+                setShowSchedule(true);
+              }
             }}
           />
         )}
@@ -483,13 +534,32 @@ const HomePage = () => {
             onClose={() => {
               setShowSpecialties(false);
               setShowPsychologist(false);
+              if (window.innerWidth >= 1025) {
+                setShowSchedule(true);
+              }
               getUniversities();
             }}
           />
         )}
-        {showSchedule && <Schedule onClose={() => setShowSchedule(false)} />}
+        {showSchedule && (
+          <Schedule
+            onClose={() => {
+              setShowSchedule(false);
+              if (window.innerWidth >= 1025) {
+                setShowSchedule(true);
+              }
+            }}
+          />
+        )}
         {showPsychologist && (
-          <Psychologist onClose={() => setShowPsychologist(false)} />
+          <Psychologist
+            onClose={() => {
+              setShowPsychologist(false);
+              if (window.innerWidth >= 1025) {
+                setShowSchedule(true);
+              }
+            }}
+          />
         )}
       </div>
 
@@ -500,7 +570,7 @@ const HomePage = () => {
         !showPsychologist && (
           <>
             <motion.div
-              className="pb-18 sm:hidden"
+              className="pb-18 "
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -513,7 +583,7 @@ const HomePage = () => {
                 Цели:
               </h2>
               {universities.length > 0 && !showProfile && !showSpecialties ? (
-                <div className="mt-6 sm:hidden">
+                <div className="mt-6 ">
                   <ul className="space-y-3  w-[90%] mx-5">
                     {universities
                       .slice(0, showAllUniversities ? universities.length : 2)
@@ -609,12 +679,12 @@ const HomePage = () => {
                   </ul>
                 </div>
               ) : (
-                <div className="sm:hidden">
+                <div className=" flex justify-center min-[1025px]:hidden">
                   <button
                     onClick={() => {
                       setShowSpecialties(true), setShowProfile(false);
                     }}
-                    className={`flex items-center mx-6 text-center w-[87%] py-2 justify-center cursor-pointer ${
+                    className={`flex items-center mx-6 text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
                         ? "bg-[#3d37f0] "
                         : "bg-[#155dfc] text-white hover:text-[#193cb8]"
@@ -624,7 +694,7 @@ const HomePage = () => {
                   </button>
                 </div>
               )}
-              <div className="my-8 px-6 sm:hidden">
+              <div className="my-8 px-6   max-[1025px]hidden">
                 <h2
                   className={`text-2xl font-semibold mb-4 ${
                     isDarkMode ? "text-white" : "text-black"
@@ -632,54 +702,55 @@ const HomePage = () => {
                 >
                   Ваши баллы:
                 </h2>
-                  {profileData.subjects.map((subj) => {
-                    return (
-                      <div key = {subj.subject} 
-                        className={`p-4 rounded-xl shadow-md ${
-                          isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <p className="font-medium text-lg">{subj.subject}</p>
-                          <svg
-                            className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500 dark:text-blue-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </div>
-                        <div className="">
-                          <div className="flex justify-center space-x-4 mt-3 ">
-                            <h3>Текущий балл: {subj.current_score}</h3>
+                {profileData.subjects.map((subj) => {
+                  return (
+                    <div
+                      key={subj.subject}
+                      className={` p-4  rounded-xl shadow-md ${
+                        isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <p className="font-medium text-lg">{subj.subject}</p>
+                        <svg
+                          className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500 dark:text-blue-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="">
+                        <div className="flex justify-center space-x-4 mt-3 ">
+                          <h3>Текущий балл: {subj.current_score}</h3>
 
-                            <h3>Желаемый балл: {subj.desired_score}</h3>
-                          </div>
+                          <h3>Желаемый балл: {subj.desired_score}</h3>
                         </div>
                       </div>
-                    );
-                  })}
-                  <button
-                    onClick={() => {
-                      setShowProfile(true);
-                    }}
-                    className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
-                      isDarkMode
-                        ? "bg-[#3d37f0] "
-                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
-                    } p-2 transition-all rounded-lg`}
-                  >
-                    Добавить/изменить предметы
-                  </button>
+                    </div>
+                  );
+                })}
+                <button
+                  onClick={() => {
+                    setShowProfile(true);
+                  }}
+                  className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
+                    isDarkMode
+                      ? "bg-[#3d37f0] "
+                      : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                  } p-2 transition-all rounded-lg`}
+                >
+                  Добавить/изменить предметы
+                </button>
               </div>
 
-              <div className="my-8 px-6 sm:hidden">
+              <div className="my-8 px-6  mix-[1024px]:hidden">
                 <h2
                   className={`text-2xl font-semibold mb-4 ${
                     isDarkMode ? "text-white" : "text-[#000]"

@@ -444,7 +444,7 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className="ml-1  bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    className={`ml-1  ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"}  px-2 py-1 rounded-lg `}
                     htmlFor="class9"
                   >
                     9 класс
@@ -460,7 +460,7 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className="ml-1 bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    className={`ml-1   ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"} px-2 py-1 rounded-lg `}
                     htmlFor="class10"
                   >
                     10 класс
@@ -476,7 +476,7 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className="ml-1  bg-[#222222] px-2 py-1 rounded-lg peer-checked:bg-[#6e7bf2]"
+                    className={`ml-1  ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"}  px-2 py-1 rounded-lg `}
                     htmlFor="class11"
                   >
                     11 класс
@@ -486,31 +486,7 @@ export default function Profile({ onClose = () => {} }) {
             )}
           </div>
 
-          {/* Telegram */}
-          <div>
-            <label
-              htmlFor="telegram"
-              className="text-base sm:text-lg font-medium block mb-2"
-            >
-              Телеграм
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="telegram"
-                name="telegram"
-                value={editableData.telegram}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md border ${
-                  isDarkMode
-                    ? "bg-[#222222] border-gray-600 text-white"
-                    : "bg-white border-gray-300"
-                }`}
-                placeholder="Telegram аккаунт"
-                disabled={!isEditing}
-              />
-            </div>
-          </div>
+          
         </div>
 
         {/* Предметы ЕГЭ */}
@@ -624,7 +600,7 @@ export default function Profile({ onClose = () => {} }) {
                             value === "" ||
                             (Number(value) >= 0 && Number(value) <= 100)
                           ) {
-                            handleSubjectChange(index, "current_score", value);
+                            handleSubjectChange(index, "current_score", Number(value));
                           }
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
@@ -646,7 +622,7 @@ export default function Profile({ onClose = () => {} }) {
                             value === "" ||
                             (Number(value) >= 0 && Number(value) <= 100)
                           ) {
-                            handleSubjectChange(index, "desired_score", value);
+                            handleSubjectChange(index, "desired_score", Number(value));
                           }
                         }}
                         className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
