@@ -77,7 +77,7 @@ const Schedule = ({ onClose = () => {} }) => {
       console.log(fullContent)
 
       await axios.post(
-        "https://api.online-postupishka.ru/schedule ",
+        "https://api.online-postupishka.ru/schedule",
         { content: fullContent },
         {
           headers: { Authorization: `Bearer ${token}` },

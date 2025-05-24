@@ -229,11 +229,12 @@ const HomePage = () => {
           </nav>
         </motion.div>
         {!showProfile && !showSpecialties && !showPsychologist && (
+        
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-[50%] mx-6 p-6  max-[1026px]:hidden min-[1027px]:flex "
+            className="w-[35%] mx-6 p-6  max-[1026px]:hidden min-[1027px]:flex "
           >
             <div
               className={`rounded-xl  sm:block  p-6 ${
