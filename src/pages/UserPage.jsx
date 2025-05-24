@@ -171,7 +171,7 @@ const HomePage = () => {
                 setShowProfile(true);
                 setShowSpecialties(false);
                 setShowSchedule(false);
-                setShowPsychologist(false)
+                setShowPsychologist(false);
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -184,7 +184,7 @@ const HomePage = () => {
             </button>
             <button
               onClick={() => {
-                setShowPsychologist(true)
+                setShowPsychologist(true);
                 setShowProfile(false);
                 setShowSpecialties(false);
                 setShowSchedule(false);
@@ -201,9 +201,9 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowSpecialties(true),
-                setShowProfile(false),
-                setShowSchedule(false);
-                setShowPsychologist(false)
+                  setShowProfile(false),
+                  setShowSchedule(false);
+                setShowPsychologist(false);
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -227,7 +227,7 @@ const HomePage = () => {
             </Link>
           </nav>
         </motion.div>
-        {!showProfile && !showSpecialties && !showPsychologist &&  (
+        {!showProfile && !showSpecialties && !showPsychologist && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -341,7 +341,7 @@ const HomePage = () => {
                           setShowSpecialties(true);
                           setShowProfile(false);
                           setShowSchedule(false);
-                          setShowPsychologist(false)
+                          setShowPsychologist(false);
                         }}
                         className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                           isDarkMode
@@ -389,6 +389,15 @@ const HomePage = () => {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <h2
+                    className={`text-2xl font-semibold mb-4 ${
+                      isDarkMode ? "text-white" : "text-gray-800"
+                    }`}
+                  >
+                    Ваши баллы:
+                  </h2>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -406,23 +415,23 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowPsychologist(true),
-                setShowSchedule(false),
-                setShowProfile(false),
-                setShowSpecialties(false);
+                  setShowSchedule(false),
+                  setShowProfile(false),
+                  setShowSpecialties(false);
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
               } hover:text-blue-500`}
             >
-              <MdOutlinePsychologyAlt  size={24} />
+              <MdOutlinePsychologyAlt size={24} />
               <span className="text-xs mt-1">Психолог</span>
             </button>
             <button
               onClick={() => {
                 setShowSchedule(true),
-                setShowProfile(false),
-                setShowSpecialties(false);
-                setShowPsychologist(false)
+                  setShowProfile(false),
+                  setShowSpecialties(false);
+                setShowPsychologist(false);
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -434,9 +443,9 @@ const HomePage = () => {
             <button
               onClick={() => {
                 setShowSpecialties(true),
-                setShowProfile(false),
-                setShowSchedule(false);
-                setShowPsychologist(false)
+                  setShowProfile(false),
+                  setShowSchedule(false);
+                setShowPsychologist(false);
               }}
               className={`flex flex-col items-center  ${
                 isDarkMode ? "text-white" : "text-[#363e45]"
@@ -462,183 +471,249 @@ const HomePage = () => {
           </div>
         </nav>
 
-        {showProfile && <Profile onClose={() => {setShowProfile(false)} }/>}
+        {showProfile && (
+          <Profile
+            onClose={() => {
+              setShowProfile(false);
+            }}
+          />
+        )}
         {showSpecialties && (
           <Profession
             onClose={() => {
               setShowSpecialties(false);
-              setShowPsychologist(false)
+              setShowPsychologist(false);
               getUniversities();
             }}
           />
         )}
         {showSchedule && <Schedule onClose={() => setShowSchedule(false)} />}
-        {showPsychologist && <Psychologist onClose={() => setShowPsychologist(false)} />}
+        {showPsychologist && (
+          <Psychologist onClose={() => setShowPsychologist(false)} />
+        )}
       </div>
 
       {/*Блок Цели */}
-      {!showProfile && !showSpecialties && !showSchedule && !showPsychologist && (
-        <>
-          <motion.div
-            className="pb-18 sm:hidden"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2
-              className={`text-2xl ml-6 font-semibold my-3 ${
-                isDarkMode ? "text-white" : "text-[#000]"
-              }`}
+      {!showProfile &&
+        !showSpecialties &&
+        !showSchedule &&
+        !showPsychologist && (
+          <>
+            <motion.div
+              className="pb-18 sm:hidden"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              Цели:
-            </h2>
-            {universities.length > 0 && !showProfile && !showSpecialties ? (
-              <div className="mt-6 sm:hidden">
-                <ul className="space-y-3  w-[90%] mx-5">
-                  {universities
-                    .slice(0, showAllUniversities ? universities.length : 2)
-                    .map((university) => (
-                      <div key={university.id}>
-                        <li
-                          onClick={() => {
-                            seeAllInfo((prev) =>
-                              prev === university.id ? "" : university.id
-                            );
-                          }}
-                          className={`flex ${
-                            isDarkMode
-                              ? "bg-[#222222] text-white"
-                              : "bg-[#ffffff] text-gray-800"
-                          } p-4 rounded-lg`}
-                        >
-                          {university.university} <br></br>Напр:{" "}
-                          {university.direction}
-                          <button className="mr-auto ">
-                            {university.id === allInfo ? (
-                              <SlArrowUp />
-                            ) : (
-                              <SlArrowDown />
-                            )}
-                          </button>
-                        </li>
-                        {university.id === allInfo && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 1 }}
-                            className={`my-3 p-4 rounded-lg  ${
-                              isDarkMode
-                                ? "bg-[#222222]  text-white"
-                                : "bg-white text-gray-800"
-                            } shadow-md transition-all duration-300`}
-                          >
-                            <h3 className="text-lg font-semibold mb-3 flex items-center">
-                              Баллы для направления: {university.direction}
-                            </h3>
-
-                            <div className="grid grid-cols-3 gap-4 text-center">
-                              <div
-                                className={`p-3 rounded-md ${
-                                  isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
-                                }`}
-                              >
-                                <p className="text-sm ">Мин. Балл</p>
-                                <p className="text-xl   font-bold">
-                                  {university.scores.min || "—"}
-                                </p>
-                              </div>
-
-                              <div
-                                className={`p-3 rounded-md ${
-                                  isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
-                                }`}
-                              >
-                                <p className="text-sm ">Ср. Балл</p>
-                                <p className="text-xl  font-bold">
-                                  {university.scores.avg || "—"}
-                                </p>
-                              </div>
-
-                              <div
-                                className={`p-3 rounded-md ${
-                                  isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
-                                }`}
-                              >
-                                <p className="text-sm ">Бюджет</p>
-                                <p className="text-xl   font-bold">
-                                  {university.scores.bud || "—"}
-                                </p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </div>
-                    ))}
-
-                  {universities.length > 2 && (
-                    <button
-                      onClick={() =>
-                        setShowAllUniversities(!showAllUniversities)
-                      }
-                      className={`mt-3 text-sm text-center font-medium ${
-                        isDarkMode ? "text-blue-400" : "text-blue-600"
-                      } hover:underline focus:outline-none`}
-                    >
-                      {showAllUniversities ? "Скрыть" : `Показать все цели`}
-                    </button>
-                  )}
-                </ul>
-              </div>
-            ) : (
-              <div className="sm:hidden">
-                <button
-                  onClick={() => {
-                    setShowSpecialties(true), setShowProfile(false);
-                  }}
-                  className={`flex items-center mx-6 text-center w-[87%] py-2 justify-center cursor-pointer ${
-                    isDarkMode
-                      ? "bg-[#3d37f0] "
-                      : "bg-[#155dfc] text-white hover:text-[#193cb8]"
-                  } p-2 transition-all rounded-lg`}
-                >
-                  Добавить цель (Пройти тест)
-                </button>
-              </div>
-            )}
-            <div className="my-8 px-6 sm:hidden">
               <h2
-                className={`text-2xl font-semibold mb-4 ${
+                className={`text-2xl ml-6 font-semibold my-3 ${
                   isDarkMode ? "text-white" : "text-[#000]"
                 }`}
               >
-                Полезные материалы:
+                Цели:
               </h2>
+              {universities.length > 0 && !showProfile && !showSpecialties ? (
+                <div className="mt-6 sm:hidden">
+                  <ul className="space-y-3  w-[90%] mx-5">
+                    {universities
+                      .slice(0, showAllUniversities ? universities.length : 2)
+                      .map((university) => (
+                        <div key={university.id}>
+                          <li
+                            onClick={() => {
+                              seeAllInfo((prev) =>
+                                prev === university.id ? "" : university.id
+                              );
+                            }}
+                            className={`flex ${
+                              isDarkMode
+                                ? "bg-[#222222] text-white"
+                                : "bg-[#ffffff] text-gray-800"
+                            } p-4 rounded-lg`}
+                          >
+                            {university.university} <br></br>Напр:{" "}
+                            {university.direction}
+                            <button className="mr-auto ">
+                              {university.id === allInfo ? (
+                                <SlArrowUp />
+                              ) : (
+                                <SlArrowDown />
+                              )}
+                            </button>
+                          </li>
+                          {university.id === allInfo && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -5 }}
+                              animate={{ opacity: 1, y: 1 }}
+                              className={`my-3 p-4 rounded-lg  ${
+                                isDarkMode
+                                  ? "bg-[#222222]  text-white"
+                                  : "bg-white text-gray-800"
+                              } shadow-md transition-all duration-300`}
+                            >
+                              <h3 className="text-lg font-semibold mb-3 flex items-center">
+                                Баллы для направления: {university.direction}
+                              </h3>
 
-              <div className="space-y-4 ">
-                {materials.map((material) => (
-                  <Link
-                    key={material.id}
-                    to={material.link}
-                    className={`block p-4 rounded-lg transition-all ${
+                              <div className="grid grid-cols-3 gap-4 text-center">
+                                <div
+                                  className={`p-3 rounded-md ${
+                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                  }`}
+                                >
+                                  <p className="text-sm ">Мин. Балл</p>
+                                  <p className="text-xl   font-bold">
+                                    {university.scores.min || "—"}
+                                  </p>
+                                </div>
+
+                                <div
+                                  className={`p-3 rounded-md ${
+                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                  }`}
+                                >
+                                  <p className="text-sm ">Ср. Балл</p>
+                                  <p className="text-xl  font-bold">
+                                    {university.scores.avg || "—"}
+                                  </p>
+                                </div>
+
+                                <div
+                                  className={`p-3 rounded-md ${
+                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                  }`}
+                                >
+                                  <p className="text-sm ">Бюджет</p>
+                                  <p className="text-xl   font-bold">
+                                    {university.scores.bud || "—"}
+                                  </p>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+                      ))}
+
+                    {universities.length > 2 && (
+                      <button
+                        onClick={() =>
+                          setShowAllUniversities(!showAllUniversities)
+                        }
+                        className={`mt-3 text-sm text-center font-medium ${
+                          isDarkMode ? "text-blue-400" : "text-blue-600"
+                        } hover:underline focus:outline-none`}
+                      >
+                        {showAllUniversities ? "Скрыть" : `Показать все цели`}
+                      </button>
+                    )}
+                  </ul>
+                </div>
+              ) : (
+                <div className="sm:hidden">
+                  <button
+                    onClick={() => {
+                      setShowSpecialties(true), setShowProfile(false);
+                    }}
+                    className={`flex items-center mx-6 text-center w-[87%] py-2 justify-center cursor-pointer ${
                       isDarkMode
-                        ? "bg-[#222222] hover:bg-gray-700"
-                        : "bg-white hover:bg-gray-50 shadow-md"
-                    }`}
+                        ? "bg-[#3d37f0] "
+                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                    } p-2 transition-all rounded-lg`}
                   >
-                    <h3 className="text-lg font-medium">{material.title}</h3>
-                    <p
-                      className={`mt-1 text-sm ${
-                        isDarkMode ? "text-gray-300" : "text-gray-600"
+                    Добавить цель (Пройти тест)
+                  </button>
+                </div>
+              )}
+              <div className="my-8 px-6 sm:hidden">
+                <h2
+                  className={`text-2xl font-semibold mb-4 ${
+                    isDarkMode ? "text-white" : "text-black"
+                  }`}
+                >
+                  Ваши баллы:
+                </h2>
+                  {profileData.subjects.map((subj) => {
+                    return (
+                      <div key = {subj.subject} 
+                        className={`p-4 rounded-xl shadow-md ${
+                          isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <p className="font-medium text-lg">{subj.subject}</p>
+                          <svg
+                            className="ml-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500 dark:text-blue-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                        <div className="">
+                          <div className="flex justify-center space-x-4 mt-3 ">
+                            <h3>Текущий балл: {subj.current_score}</h3>
+
+                            <h3>Желаемый балл: {subj.desired_score}</h3>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <button
+                    onClick={() => {
+                      setShowProfile(true);
+                    }}
+                    className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
+                      isDarkMode
+                        ? "bg-[#3d37f0] "
+                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                    } p-2 transition-all rounded-lg`}
+                  >
+                    Добавить/изменить предметы
+                  </button>
+              </div>
+
+              <div className="my-8 px-6 sm:hidden">
+                <h2
+                  className={`text-2xl font-semibold mb-4 ${
+                    isDarkMode ? "text-white" : "text-[#000]"
+                  }`}
+                >
+                  Полезные материалы:
+                </h2>
+
+                <div className="space-y-4 ">
+                  {materials.map((material) => (
+                    <Link
+                      key={material.id}
+                      to={material.link}
+                      className={`block p-4 rounded-lg transition-all ${
+                        isDarkMode
+                          ? "bg-[#222222] hover:bg-gray-700"
+                          : "bg-white hover:bg-gray-50 shadow-md"
                       }`}
                     >
-                      {material.description}
-                    </p>
-                  </Link>
-                ))}
+                      <h3 className="text-lg font-medium">{material.title}</h3>
+                      <p
+                        className={`mt-1 text-sm ${
+                          isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }`}
+                      >
+                        {material.description}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </>
-      )}
+            </motion.div>
+          </>
+        )}
     </div>
   );
 };

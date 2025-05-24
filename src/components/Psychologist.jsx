@@ -104,7 +104,7 @@ const Psychologist = ({ onClose = () => {} }) => {
           </motion.button>
         </div>
 
-        {/* Chat box */}
+        {/* чат */}
         <div ref={chatBoxRef} className="min-h-[57vh] px-4 pb-4 overflow-y-auto">
           {messages.map((msg) => (
             <div

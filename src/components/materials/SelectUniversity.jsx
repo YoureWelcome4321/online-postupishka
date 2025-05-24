@@ -56,7 +56,7 @@ const SelectUniversity = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF({
-      encoding: "Identity-H", // Поддержка кириллицы
+      encoding: "Identity-H", 
     });
 
     doc.setFont("helvetica");
