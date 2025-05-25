@@ -138,7 +138,7 @@ const Schedule = ({ onClose = () => {} }) => {
       </div>
 
       {/* Кнопки дней */}
-      <div className="flex justify-between mb-6">
+      <div className=" flex justify-between mb-6">
         {daysOfWeek.map((dayName, index) => {
           const dayData = initialDays[index];
           const dayNumber = dayData.day_in_month;
@@ -148,7 +148,7 @@ const Schedule = ({ onClose = () => {} }) => {
               <span className="mb-2 text-xs">{dayName}</span>
               <button
                 onClick={() => setSelectedDayIndex(index)}
-                className={`w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all ${
+                className={` cursor-pointer w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all ${
                     selectedDayIndex === index
                       ? isDarkMode ? "bg-[#3d37f0] text-white" : "bg-blue-600 text-white"
                       : isDarkMode ? "bg-[#222222] text-white" : "bg-white sm:bg-[#f6f6f6] text-[#363e45]"
@@ -203,7 +203,7 @@ const Schedule = ({ onClose = () => {} }) => {
       {/* Кнопки управления */}
       {editing ? (
         <button
-          className={`mt-6 w-full py-2 ${
+          className={` cursor-pointer  mt-6 w-full py-2 ${
             isDarkMode ? "bg-[#3d37f0]" : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-lg transition-colors`}
           onClick={() => {
@@ -215,7 +215,7 @@ const Schedule = ({ onClose = () => {} }) => {
         </button>
       ) : (
         <button
-          className={`mt-6 w-full py-2 ${
+          className={` cursor-pointer mt-6 w-full py-2 ${
             isDarkMode ? "bg-[#3d37f0]" : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-lg transition-colors`}
           onClick={() => setEditing(true)}

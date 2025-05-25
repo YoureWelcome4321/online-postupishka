@@ -14,7 +14,6 @@ const Psychologist = ({ onClose = () => {} }) => {
     handleGetChat();
   }, []);
 
-
   useEffect(() => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
@@ -36,7 +35,6 @@ const Psychologist = ({ onClose = () => {} }) => {
     setTimeout(() => handleBotResponse(input), 300);
   };
 
- 
   const handleQuickReply = (text) => {
     const userMessage = {
       id: Date.now(),
@@ -48,7 +46,6 @@ const Psychologist = ({ onClose = () => {} }) => {
     setTimeout(() => handleBotResponse(text), 300);
   };
 
- 
   const handleBotResponse = async (query) => {
     try {
       const token = localStorage.getItem("token");
@@ -81,7 +78,6 @@ const Psychologist = ({ onClose = () => {} }) => {
     }
   };
 
-
   const handleGetChat = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -96,9 +92,9 @@ const Psychologist = ({ onClose = () => {} }) => {
       );
 
       const chatHistory = response.data.map((msg) => ({
-        id: Date.now() + Math.random(), 
+        id: Date.now() + Math.random(),
         text: msg.content,
-        sender: msg.role === "assistant" ? "assistant" : "user",
+        sender: msg.role === "assistant" ? "bot" : "user",
       }));
 
       if (chatHistory.length === 0) {
@@ -130,100 +126,99 @@ const Psychologist = ({ onClose = () => {} }) => {
       transition={{ duration: 0.6 }}
       className={`absolute ${
         isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6] sm:bg-white"
-      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative w-full max-w-2xl mx-auto sm:p-6`}
+      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative w-full max-w-2xl mx-auto h-screen sm:h-auto sm:max-h-[90vh] flex flex-col`}
     >
-      <div className={`rounded-xl ${isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6]"} overflow-hidden`}>
-        <div className="flex px-6 py-4">
-          <h2 className="text-2xl font-semibold">Ваш психолог:</h2>
-          <motion.button
-            className="p-2 ml-auto rounded-full transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={onClose}
+      <div className="flex px-6 py-4">
+        <h2 className="text-2xl font-semibold">Ваш психолог:</h2>
+        <motion.button
+          className="p-2 ml-auto rounded-full transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={onClose}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 sm:h-6 sm:w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke={isDarkMode ? "#e2e8f0" : "#334155"}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 sm:h-6 sm:w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke={isDarkMode ? "#e2e8f0" : "#334155"}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </motion.button>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </motion.button>
+      </div>
 
-        {/* Чат */}
-        <div ref={chatBoxRef} className="min-h-[57vh] px-4 pb-4 overflow-y-auto">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`mb-4 ${
-                msg.sender === "user" ? "flex justify-end" : "flex justify-start"
-              }`}
-            >
-              <div
-                className={`rounded-xl ${
-                  msg.sender === "user"
-                    ? isDarkMode
-                      ? "bg-[#615fff] text-white"
-                      : "bg-[#155dfc] text-white"
-                    : isDarkMode
-                    ? "bg-[#222222] shadow-sm"
-                    : "bg-white shadow-sm"
-                } max-w-[70%] px-4 py-3`}
-              >
-                {msg.text}
-                {msg.quickReplies && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {msg.quickReplies.map((reply, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleQuickReply(reply)}
-                        className={`${
-                          isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
-                        } text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
-                      >
-                        {reply}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Поле ввода */}
-        <div className="mb-18">
+      <div ref={chatBoxRef} className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-4">
+        {messages.map((msg) => (
           <div
-            className={`p-4 ${
-              isDarkMode ? "bg-[#222222] text-white" : "bg-white text-[#363e45]"
+            key={msg.id}
+            className={`mb-4 ${
+              msg.sender === "user" ? "flex justify-end" : "flex justify-start"
             }`}
           >
-            <div className="flex items-center gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Введите ваше сообщение..."
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                className="flex-1 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button
-                onClick={handleSendMessage}
-                className={`${
-                  isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
-                } text-white p-3 rounded-full transition-colors`}
-              >
-                <IoIosSend className="text-3xl" />
-              </button>
+            <div
+              className={`rounded-xl ${
+                msg.sender === "user"
+                  ? isDarkMode
+                    ? "bg-[#615fff] text-white"
+                    : "bg-[#155dfc] text-white"
+                  : isDarkMode
+                  ? "bg-[#222222] shadow-sm"
+                  : "bg-white shadow-sm"
+              } max-w-[70%] px-4 py-3`}
+            >
+              {msg.text}
+              {msg.quickReplies && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {msg.quickReplies.map((reply, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickReply(reply)}
+                      className={`${
+                        isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
+                      } text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
+                    >
+                      {reply}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
+        ))}
+      </div>
+
+      <div
+        className={`mb-18 sm:mb-0 sm:static fixed bottom-0 left-0 right-0 p-4 border-t ${
+          isDarkMode ? "bg-[#222222] border-gray-700" : "bg-white border-gray-200"
+        } z-10 transition-all duration-300`}
+      >
+        <div className="max-w-2xl mx-auto flex items-center gap-2">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Введите ваше сообщение..."
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+            className={`flex-1 p-3 rounded-full border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              isDarkMode
+                ? "bg-[#1a1a1a] border-gray-600 text-white"
+                : "bg-gray-100 border-gray-300"
+            }`}
+          />
+          <button
+            onClick={handleSendMessage}
+            className={`${
+              isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
+            } text-white p-3 rounded-full transition-colors`}
+          >
+            <IoIosSend className="text-3xl" />
+          </button>
         </div>
       </div>
     </motion.div>
