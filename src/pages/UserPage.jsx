@@ -22,20 +22,14 @@ import Profile from "../components/Profile";
 import Profession from "../components/Profession";
 import Schedule from "../components/Schedule";
 import Psychologist from "../components/Psychologist";
+import SelectUniversity from "../components/materials/SelectUniversity";
 
 const HomePage = () => {
   const [materials] = useState([
     {
       id: 1,
-      title: "Какие документы нужны для поступления",
+      title: "Какие документы нужны для поступления ?",
       description: "Расскажем о всех документах, которые могут понадобиться.",
-      link: "/materials/select-university",
-    },
-    {
-      id: 2,
-      title: "Эссе для поступления",
-      description: "Советы по написанию мотивационного письма.",
-      link: "/materials/essay",
     },
   ]);
 
@@ -43,6 +37,7 @@ const HomePage = () => {
   const [showSpecialties, setShowSpecialties] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
   const [showPsychologist, setShowPsychologist] = useState(false);
+  const [showMaterials, setShowMaterials] = useState(false);
   const { isDarkMode } = useContext(ThemeContext);
 
   const [profileData, setProfileData] = useState({
@@ -241,6 +236,7 @@ const HomePage = () => {
                 setShowSpecialties(false);
                 setShowSchedule(false);
                 setShowPsychologist(false);
+                setShowMaterials(false)
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -248,7 +244,7 @@ const HomePage = () => {
                   : "hover:bg-gray-100 dark:hover:bg-[#dbeafe] hover:text-[#193cb8]"
               } p-2 transition-all rounded-lg`}
             >
-              <HiOutlineUserCircle className="mr-2 text-xl" />
+              <HiOutlineUserCircle onClose={getUser} className="mr-2 text-xl" />
               Личный кабинет
             </button>
             <button
@@ -257,6 +253,7 @@ const HomePage = () => {
                 setShowProfile(false);
                 setShowSpecialties(false);
                 setShowSchedule(false);
+                setShowMaterials(false)
               }}
               className={`  cursor-pointer flex items-center w-full py-2 p-2 ${
                 isDarkMode
@@ -273,6 +270,7 @@ const HomePage = () => {
                 setShowProfile(false);
                 setShowSchedule(false);
                 setShowPsychologist(false);
+                setShowMaterials(false)
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -404,6 +402,7 @@ const HomePage = () => {
                           setShowProfile(false);
                           setShowSchedule(false);
                           setShowPsychologist(false);
+                          setShowMaterials(false)
                         }}
                         className={` cursor-pointer w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                           isDarkMode
@@ -429,7 +428,7 @@ const HomePage = () => {
                   {profileData.subjects.map((subj) => (
                     <div
                       key={subj.subject}
-                      className={`p-4 rounded-xl shadow-md ${
+                      className={`p-4 mb-3 rounded-xl shadow-md ${
                         isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
                       }`}
                     >
@@ -478,27 +477,34 @@ const HomePage = () => {
                   </h2>
                   <div className="space-y-4">
                     {materials.map((material) => (
-                      <Link
+                      <button
                         key={material.id}
-                        to={material.link}
-                        className={`block p-4 rounded-lg ${
+                        onClick={() => {setShowMaterials(true);
+                          setShowSpecialties(false);
+                          setShowProfile(false);
+                          setShowSchedule(false);
+                          setShowPsychologist(false);}}
+                        className={`cursor-pointer block p-4 rounded-lg ${
                           isDarkMode
-                            ? "bg-[#222222] hover:bg-gray-700"
+                            ? "bg-[#222222] hover:bg-[#3d37f0]"
                             : "bg-white hover:bg-gray-50 shadow"
                         } transition-all`}
                       >
-                        <h3 className="text-lg font-medium">
+                        <h3 className="text-left text-lg font-medium">
                           {material.title}
                         </h3>
                         <p
-                          className={`mt-1 text-sm ${
+                          className={`mt-1  text-left text-sm ${
                             isDarkMode ? "text-gray-300" : "text-gray-600"
                           }`}
                         >
                           {material.description}
                         </p>
-                      </Link>
+                      </button>
                     ))}
+                  </div>
+                  <div className="flex justify-center my-5">
+                      <p className={`mx-0 text-sm ${isDarkMode ? 'text-[#fff]' : "text-[#000]"}`}>Следите за обновлениями, здесь будет много интересного.</p>
                   </div>
                 </div>
               </div>
@@ -506,7 +512,6 @@ const HomePage = () => {
           </motion.div>
         )}
 
-        {/* Мобильное меню и остальные компоненты ниже... */}
         {showProfile && (
           <Profile
             onClose={() => {
@@ -540,10 +545,14 @@ const HomePage = () => {
             }}
           />
         )}
+
+        {showMaterials && (
+          <SelectUniversity onClose={() => {setShowMaterials(false);if (window.innerWidth >= 1025) setShowSchedule(true);}}/>
+        )}
       </div>
 
       {/*Блок Цели */}
-      {!showProfile &&
+      {!showProfile && !showMaterials &&
         !showSpecialties &&
         !showSchedule &&
         !showPsychologist && (
@@ -661,7 +670,7 @@ const HomePage = () => {
                 <div className=" flex justify-center min-[1025px]:hidden">
                   <button
                     onClick={() => {
-                      setShowSpecialties(true), setShowProfile(false);
+                      setShowSpecialties(true), setShowProfile(false), setShowMaterials(false)
                     }}
                     className={`flex items-center mx-6 text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
@@ -685,7 +694,7 @@ const HomePage = () => {
                   return (
                     <div
                       key={subj.subject}
-                      className={` p-4  rounded-xl shadow-md ${
+                      className={` p-4 mb-3  rounded-xl shadow-md ${
                         isDarkMode ? "bg-[#222222]" : "bg-[#fff]"
                       }`}
                     >
@@ -738,28 +747,37 @@ const HomePage = () => {
                   Полезные материалы:
                 </h2>
 
-                <div className="space-y-4 ">
-                  {materials.map((material) => (
-                    <Link
-                      key={material.id}
-                      to={material.link}
-                      className={`block p-4 rounded-lg transition-all ${
-                        isDarkMode
-                          ? "bg-[#222222] hover:bg-gray-700"
-                          : "bg-white hover:bg-gray-50 shadow-md"
-                      }`}
-                    >
-                      <h3 className="text-lg font-medium">{material.title}</h3>
-                      <p
-                        className={`mt-1 text-sm ${
-                          isDarkMode ? "text-gray-300" : "text-gray-600"
-                        }`}
+                <div className="space-y-4">
+                    {materials.map((material) => (
+                      <button
+                        key={material.id}
+                        onClick={() => {setShowMaterials(true);
+                          setShowSpecialties(false);
+                          setShowProfile(false);
+                          setShowSchedule(false);
+                          setShowPsychologist(false);}}
+                        className={`block p-4 rounded-lg ${
+                          isDarkMode
+                            ? "bg-[#222222] hover:bg-gray-700"
+                            : "bg-white hover:bg-gray-50 shadow"
+                        } transition-all`}
                       >
-                        {material.description}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
+                        <h3 className="text-left text-lg font-medium">
+                          {material.title}
+                        </h3>
+                        <p
+                          className={`mt-1  text-left text-sm ${
+                            isDarkMode ? "text-gray-300" : "text-gray-600"
+                          }`}
+                        >
+                          {material.description}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex text-center justify-center my-5">
+                      <p className={`mx-0 text-sm ${isDarkMode ? 'text-[#fff]' : "text-[#000]"}`}>Следите за обновлениями, здесь будет много интересного.</p>
+                  </div>
               </div>
             </motion.div>
           </>
@@ -780,6 +798,7 @@ const HomePage = () => {
               setShowSchedule(false);
               setShowProfile(false);
               setShowSpecialties(false);
+              setShowMaterials(false)
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -794,6 +813,7 @@ const HomePage = () => {
               setShowProfile(false);
               setShowSpecialties(false);
               setShowPsychologist(false);
+              setShowMaterials(false)
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -808,6 +828,7 @@ const HomePage = () => {
               setShowProfile(false);
               setShowSchedule(false);
               setShowPsychologist(false);
+              setShowMaterials(false)
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -822,6 +843,7 @@ const HomePage = () => {
               setShowSpecialties(false);
               setShowSchedule(false);
               setShowPsychologist(false);
+              setShowMaterials(false)
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"

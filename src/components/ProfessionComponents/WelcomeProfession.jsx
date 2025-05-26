@@ -60,7 +60,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
     const now = Date.now();
     localStorage.setItem(TIMER_KEY, now);
     
-    // Обновляем состояние
+    // состояние
     const endTime = now + TIMER_DURATION;
     setRemainingTime(endTime - now);
     setIsTimerComplete(false);
@@ -240,7 +240,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
           ) : (
             <div className="text-center py-3">
               <p className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>
-                Следующая попытка станет доступной через:
+                Следующая возможность прохождения станет доступной через:
               </p>
               <p className="text-lg font-bold text-blue-500">
                 {formatTime(remainingTime)}

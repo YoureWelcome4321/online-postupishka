@@ -20,7 +20,7 @@ export default function Profile({ onClose = () => {} }) {
   const [profileData, setProfileData] = useState({
     first_name: "",
     email: "",
-    class: "",
+    class_number: 0,
     username: "",
     subjects: [
       {
@@ -32,15 +32,16 @@ export default function Profile({ onClose = () => {} }) {
   });
 
   const [editableData, setEditableData] = useState({
-    firstName: "",
+    first_name: "",
     email: "",
     password_old: "",
     password_new: "",
-    class: "",
+    class_number: 0,
     telegram: "",
     subjects: [{ subject: "", current_score: "", desired_score: "" }],
   });
 
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -97,9 +98,9 @@ export default function Profile({ onClose = () => {} }) {
 
   useEffect(() => {
     const initialData = {
-      firstName: profileData.first_name || "",
+      first_name: profileData.first_name || "",
       email: profileData.email || "",
-      class: profileData.class || "",
+      class_number: profileData.class_number || "" ,
       password_old: editableData.password_old || "",
       password_new: editableData.password_new || "",
       telegram: profileData.username || "",
@@ -117,7 +118,11 @@ export default function Profile({ onClose = () => {} }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setEditableData((prev) => ({ ...prev, [name]: value }));
+    if (name === "class_number" ) {
+      setEditableData((prev) => ({ ...prev, [name]: Number(value) }));
+    } else {
+      setEditableData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubjectChange = (index, field, value) => {
@@ -258,16 +263,16 @@ export default function Profile({ onClose = () => {} }) {
           {/* Имя */}
           <div>
             <label
-              htmlFor="firstName"
+              htmlFor="first_name"
               className="text-base sm:text-lg font-medium block mb-2"
             >
               Логин
             </label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
-              value={editableData.firstName}
+              id="first_name"
+              name="first_name"
+              value={editableData.first_name}
               onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
@@ -414,7 +419,7 @@ export default function Profile({ onClose = () => {} }) {
           {/* Класс */}
           <div>
             <label
-              htmlFor="class"
+              htmlFor="class_number"
               className="text-base sm:text-lg font-medium block mb-2"
             >
               Класс
@@ -422,14 +427,14 @@ export default function Profile({ onClose = () => {} }) {
             {!isEditing ? (
               <input
                 type="text"
-                name="class"
+                name="class_number"
                 placeholder="Класс"
                 className={`w-full px-3 py-2 rounded-md border ${
                   isDarkMode
                     ? "bg-[#222222] border-gray-600 text-white"
                     : "bg-white border-gray-300"
                 }`}
-                value={editableData.class}
+                value={editableData.class_number}
                 disabled={!isEditing}
               />
             ) : (
@@ -438,7 +443,7 @@ export default function Profile({ onClose = () => {} }) {
                   <input
                     type="radio"
                     id="class9"
-                    name="class"
+                    name="class_number"
                     className="peer hidden"
                     value="9"
                     onChange={handleChange}
@@ -454,7 +459,7 @@ export default function Profile({ onClose = () => {} }) {
                   <input
                     type="radio"
                     id="class10"
-                    name="class"
+                    name="class_number"
                     className="peer hidden"
                     value="10"
                     onChange={handleChange}
@@ -471,7 +476,7 @@ export default function Profile({ onClose = () => {} }) {
                     type="radio"
                     id="class11"
                     className="peer hidden"
-                    name="class"
+                    name="class_number"
                     value="11"
                     onChange={handleChange}
                   />

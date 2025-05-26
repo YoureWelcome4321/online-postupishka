@@ -16,9 +16,9 @@ const RegistrationLogin = () => {
   const { isDarkMode } = useContext(ThemeContext);
   const [isLogin, setIsLogin] = useState(true);
   const [formRegistData, setFormRegistData] = useState({
-    firstName: "",
+    first_name: "",
     email: "",
-    class: "",
+    class_number: "",
     telegram: "",
     password: "",
   });
@@ -37,16 +37,16 @@ const RegistrationLogin = () => {
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validateRegistration = () => {
     const errors = {};
-    if (!formRegistData.firstName.trim()) errors.firstName = "Введите имя";
+    if (!formRegistData.first_name.trim()) errors.first_name = "Введите имя";
     if (!formRegistData.email.trim()) {
       errors.email = "Введите email";
     } else if (!validateEmail(formRegistData.email)) {
       errors.email = "Некорректный email";
     }
-    if (!formRegistData.class) {
-      errors.class = "Введите класс";
-    } else if (formRegistData.class > 11 || formRegistData.class < 9) {
-      errors.class = "Класс должен быть от 9 до 11";
+    if (!formRegistData.class_number) {
+      errors.class_number = "Введите класс";
+    } else if (formRegistData.class_number > 11 || formRegistData.class_number < 9) {
+      errors.class_number = "Класс должен быть от 9 до 11";
     }
     if (formRegistData.password.length < 6) {
       errors.password = "Пароль должен быть не менее 6 символов";
@@ -122,7 +122,7 @@ const RegistrationLogin = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    const processedValue = name === "class" ? parseInt(value, 10) : value;
+    const processedValue = name === "class_number" ? parseInt(value, 10) : value;
 
     setRegistErrors({ ...registErrors, [name]: "" });
     setFormRegistData((prev) => ({ ...prev, [name]: processedValue }));
@@ -208,9 +208,9 @@ const RegistrationLogin = () => {
             />
             <input
               type="text"
-              name={isLogin ? "identifier" : "firstName"}
+              name={isLogin ? "identifier" : "first_name"}
               value={
-                isLogin ? formSignInData.identifier : formRegistData.firstName
+                isLogin ? formSignInData.identifier : formRegistData.first_name
               }
               onChange={isLogin ? handleSignInChange : handleInputChange}
               placeholder={isLogin ? "Логин или email" : "Логин"}
@@ -221,13 +221,13 @@ const RegistrationLogin = () => {
                   : "bg-white placeholder-[#99a1af] focus:bg-gray-50"
               } border border-transparent focus:border-[#6E7BF2] transition-all ${
                 (isLogin && signInErrors.identifier) ||
-                (!isLogin && registErrors.firstName)
+                (!isLogin && registErrors.first_name)
                   ? "border-red-500"
                   : ""
               }`}
             />
             {/* Валидация имени */}
-            {(isLogin ? signInErrors.identifier : registErrors.firstName) && (
+            {(isLogin ? signInErrors.identifier : registErrors.first_name) && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -236,7 +236,7 @@ const RegistrationLogin = () => {
               >
                 <span className="block w-2 h-2 rounded-full bg-red-500" />
                 <span>
-                  {isLogin ? signInErrors.identifier : registErrors.firstName}
+                  {isLogin ? signInErrors.identifier : registErrors.first_name}
                 </span>
               </motion.div>
             )}
@@ -293,8 +293,8 @@ const RegistrationLogin = () => {
                 />
                 <input
                   type="number"
-                  name="class"
-                  value={formRegistData.class}
+                  name="class_number"
+                  value={formRegistData.class_number}
                   onChange={handleInputChange}
                   placeholder="Класс"
                   className={`w-full pl-12 pr-4 py-3 rounded-lg ${
@@ -302,11 +302,11 @@ const RegistrationLogin = () => {
                       ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
                       : "bg-white focus:bg-gray-50"
                   } border border-transparent focus:border-[#6E7BF2] transition-all ${
-                    registErrors.class ? "border-red-500" : ""
+                    registErrors.class_number ? "border-red-500" : ""
                   }`}
                 />
                 {/*  Валидация класса */}
-                {registErrors.class && (
+                {registErrors.class_number && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -314,7 +314,7 @@ const RegistrationLogin = () => {
                     className="mt-2 ml-2 flex items-center space-x-2 text-red-500 text-xs w-full"
                   >
                     <span className="block w-2 h-2 rounded-full bg-red-500" />
-                    <span>{registErrors.class}</span>
+                    <span>{registErrors.class_number}</span>
                   </motion.div>
                 )}
               </div>

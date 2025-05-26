@@ -4,9 +4,8 @@ import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
 import { Result } from "./ProfessionComponents/ResultProfession";
 import { Welcome } from "./ProfessionComponents/WelcomeProfession";
-import HomePage from "../pages/UserPage";
 
-export default function Profession({onClose = () => {}} ) {
+export default function Profession({ onClose = () => {} }) {
   const { isDarkMode } = useContext(ThemeContext);
   const [questionsData, setQuestionsData] = useState({
     question: "",
@@ -16,8 +15,16 @@ export default function Profession({onClose = () => {}} ) {
   const [showWelcome, setShowWelcome] = useState(true);
   const [userAnswer, setAnswer] = useState({ answer: "" });
   const [stage, setStage] = useState("welcome");
-  const [results, setResults] = useState([]);
-  const [loadingStatus, setLoadingStatus] = useState("idle");
+  const [results, setResults] = useState([
+    {
+      university: "",
+      region: "",
+      features: [],
+      information: true,
+      directions: [],
+    },
+  ]);
+  const [loadingStatus, setLoadingStatus] = useState("idle"); // idle | loading | success | error
   const [pollingInterval, setPollingInterval] = useState(null);
 
   const handleAnswerChange = (e) => {
@@ -29,7 +36,7 @@ export default function Profession({onClose = () => {}} ) {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/questio ",
+        "https://api.online-postupishka.ru/specialization/question ", 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuestionsData(response.data);
@@ -41,12 +48,11 @@ export default function Profession({onClose = () => {}} ) {
     }
   };
 
-
   const handleSendAnswer = async () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "https://api.online-postupishka.ru/specialization/answe ",
+        "https://api.online-postupishka.ru/specialization/answer ", 
         userAnswer,
         {
           headers: {
@@ -60,33 +66,33 @@ export default function Profession({onClose = () => {}} ) {
     }
   };
 
-  const checkResults = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/resul ",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.status === "done") {
-        clearInterval(pollingInterval);
-        setResults(response.data.result);
-        setLoadingStatus("success");
-      }
-    } catch (error) {
-      clearInterval(pollingInterval);
-      console.error("Ошибка опроса:", error);
-      setLoadingStatus("error");
-    }
-  };
 
   const handleEndTest = async () => {
     setLoadingStatus("loading");
 
-    const interval = setInterval(checkResults, 30000);
-    setPollingInterval(interval);
+    const interval = setInterval(async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get(
+          "https://api.online-postupishka.ru/specialization/result",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-    await checkResults();
+        if (res.data.status === "done") {
+          clearInterval(interval);
+          setResults(res.data.result || []);
+          setLoadingStatus("success");
+          setPollingInterval(null);
+        }
+      } catch (error) {
+        clearInterval(interval);
+        console.error("Ошибка опроса результата:", error);
+        setLoadingStatus("error");
+        setPollingInterval(null);
+      }
+    }, 30000);
+
+    setPollingInterval(interval);
   };
 
   useEffect(() => {
@@ -96,28 +102,26 @@ export default function Profession({onClose = () => {}} ) {
   }, [pollingInterval]);
 
   const renderResult = () => {
-  return (
-    <Result
-      results={results}
-      loadingStatus={loadingStatus}
-      onClose={onClose}
-    />
-  );
-};
-
-
-
-const renderWelcome = () => {
-  return (
-    showWelcome && (
-      <Welcome 
-        setStage={setStage} 
-        handleGetQuestion={handleGetQuestion} 
+    return (
+      <Result
+        results={results}
+        loadingStatus={loadingStatus}
         onClose={onClose}
-      />   
-    )
-  );
-};
+      />
+    );
+  };
+
+  const renderWelcome = () => {
+    return (
+      showWelcome && (
+        <Welcome
+          setStage={setStage}
+          handleGetQuestion={handleGetQuestion}
+          onClose={onClose}
+        />
+      )
+    );
+  };
 
   const renderTest = () => {
     return (
@@ -125,12 +129,12 @@ const renderWelcome = () => {
         className={`min-h-screen absolute sm:pt-0 sm:my-0 my-18 px-8 pt-8 inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
           isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
         }`}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
       >
         <motion.button
-          className="p-2 rounded-full  transition-colors"
+          className="p-2 rounded-full transition-colors"
           onClick={onClose}
         >
           <svg
@@ -148,14 +152,17 @@ const renderWelcome = () => {
             />
           </svg>
         </motion.button>
+
         <div className="mb-2 sm:mb-4">
           <span className="font-medium text-xl sm:text-base">
             Осталось вопросов: {questionsData.counts_remaind}
           </span>
         </div>
+
         <h2 className="text-2xl sm:text-xl font-medium mb-3 sm:mb-4">
           {questionsData.question}
         </h2>
+
         <textarea
           value={userAnswer.answer}
           onChange={handleAnswerChange}
@@ -163,6 +170,7 @@ const renderWelcome = () => {
           placeholder="Введите ваш ответ здесь..."
           rows={4}
         />
+
         <div className="flex justify-between mt-4 sm:mt-8">
           <motion.button
             onClick={async () => {
@@ -172,7 +180,7 @@ const renderWelcome = () => {
               if (questionsData.counts_remaind > 1) {
                 handleGetQuestion();
               } else {
-                handleEndTest();
+                handleEndTest(); // ✅ Запуск опроса только один раз
                 setStage("result");
               }
             }}
@@ -193,17 +201,16 @@ const renderWelcome = () => {
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
-      <div className="min-h-screen max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl ">
+      <div className="min-h-screen max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div
-          className={` rounded-2xl overflow-hidden  ${
+          className={`rounded-2xl overflow-hidden ${
             isDarkMode ? "bg-[#141414]" : "bg-white"
           }`}
         >
-          <div className={` w-full p-4 sm:p-6  `}>
+          <div className="w-full p-4 sm:p-6">
             {stage === "welcome" && renderWelcome()}
             {stage === "test" && renderTest()}
             {stage === "result" && renderResult()}
-            {stage === "main" && renderMain()}
           </div>
         </div>
       </div>
