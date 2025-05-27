@@ -355,7 +355,7 @@ const HomePage = () => {
                                 <div
                                   className={`p-2 rounded-md ${
                                     isDarkMode
-                                      ? "bg-[#6e7bf2]"
+                                      ? "bg-[#3d37f0]"
                                       : "bg-[#bedbff]"
                                   }`}
                                 >
@@ -367,19 +367,19 @@ const HomePage = () => {
                                 <div
                                   className={`p-2 rounded-md ${
                                     isDarkMode
-                                      ? "bg-[#6e7bf2]"
+                                      ? "bg-[#3d37f0]"
                                       : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm">Ср. Балл</p>
                                   <p className="text-xl font-bold">
-                                    {universities.scores.avg || "—"}
+                                    {university.scores.avg || "—"}
                                   </p>
                                 </div>
                                 <div
                                   className={`p-2 rounded-md ${
                                     isDarkMode
-                                      ? "bg-[#6e7bf2]"
+                                      ? "bg-[#3d37f0]"
                                       : "bg-[#bedbff]"
                                   }`}
                                 >
@@ -616,7 +616,7 @@ const HomePage = () => {
                               <div className="grid grid-cols-3 gap-4 text-center">
                                 <div
                                   className={`p-3 rounded-md ${
-                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm ">Мин. Балл</p>
@@ -627,7 +627,7 @@ const HomePage = () => {
 
                                 <div
                                   className={`p-3 rounded-md ${
-                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm ">Ср. Балл</p>
@@ -638,7 +638,7 @@ const HomePage = () => {
 
                                 <div
                                   className={`p-3 rounded-md ${
-                                    isDarkMode ? "bg-[#6e7bf2]" : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm ">Бюджет</p>

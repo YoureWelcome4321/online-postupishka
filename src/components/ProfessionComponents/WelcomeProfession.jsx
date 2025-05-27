@@ -79,7 +79,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
         flex flex-col sm:my-0 sm:pt-0 my-18 pt-4
         px-4 sm:px-6 lg:px-8
         transition-all duration-500 ease-in-out
-        ${isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"}
+        ${isDarkMode ? "bg-[#141414] text-white" : "bg-[#f6f6f6] sm:bg-white text-gray-900"}
       `}
     >
       <motion.button
@@ -128,7 +128,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
       </motion.div>
 
       <motion.h1
-        className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center mb-4 sm:mb-6 px-2"
+        className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6 px-2"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.8 }}
@@ -242,7 +242,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
               <p className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>
                 Следующая возможность прохождения станет доступной через:
               </p>
-              <p className="text-lg font-bold text-blue-500">
+              <p className={`text-lg font-bold ${isDarkMode ? "text-[#6e7bf2]" :"text-blue-500"}`}>
                 {formatTime(remainingTime)}
               </p>
             </div>

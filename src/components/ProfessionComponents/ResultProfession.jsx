@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../../ThemeContext";
+import axios from "axios";
 import UniversityCard from "./UniversityCard";
 
 export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
@@ -12,29 +13,28 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
   const [startSlide, setStartSlide] = useState(0);
   const maxSelections = 5;
 
-  // Сброс при закрытии
   useEffect(() => {
     return () => {
       setSelectedUniversities([]);
     };
   }, []);
 
-  // Обработка выбора университета
-  const handleSelectUniversity = (university) => {
-    if (selectedUniversities.some(
-      (u) => u.university === university.university && 
-             u.direction === university.direction
-    )) {
-      alert("Вы уже выбрали это направление");
-      return;
-    }
+  const handleSaveUniversity = async (universityData) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "https://api.online-postupishka.ru/university/add",universityData,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+      });
 
-    if (selectedUniversities.length >= maxSelections) {
-      alert("Максимум 5 направлений");
-      return;
+      setSelectedUniversities((prev) => [...prev, universityData]);
+    } catch (error) {
+      console.error("Не удалось сохранить данные:", error);
+      alert("Ошибка при сохранении данных");
     }
-
-    setSelectedUniversities((prev) => [...prev, university]);
   };
 
   // Переключение слайдов
@@ -48,14 +48,15 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
     setCurrentSlide((prev) => Math.max(prev - 1, 0));
   };
 
-  // Обработка начала свайпа
+  // Обработка свайпов
   const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX);
-    setStartSlide(currentSlide);
+    if (e.touches && e.touches.length > 0) {
+      setIsDragging(true);
+      setStartX(e.touches[0].clientX);
+      setStartSlide(currentSlide);
+    }
   };
 
-  // Обработка свайпа
   const handleTouchMove = (e) => {
     if (!isDragging) return;
     
@@ -72,7 +73,6 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
     }
   };
 
-  // Обработка окончания свайпа
   const handleTouchEnd = () => {
     setIsDragging(false);
   };
@@ -87,36 +87,34 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
         space-y-8 sm:space-y-6
       `}
     >
-   
-
       {/* Заголовок и счетчик */}
-      <div className=" sm:space-y-2 mb-4">
-       <div className="flex">
-        <h2 className="text-2xl px-3 sm:text-3xl font-bold mb-2">
-          Самые подходящие ВУЗы для вас:
-        </h2>
-        <motion.button
-        className="p-2 self-end mb-6 rounded-full transition-colors"
-        onClick={onClose}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 sm:h-6 sm:w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke={isDarkMode ? "#e2e8f0" : "#334155"}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </motion.button>
-      </div>
+      <div className="sm:space-y-2 mb-4">
+        <div className="flex">
+          <h2 className="text-2xl px-3 sm:text-3xl font-bold mb-2">
+            Самые подходящие ВУЗы для вас:
+          </h2>
+          <motion.button
+            className="p-2 self-end mb-6 rounded-full transition-colors"
+            onClick={onClose}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 sm:h-6 sm:w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke={isDarkMode ? "#e2e8f0" : "#334155"}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </motion.button>
+        </div>
         <div
           className={`ml-3 inline-flex items-center justify-center px-3 py-1 rounded-full text-xs ${
             isDarkMode ? "bg-[#2d2d2d]" : "bg-gray-100"
@@ -151,10 +149,9 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
         </div>
       )}
 
-      {/* Успешный результат */}
-      {loadingStatus === "success" && results?.length > 0 && (
-        <div className="relative">
-          {/* Слайдер с карточками */}
+      {/* Слайдер с карточками */}
+     {loadingStatus === "success" && results?.length > 0 && ( 
+        <div className="relative w-full">
           <div 
             className="overflow-hidden"
             onTouchStart={handleTouchStart}
@@ -169,7 +166,6 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
               className="flex transition-transform duration-300 ease-in-out"
               style={{
                 transform: `translateX(-${currentSlide * 100}%)`,
-                width: `${results.length * 100}%`,
               }}
             >
               {results.map((university, index) => (
@@ -178,16 +174,13 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
                   className="w-full flex-shrink-0 px-2 sm:px-4"
                 >
                   <UniversityCard
-                    {...university}
-                    onSelect={handleSelectUniversity}
-                    isSelected={selectedUniversities.some(
-                      (u) =>
-                        u.university === university.university &&
-                        u.direction === university.direction
-                    )}
-                    isMaxSelected={
-                      selectedUniversities.length >= maxSelections
-                    }
+                    university={university.university}
+                    region={university.region}
+                    directions={university.directions}
+                    information={university.information}
+                    selectedUniversities={selectedUniversities}
+                    onSaveUniversity={handleSaveUniversity}
+                    isMaxSelected={selectedUniversities.length >= maxSelections}
                   />
                 </div>
               ))}
@@ -218,7 +211,7 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
           {results.length > 1 && (
             <>
               <button
-                className={`absolute top-1/2 left-2 transform -translate-y-1/2 z-10 p-2 rounded-full ${
+                className={`absolute top-1/2 text-4xl left-2 transform -translate-y-1/2 z-10 p-2 rounded-full ${
                   currentSlide === 0
                     ? "opacity-50 cursor-not-allowed"
                     : isDarkMode
@@ -232,7 +225,7 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
                 ‹
               </button>
               <button
-                className={`absolute top-1/2 right-2 transform -translate-y-1/2 z-10 p-2 rounded-full ${
+                className={`absolute top-1/2 text-4xl   right-2 transform -translate-y-1/2 z-10 p-2 rounded-full ${
                   currentSlide === results.length - 1
                     ? "opacity-50 cursor-not-allowed"
                     : isDarkMode

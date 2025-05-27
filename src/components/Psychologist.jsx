@@ -124,7 +124,7 @@ const Psychologist = ({ onClose = () => {} }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`absolute ${
+      className={`sm:min-h-screen sm:mb-6 sm:rounded-xl sm:w-[100%] absolute ${
         isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6] sm:bg-white"
       } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative w-full max-w-2xl mx-auto h-screen sm:h-auto sm:max-h-[90vh] flex flex-col`}
     >
@@ -182,7 +182,7 @@ const Psychologist = ({ onClose = () => {} }) => {
                       onClick={() => handleQuickReply(reply)}
                       className={`${
                         isDarkMode ? "bg-[#615fff]" : "bg-[#155dfc]"
-                      } text-white px-4 py-1 rounded-full hover:bg-indigo-100 transition-colors`}
+                      } text-white px-4 py-1 rounded-full hover:bg-[#3d37f0] transition-colors`}
                     >
                       {reply}
                     </button>

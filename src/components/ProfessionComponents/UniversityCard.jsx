@@ -2,19 +2,57 @@ import React, { useState, useContext } from "react";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../../ThemeContext";
 
-const UniversityCard = ({
-  university,
-  region,
-  directions,
-  information,
-  onSelect = () => {},
-  isSelected = false,
-  isMaxSelected = false,
-}) => {
+const UniversityCard = (
+  {
+    university,
+    region,
+    directions,
+    information,
+    isMaxSelected = false,
+    selectedUniversities = [],
+    onSaveUniversity,
+  } = {}
+) => {
   const { isDarkMode } = useContext(ThemeContext);
   const [selectedDirection, setSelectedDirection] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const currentDirection = directions?.[selectedDirection] || {};
   
+  // Получаем актуальные scores, с fallback на пустые значения
+  const scores = currentDirection.scores || { min: "—", avg: "—", bud: "—" };
+
+  const isSelected = selectedUniversities.some(
+    (item) =>
+      item.university === university &&
+      item.direction === (currentDirection.name || currentDirection.program)
+  );
+
+  const handleSave = async () => {
+    if (isSelected || isSubmitting || isMaxSelected) return;
+
+    setIsSubmitting(true);
+    try {
+      // Формируем данные для отправки
+      const payload = {
+        university,
+        direction: currentDirection.name || currentDirection.program,
+        scores: {
+          min: scores.min || 0,
+          avg: scores.avg || 0,
+          bud: scores.bud || 0,
+        },
+      };
+
+      // Вызываем внешний обработчик, например, в родительском компоненте
+      await onSaveUniversity(payload);
+    } catch (error) {
+      console.error("Ошибка при сохранении данных:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -26,24 +64,16 @@ const UniversityCard = ({
     >
       {/* Баннер с названием */}
       <div
-        className={`px-4 py-3 relative ${
+        className={`px-4 py-3 ${
           isDarkMode ? "bg-[#3d37f0] text-white" : "bg-blue-600 text-white"
         }`}
       >
         <div
-          className={`absolute top-3 right-4 px-3 py-1 rounded-full text-xs flex items-center gap-1 ${
+          className={`float-right px-3 py-1 rounded-full text-xs flex items-center gap-1 ${
             information ? "bg-green-500" : "bg-red-500"
           }`}
         >
-          {information ? (
-            <>
-              <span>✅ Актуальная информация</span>
-            </>
-          ) : (
-            <>
-              <span>⚠️ Требуется проверка</span>
-            </>
-          )}
+          {information ? <span>Актуальная информация</span> : <span>Требуется проверка</span>}
         </div>
         <h3 className="text-lg">{university}</h3>
         <p className="text-sm opacity-80">{region}</p>
@@ -98,7 +128,7 @@ const UniversityCard = ({
                 {key === "bud" && "Бюджет"}
               </div>
               <div className="text-xl font-bold mt-1">
-                {currentDirection.scores?.[key] ?? "—"}
+                {scores[key] ?? "—"}
               </div>
             </div>
           ))}
@@ -122,25 +152,41 @@ const UniversityCard = ({
         <button
           className={`
             w-full my-4 py-2 rounded-lg transition
-            ${isSelected
-              ? "bg-green-600 hover:bg-green-700 cursor-default"
-              : isMaxSelected
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : isDarkMode
+            ${isDarkMode
               ? "bg-[#3d37f0] hover:bg-[#2a25b0] text-white"
               : "bg-blue-600 hover:bg-blue-700 text-white"
             }
+            ${isSelected && "bg-green-600 hover:bg-green-700 cursor-default"}
           `}
-          disabled={isSelected || isMaxSelected}
-          onClick={() => onSelect({
-            university,
-            direction: currentDirection.program || currentDirection.name || "Не указано"
-          })}
+          onClick={handleSave}
+          disabled={isSubmitting || isSelected || isMaxSelected}
         >
           {isSelected
             ? "Выбрано"
-            : isMaxSelected
-            ? "Достигнут лимит (5)"
+            : isSubmitting
+            ? (
+                <div className="flex justify-center items-center">
+                  <svg
+                    className="animate-spin h-5 w-5 mr-2"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Отправка...
+                </div>
+              )
             : "Выбрать направление"}
         </button>
       </div>

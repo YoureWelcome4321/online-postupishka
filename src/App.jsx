@@ -14,10 +14,6 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/main" element={<UserPage />} />
           <Route path="/sign" element={<RegistrationLogin />} />
-          <Route
-            path="/materials/select-university"
-            element={<SelectUniversity />}
-          />
         </Routes>
       </Router>
     </ThemeProvider>

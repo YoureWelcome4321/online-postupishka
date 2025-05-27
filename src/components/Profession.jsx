@@ -15,16 +15,8 @@ export default function Profession({ onClose = () => {} }) {
   const [showWelcome, setShowWelcome] = useState(true);
   const [userAnswer, setAnswer] = useState({ answer: "" });
   const [stage, setStage] = useState("welcome");
-  const [results, setResults] = useState([
-    {
-      university: "",
-      region: "",
-      features: [],
-      information: true,
-      directions: [],
-    },
-  ]);
-  const [loadingStatus, setLoadingStatus] = useState("idle"); // idle | loading | success | error
+  const [results, setResults] = useState([]);
+  const [loadingStatus, setLoadingStatus] = useState("idle"); 
   const [pollingInterval, setPollingInterval] = useState(null);
 
   const handleAnswerChange = (e) => {
@@ -36,7 +28,7 @@ export default function Profession({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/question ", 
+        "https://api.online-postupishka.ru/specialization/question", 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuestionsData(response.data);
@@ -52,7 +44,7 @@ export default function Profession({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "https://api.online-postupishka.ru/specialization/answer ", 
+        "https://api.online-postupishka.ru/specialization/answer", 
         userAnswer,
         {
           headers: {
@@ -133,8 +125,15 @@ export default function Profession({ onClose = () => {} }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <motion.button
-          className="p-2 rounded-full transition-colors"
+        
+
+        <div className=" flex mb-2 sm:mb-4">
+          <span className="font-medium text-xl sm:text-base">
+            Осталось вопросов: {questionsData.counts_remaind}
+          </span>
+
+          <motion.button
+          className="ml-auto rounded-full transition-colors"
           onClick={onClose}
         >
           <svg
@@ -152,14 +151,9 @@ export default function Profession({ onClose = () => {} }) {
             />
           </svg>
         </motion.button>
-
-        <div className="mb-2 sm:mb-4">
-          <span className="font-medium text-xl sm:text-base">
-            Осталось вопросов: {questionsData.counts_remaind}
-          </span>
         </div>
 
-        <h2 className="text-2xl sm:text-xl font-medium mb-3 sm:mb-4">
+        <h2 className="text-2xl sm:text-xl font-medium mb-6 sm:mb-4">
           {questionsData.question}
         </h2>
 
@@ -180,7 +174,7 @@ export default function Profession({ onClose = () => {} }) {
               if (questionsData.counts_remaind > 1) {
                 handleGetQuestion();
               } else {
-                handleEndTest(); // ✅ Запуск опроса только один раз
+                handleEndTest(); 
                 setStage("result");
               }
             }}
