@@ -455,7 +455,7 @@ const HomePage = () => {
                     </div>
                   ))}
                   <button
-                    onClick={() => setShowProfile(true)}
+                    onClick={() => {setShowProfile(true),setShowSchedule(false)}}
                     className={`my-3 flex items-center text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
                         ? "bg-[#3d37f0]"
@@ -675,7 +675,7 @@ const HomePage = () => {
                     className={`flex items-center mx-6 text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
                         ? "bg-[#3d37f0] "
-                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                        : "bg-[#155dfc] hover:bg-[#200eb2] text-white "
                     } p-2 transition-all rounded-lg`}
                   >
                     Добавить цель (Пройти тест)
@@ -726,12 +726,13 @@ const HomePage = () => {
                 })}
                 <button
                   onClick={() => {
-                    setShowProfile(true);
+                    setShowProfile(true),
+                    setShowSchedule(false)
                   }}
                   className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
                     isDarkMode
                       ? "bg-[#3d37f0] "
-                      : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                      : "bg-[#155dfc] text-white "
                   } p-2 transition-all rounded-lg`}
                 >
                   Добавить/изменить предметы
