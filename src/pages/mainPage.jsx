@@ -166,7 +166,7 @@ const MainPage = () => {
               <motion.p
                 className={`text-lg mb-8 ${isDarkMode ? "text-white" : "text-[#363e45]"}`}
               >
-                Бот анализирует ваши интересы, страхи и текущий уровень подготовки, создавая индивидуальную траекторию
+                Мы анализируем ваши интересы, страхи и текущий уровень подготовки, создавая индивидуальную траекторию
               </motion.p>
               <ul className={`space-y-4 ${isDarkMode ? "text-white" : "text-[#363e45]"}`}>
                 {[...Array(6)].map((_, i) => (
@@ -180,9 +180,9 @@ const MainPage = () => {
                         "Поддержка 24/7",
                         "Помощь в выборе специальности",
                         "Рекомендации по вузам",
-                        "Анализ пробелов в знаниях",
                         "Напоминания о занятиях",
-                        "Ежедневная проверка знаний ",
+                        "Ежедневная проверка знаний (В разработке)",
+                        "Анализ пробелов в знаниях (В разработке)"
                       ][i]}
                     </span>
                   </motion.li>
@@ -197,7 +197,7 @@ const MainPage = () => {
             >
               <img
                 src="/phone.png"
-                alt="Telegram бот интерфейс"
+                alt="интерфейс"
                 className="w-[60%] rounded-3xl transition-transform duration-500"
               />
             </motion.div>
@@ -227,7 +227,7 @@ const MainPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <a href="https://t.me/postupishka_bot">Начать бесплатно</a>
+            <Link to={`${loginLink}`}>Начать бесплатно</Link>
           </motion.button>
         </motion.div>
       </section>

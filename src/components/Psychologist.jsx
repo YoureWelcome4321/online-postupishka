@@ -15,9 +15,16 @@ const Psychologist = ({ onClose = () => {} }) => {
   }, []);
 
   useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
+    const scrollChatToBottom = () => {
+      if (chatBoxRef.current) {
+        // Небольшая задержка, чтобы DOM успел обновиться
+        setTimeout(() => {
+          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }, 50);
+      }
+    };
+
+    scrollChatToBottom();
   }, [messages]);
 
   const handleSendMessage = () => {
@@ -124,9 +131,9 @@ const Psychologist = ({ onClose = () => {} }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`sm:min-h-screen sm:mb-6 sm:rounded-xl sm:w-[100%] absolute ${
+      className={`sm:min-h-screen min-[1025px]:mb-6 sm:rounded-xl min-[1025px]:w-[100%] absolute ${
         isDarkMode ? "text-white bg-[#141414]" : "text-[#41384b] bg-[#f6f6f6] sm:bg-white"
-      } mt-18 sm:mt-4 rounded-xl inset-0 sm:relative w-full max-w-2xl mx-auto h-screen sm:h-auto sm:max-h-[90vh] flex flex-col`}
+      } mt-18 min-[1025px]:mt-4 min-[1025px]:max-w-2xl rounded-xl inset-0 min-[1025px]:relative w-full mx-auto h-screen sm:h-auto min-[1025px]:max-h-[90vh] flex flex-col`}
     >
       <div className="flex px-6 py-4">
         <h2 className="text-2xl font-semibold">Ваш психолог:</h2>
@@ -153,8 +160,12 @@ const Psychologist = ({ onClose = () => {} }) => {
         </motion.button>
       </div>
 
-
-      <div ref={chatBoxRef} className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-4">
+      {/* Контейнер с чатом */}
+      <div
+        ref={chatBoxRef}
+        className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-4"
+        style={{ maxHeight: "calc(100vh - 200px)" }}
+      >
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -194,8 +205,9 @@ const Psychologist = ({ onClose = () => {} }) => {
         ))}
       </div>
 
+      {/* Поле ввода */}
       <div
-        className={`mb-18 sm:mb-0 sm:static fixed bottom-0 left-0 right-0 p-4 border-t ${
+        className={`mb-18 min-[1025px]:mb-0 min-[1025px]:static fixed bottom-0 left-0 right-0 p-4 border-t ${
           isDarkMode ? "bg-[#222222] border-gray-700" : "bg-white border-gray-200"
         } z-10 transition-all duration-300`}
       >

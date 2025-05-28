@@ -24,30 +24,50 @@ const Schedule = ({ onClose = () => {} }) => {
     "Воскресенье"
   ];
 
-  const initialDays = Array.from({ length: 7 }, (_, i) => ({
-    day_in_month: new Date().getDate() + i,
+  // Получаем текущую дату
+  const today = new Date();
+
+  // Создаём массив из 7 дней, начиная с понедельника
+  const weekDates = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i - ((today.getDay() + 6) % 7));
+    return date;
+  });
+
+  // Определяем индекс текущего дня (0 = пн, 6 = вс)
+  const adjustedToday = (today.getDay() + 6) % 7;
+
+  // Формируем initialDays с реальными датами
+  const initialDays = weekDates.map(date => ({
+    day_in_month: date.getDate(),
     schedule: [],
   }));
 
   const [allSchedule, setAllSchedule] = useState([
     {
       week: 1,
-      info: initialDays,
+      info: [...initialDays],
     },
   ]);
 
   const currentWeek = allSchedule[0];
 
+  // Устанавливаем текущий день при монтировании
+  useEffect(() => {
+    setSelectedDayIndex(adjustedToday);
+  }, []);
+
   // Для свайпов
   const handleNextDay = () => setSelectedDayIndex((prev) => (prev + 1) % 7);
   const handlePrevDay = () => setSelectedDayIndex((prev) => (prev - 1 + 7) % 7);
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: handleNextDay,
     onSwipedRight: handlePrevDay,
     trackMouse: true,
   });
 
-  // расписание с сервера
+  // Загрузка расписания с сервера
   const handleGetSchedule = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -59,25 +79,34 @@ const Schedule = ({ onClose = () => {} }) => {
       );
 
       if (response.data && response.data.length > 0) {
-        setAllSchedule(response.data);
+        const updatedSchedule = [...initialDays];
+
+        response.data.forEach((week) => {
+          week.info.forEach((dayData) => {
+            const dayIndexFromServer = dayData.day - 1; // 1 = ПН → index 0
+            if (updatedSchedule[dayIndexFromServer]) {
+              updatedSchedule[dayIndexFromServer].schedule = dayData.schedule || [];
+            }
+          });
+        });
+
+        setAllSchedule([{ week: 1, info: updatedSchedule }]);
       }
     } catch (error) {
       console.error("Ошибка загрузки расписания:", error);
     }
   };
 
-  //  пользовательское расписание
+  // Отправка пользовательского расписания
   const handleSendSchedule = async () => {
-    
     try {
       const token = localStorage.getItem("token");
 
-      const fullContent = `Учитывая что первый день недели понедельник, второй вторник, третий среда ,четвертый четверг ,пятый пятница, шестой суббота ,а седьмой воскресенье. Добавь в ${selectedDayIndex+1} день недели ${userSchedule.content}`;
-
-      console.log(fullContent)
+      const fullContent = `${userSchedule.content} в ${
+        dayNamesFull[selectedDayIndex]}`; 
 
       await axios.post(
-        "https://api.online-postupishka.ru/schedule",
+        "https://api.online-postupishka.ru/schedule ",
         { content: fullContent },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -101,7 +130,7 @@ const Schedule = ({ onClose = () => {} }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`absolute my-18 sm:my-6 sm:mr-12 sm:w-[40%] z-10 inset-0 sm:relative  rounded-xl p-6 ${
+      className={`absolute my-18 min-[1025px]:my-6 min-[1025px]:mr-12 min-[1025px]:w-[40%] z-10 inset-0 min-[1025px]:relative rounded-xl p-6 ${
         isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6] sm:bg-[#fff]"
       } shadow-md`}
     >
@@ -138,22 +167,24 @@ const Schedule = ({ onClose = () => {} }) => {
       </div>
 
       {/* Кнопки дней */}
-      <div className=" flex justify-between mb-6">
+      <div className="flex justify-between mb-6">
         {daysOfWeek.map((dayName, index) => {
-          const dayData = initialDays[index];
-          const dayNumber = dayData.day_in_month;
+          const dayNumber = initialDays[index].day_in_month;
 
           return (
             <div key={index} className="flex flex-col items-center">
               <span className="mb-2 text-xs">{dayName}</span>
               <button
                 onClick={() => setSelectedDayIndex(index)}
-                className={` cursor-pointer w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all ${
-                    selectedDayIndex === index
-                      ? isDarkMode ? "bg-[#3d37f0] text-white" : "bg-blue-600 text-white"
-                      : isDarkMode ? "bg-[#222222] text-white" : "bg-white sm:bg-[#f6f6f6] text-[#363e45]"
-                  }`}
-    
+                className={`cursor-pointer w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all ${
+                  selectedDayIndex === index
+                    ? isDarkMode
+                      ? "bg-[#3d37f0] text-white"
+                      : "bg-blue-600 text-white"
+                    : isDarkMode
+                    ? "bg-[#222222] text-white"
+                    : "bg-white sm:bg-[#f6f6f6] text-[#363e45]"
+                }`}
               >
                 <span className="text-lg font-medium">{dayNumber}</span>
               </button>
@@ -196,14 +227,14 @@ const Schedule = ({ onClose = () => {} }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">Занятий нет</p>
+          <p className={` ${isDarkMode ? 'text-gray-200 ' : 'text-gray-800'}`}>Занятий нет</p>
         )}
       </div>
 
       {/* Кнопки управления */}
       {editing ? (
         <button
-          className={` cursor-pointer  mt-6 w-full py-2 ${
+          className={`cursor-pointer mt-6 w-full py-2 ${
             isDarkMode ? "bg-[#3d37f0]" : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-lg transition-colors`}
           onClick={() => {
@@ -215,7 +246,7 @@ const Schedule = ({ onClose = () => {} }) => {
         </button>
       ) : (
         <button
-          className={` cursor-pointer mt-6 w-full py-2 ${
+          className={`cursor-pointer mt-6 w-full py-2 ${
             isDarkMode ? "bg-[#3d37f0]" : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-lg transition-colors`}
           onClick={() => setEditing(true)}
@@ -229,7 +260,7 @@ const Schedule = ({ onClose = () => {} }) => {
         <div className="my-4 w-full">
           <label
             htmlFor="scheduleInput"
-            className="block text-sm font-medium mb-4 text-gray-300"
+            className= {`block text-sm font-medium mb-4 ${isDarkMode ? 'text-gray-200 ' : 'text-gray-800'}`}
           >
             Напишите свои занятия на день — настроим расписание под вас
           </label>
@@ -252,11 +283,11 @@ const Schedule = ({ onClose = () => {} }) => {
               })
             }
             id="scheduleInput"
-            placeholder="Формат: Время - Предмет - Описание. Например: 9:00 - Математика - Решение уравнений высших степеней..."
+            placeholder="Ваши занятия на сегодня..."
             rows={4}
-            className="w-full px-4 py-3 rounded-lg bg-[#222222] text-white placeholder-gray-500 
+            className={`w-full px-4 py-3 rounded-lg ${isDarkMode ? 'bg-[#222222]' : 'bg-[#fff] min-[1025px]:bg-[#f6f6f6]'} text-white placeholder-gray-500 
                      border border-transparent focus:border-blue-500 focus:outline-none 
-                     shadow-md focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-y"
+                     shadow-md focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-y`}
           />
         </div>
       )}

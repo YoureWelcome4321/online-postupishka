@@ -756,7 +756,7 @@ const HomePage = () => {
                           setShowProfile(false);
                           setShowSchedule(false);
                           setShowPsychologist(false);}}
-                        className={`block p-4 rounded-lg ${
+                        className={`w-full block p-4 rounded-lg ${
                           isDarkMode
                             ? "bg-[#222222] hover:bg-gray-700"
                             : "bg-white hover:bg-gray-50 shadow"
