@@ -128,7 +128,7 @@ const Schedule = ({ onClose = () => {} }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`absolute my-18 min-[1025px]:my-6 min-[1025px]:mr-auto min-[1025px]:max-w-xl  z-10 inset-0 min-[1025px]:relative rounded-xl p-6 ${
+      className={`absolute my-18 min-[1025px]:my-6 min-[1025px]:mr-auto min-[1025px]:w-[30%] min-[1025px]:max-w-lg z-10 inset-0 min-[1025px]:relative rounded-xl p-6 ${
         isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6] sm:bg-[#fff]"
       } shadow-md`}
     >

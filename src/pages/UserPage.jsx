@@ -73,7 +73,7 @@ const HomePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/university ",
+        process.env.API + '/university',
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -158,7 +158,7 @@ const HomePage = () => {
         }`}
       >
         <motion.div
-          className="max-[1025px]:w-full p-6 bg-[#f6f6f6]"
+          className="min-[1025px]:min-h-screen  max-[1025px]:w-full p-6 bg-[#f6f6f6]"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

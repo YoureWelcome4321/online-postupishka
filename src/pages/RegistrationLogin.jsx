@@ -6,7 +6,7 @@ import {
   HiOutlineLockClosed,
   HiOutlineMail,
 } from "react-icons/hi";
-import { FaTelegramPlane, FaGoogle, FaVk, FaTelegram } from "react-icons/fa";
+ 
 import { MdOutlineClass } from "react-icons/md";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
@@ -14,6 +14,8 @@ import HeaderNoButton from "../components/MainPageComponents/Header";
 
 const RegistrationLogin = () => {
   const { isDarkMode } = useContext(ThemeContext);
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   const [formRegistData, setFormRegistData] = useState({
     first_name: "",
@@ -22,12 +24,10 @@ const RegistrationLogin = () => {
     telegram: "",
     password: "",
   });
-
   const [formSignInData, setFormSignInData] = useState({
     identifier: "",
     password: "",
   });
-
   const [registErrors, setRegistErrors] = useState({});
   const [signInErrors, setSignInErrors] = useState({});
   const [loginError, setLoginError] = useState("");
@@ -35,6 +35,7 @@ const RegistrationLogin = () => {
 
   // Функции валидации
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
   const validateRegistration = () => {
     const errors = {};
     if (!formRegistData.first_name.trim()) errors.first_name = "Введите имя";
@@ -45,7 +46,10 @@ const RegistrationLogin = () => {
     }
     if (!formRegistData.class_number) {
       errors.class_number = "Введите класс";
-    } else if (formRegistData.class_number > 11 || formRegistData.class_number < 9) {
+    } else if (
+      formRegistData.class_number > 11 ||
+      formRegistData.class_number < 9
+    ) {
       errors.class_number = "Класс должен быть от 9 до 11";
     }
     if (formRegistData.password.length < 6) {
@@ -67,15 +71,13 @@ const RegistrationLogin = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isLogin) {
         if (validateSignIn()) {
           const response = await axios.post(
-            "https://api.online-postupishka.ru/auth",
+            process.env.API + "/auth",
             {
               ...formSignInData,
             },
@@ -91,7 +93,7 @@ const RegistrationLogin = () => {
       } else {
         if (validateRegistration()) {
           const response = await axios.post(
-            "https://api.online-postupishka.ru/reg",
+            "https://api.online-postupishka.ru/reg", 
             {
               ...formRegistData,
             },
@@ -102,7 +104,9 @@ const RegistrationLogin = () => {
             }
           );
           localStorage.setItem("token", response.data.token);
-          navigate("/main");
+          localStorage.setItem("registeringEmail", formRegistData.email); 
+
+          navigate("/check-email");
         }
       }
     } catch (error) {
@@ -114,16 +118,14 @@ const RegistrationLogin = () => {
           setEmailError("Данная почта уже зарегистрирована");
         }
       }
-
       console.error("Ошибка при регистрации:", error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    const processedValue = name === "class_number" ? parseInt(value, 10) : value;
-
+    const processedValue =
+      name === "class_number" ? parseInt(value, 10) : value;
     setRegistErrors({ ...registErrors, [name]: "" });
     setFormRegistData((prev) => ({ ...prev, [name]: processedValue }));
   };
@@ -132,7 +134,10 @@ const RegistrationLogin = () => {
     setSignInErrors({ ...signInErrors, [e.target.name]: "" });
     setLoginError("");
     setEmailError("");
-    setFormSignInData({ ...formSignInData, [e.target.name]: e.target.value });
+    setFormSignInData({
+      ...formSignInData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -198,6 +203,7 @@ const RegistrationLogin = () => {
             Регистрация
           </button>
         </div>
+
         <form onSubmit={handleSubmit}>
           {/* Поле имени */}
           <div className="relative mb-4">
@@ -241,6 +247,7 @@ const RegistrationLogin = () => {
               </motion.div>
             )}
           </div>
+
           {/* Поля регистрации */}
           {!isLogin && (
             <>
@@ -277,13 +284,20 @@ const RegistrationLogin = () => {
                     <span>{registErrors.email}</span>
                   </motion.div>
                 )}
-                {!isLogin && (
-                  <p className="my-2 ml-2 flex items-center space-x-2 text-red-500 text-sm w-full">
-                    {" "}
+
+                {/* Ошибка существующей почты */}
+                {emailError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-2 ml-2 flex items-center space-x-2 text-red-500 text-sm w-full"
+                  >
                     {emailError}
-                  </p>
+                  </motion.p>
                 )}
               </div>
+
               {/* Класс */}
               <div className="relative mb-4">
                 <MdOutlineClass
@@ -305,7 +319,7 @@ const RegistrationLogin = () => {
                     registErrors.class_number ? "border-red-500" : ""
                   }`}
                 />
-                {/*  Валидация класса */}
+                {/* Валидация класса */}
                 {registErrors.class_number && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -347,7 +361,7 @@ const RegistrationLogin = () => {
                   : ""
               }`}
             />
-            {/*  Валидация для пароля */}
+            {/* Валидация пароля */}
             {(isLogin ? signInErrors.password : registErrors.password) && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -374,16 +388,17 @@ const RegistrationLogin = () => {
           >
             {isLogin ? "Войти" : "Зарегистрироваться"}
           </motion.button>
+
           {isLogin && (
-            <p className=" my-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">
+            <p className="my-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">
               {loginError}
             </p>
           )}
 
-          {/* Ссылки и соцсети */}
           <div className="flex justify-between text-sm mt-3 mb-6">
             {!isLogin && (
               <button
+                type="button"
                 onClick={() => {
                   setIsLogin(true);
                   setRegistErrors({});
