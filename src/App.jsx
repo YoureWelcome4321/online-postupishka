@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import MainPage from "./pages/mainPage";
+import MainPage from "./pages/MainPage";
 import UserPage from "./pages/UserPage";
 import RegistrationLogin from "./pages/RegistrationLogin";
 import { ThemeProvider } from "./ThemeContext";
-import SelectUniversity from "./components/materials/SelectUniversity";
+import EmailVerification from "./pages/EmailVerification";
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/main" element={<UserPage />} />
           <Route path="/sign" element={<RegistrationLogin />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
         </Routes>
       </Router>
     </ThemeProvider>

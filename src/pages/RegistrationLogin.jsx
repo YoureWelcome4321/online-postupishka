@@ -10,7 +10,7 @@ import { FaTelegramPlane, FaGoogle, FaVk, FaTelegram } from "react-icons/fa";
 import { MdOutlineClass } from "react-icons/md";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
-import HeaderNoButton from "../components/HeaderNoButtons";
+import HeaderNoButton from "../components/MainPageComponents/Header";
 
 const RegistrationLogin = () => {
   const { isDarkMode } = useContext(ThemeContext);

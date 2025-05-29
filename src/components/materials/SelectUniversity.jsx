@@ -45,7 +45,7 @@ const SelectUniversity = ({ onClose = () => {} }) => {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-    <div className={`flex sm:my-6 rounded-xl justify-center p-4 ${
+    <div className={`flex sm:my-6 sm:mr-auto rounded-xl justify-center p-4 ${
       isDarkMode ? "bg-[#141414]" : "bg-gray-100"
     }`}>
 
@@ -53,7 +53,7 @@ const SelectUniversity = ({ onClose = () => {} }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`absolute mt-18 sm:mt-0 inset-0 sm:relative sm:mx-auto  w-full max-w-2xl ${
+        className={`absolute mt-18 min-[1025px]:mt-0 inset-0 min-[1025px]:relative  sm:mx-auto  w-full max-[1025px]:max-w-full max-w-lg ${
           isDarkMode ? "bg-[#141414] text-white" : "bg-white text-[#363e45]"
         } shadow-xl rounded-xl overflow-hidden flex flex-col`}
       >

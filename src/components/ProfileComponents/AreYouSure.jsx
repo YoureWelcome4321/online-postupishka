@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useContext } from "react";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../ThemeContext";
 
 export default function AreYouSure({
   onClose,

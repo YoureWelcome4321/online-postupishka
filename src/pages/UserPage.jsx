@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import {
   HiOutlineUserCircle,
-  HiOutlineAcademicCap,
 } from "react-icons/hi";
 import { FaTasks } from "react-icons/fa";
 import { IoAccessibilityOutline } from "react-icons/io5";
@@ -17,8 +15,8 @@ import {
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { PiSmileyAngry } from "react-icons/pi";
 import { ThemeContext } from "../ThemeContext";
-import HeaderNoButton from "../components/HeaderNoButtons";
-import Profile from "../components/Profile";
+import HeaderNoButton from "../components/MainPageComponents/Header";
+import Profile from "../components/ProfileComponents/Profile";
 import Profession from "../components/Profession";
 import Schedule from "../components/Schedule";
 import Psychologist from "../components/Psychologist";
@@ -289,7 +287,7 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-[35%] mx-6 p-6 max-[1026px]:hidden min-[1027px]:flex"
+            className="max-w-xl ml-auto p-6 max-[1026px]:hidden min-[1027px]:flex "
           >
             <div
               className={`rounded-xl sm:block p-6 ${

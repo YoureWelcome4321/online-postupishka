@@ -6,7 +6,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { TiDeleteOutline } from "react-icons/ti";
 import axios from "axios";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../ThemeContext";
 import AreYouSure from "./AreYouSure";
 
 export default function Profile({ onClose = () => {} }) {

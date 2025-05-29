@@ -27,17 +27,15 @@ const Schedule = ({ onClose = () => {} }) => {
   // Получаем текущую дату
   const today = new Date();
 
-  // Создаём массив из 7 дней, начиная с понедельника
   const weekDates = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() + i - ((today.getDay() + 6) % 7));
     return date;
   });
 
-  // Определяем индекс текущего дня (0 = пн, 6 = вс)
   const adjustedToday = (today.getDay() + 6) % 7;
 
-  // Формируем initialDays с реальными датами
+
   const initialDays = weekDates.map(date => ({
     day_in_month: date.getDate(),
     schedule: [],
@@ -130,7 +128,7 @@ const Schedule = ({ onClose = () => {} }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className={`absolute my-18 min-[1025px]:my-6 min-[1025px]:mr-12 min-[1025px]:w-[40%] z-10 inset-0 min-[1025px]:relative rounded-xl p-6 ${
+      className={`absolute my-18 min-[1025px]:my-6 min-[1025px]:mr-auto min-[1025px]:max-w-xl  z-10 inset-0 min-[1025px]:relative rounded-xl p-6 ${
         isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6] sm:bg-[#fff]"
       } shadow-md`}
     >
@@ -144,7 +142,7 @@ const Schedule = ({ onClose = () => {} }) => {
         </h2>
 
         <motion.button
-          className="p-2 sm:hidden ml-auto rounded-full transition-colors"
+          className="p-2 min-[1025px]:hidden ml-auto rounded-full transition-colors"
           onClick={onClose}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

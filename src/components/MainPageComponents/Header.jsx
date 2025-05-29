@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import React from "react";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../ThemeContext";
 import { IoIosSunny,IoMdMoon } from "react-icons/io";
-import DolphinAnimationReverse from "../components/DolphinAnimationReverse";
+import DolphinAnimationReverse from "./DolphinAnimationReverse";
 
 
 export default function HeaderNoButton() {

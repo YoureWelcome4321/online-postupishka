@@ -8,8 +8,8 @@ import {
   HiOutlineClipboardList,
 } from "react-icons/hi";
 import { motion } from "framer-motion";
-import StressChart from "../components/StressChart";
-import HeaderNoButton from "../components/HeaderNoButtons";
+import StressChart from "../components/MainPageComponents/StressChart";
+import HeaderNoButton from "../components/MainPageComponents/Header";
 
 
 const MainPage = () => {
