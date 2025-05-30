@@ -6,7 +6,6 @@ import {
   HiOutlineLockClosed,
   HiOutlineMail,
 } from "react-icons/hi";
- 
 import { MdOutlineClass } from "react-icons/md";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../ThemeContext";
@@ -15,7 +14,6 @@ import HeaderNoButton from "../components/MainPageComponents/Header";
 const RegistrationLogin = () => {
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
-
   const [isLogin, setIsLogin] = useState(true);
   const [formRegistData, setFormRegistData] = useState({
     first_name: "",
@@ -32,6 +30,7 @@ const RegistrationLogin = () => {
   const [signInErrors, setSignInErrors] = useState({});
   const [loginError, setLoginError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Функции валидации
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -73,14 +72,17 @@ const RegistrationLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setLoginError("");
+    setEmailError("");
+    setRegistErrors({});
+
     try {
       if (isLogin) {
         if (validateSignIn()) {
           const response = await axios.post(
             `${import.meta.env.VITE_API}/auth`,
-            {
-              ...formSignInData,
-            },
+            formSignInData,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -88,15 +90,27 @@ const RegistrationLogin = () => {
             }
           );
           localStorage.setItem("token", response.data.token);
-          navigate("/main");
+
+          const profileResponse = await axios.get(
+            `${import.meta.env.VITE_API}/profile`,
+            {
+              headers: {
+                Authorization: `Bearer ${response.data.token}`,
+              },
+            }
+          );
+
+          if (profileResponse.data.verified) {
+            navigate("/main");
+          } else {
+            navigate("/check-email");
+          }
         }
       } else {
         if (validateRegistration()) {
           const response = await axios.post(
-            `${import.meta.env.VITE_API}/reg`, 
-            {
-              ...formRegistData,
-            },
+            `${import.meta.env.VITE_API}/reg`,
+            formRegistData,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -104,21 +118,33 @@ const RegistrationLogin = () => {
             }
           );
           localStorage.setItem("token", response.data.token);
-          localStorage.setItem("registeringEmail", formRegistData.email); 
-
+          localStorage.setItem("registeringEmail", formRegistData.email);
           navigate("/check-email");
         }
       }
     } catch (error) {
       if (error.response) {
-        const { status } = error.response;
+        const { status, data } = error.response;
+
         if (status === 401) {
           setLoginError("Неверный логин или пароль");
         } else if (status === 409) {
-          setEmailError("Данная почта уже зарегистрирована");
+          if (error.response.data.name === "first_name") {
+            setRegistErrors({ first_name: data.message || "Имя занято" });
+          } else if (error.response.data.name === "email") {
+            setEmailError(data.message || "Email уже зарегистрирован");
+          }
+        } else if (status === 400) {
+          setLoginError("Ошибка проверки аккаунта");
         }
+      } else {
+        setLoginError("Ошибка соединения");
       }
-      console.error("Ошибка при регистрации:", error);
+
+      console.error("Ошибка при регистрации или входе:", error);
+      localStorage.removeItem("token");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,6 +187,7 @@ const RegistrationLogin = () => {
           boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
         }}
       >
+        {/* Переключение между формами */}
         <div className="flex justify-around mb-6">
           <button
             onClick={() => {
@@ -204,6 +231,7 @@ const RegistrationLogin = () => {
           </button>
         </div>
 
+        {/* Форма */}
         <form onSubmit={handleSubmit}>
           {/* Поле имени */}
           <div className="relative mb-4">
@@ -254,7 +282,7 @@ const RegistrationLogin = () => {
               {/* Email */}
               <div className="relative mb-4">
                 <HiOutlineMail
-                  className={`absolute left-4 flex mt-4.5 z-10  ${
+                  className={`absolute left-4 flex mt-4.5 z-10 ${
                     isDarkMode ? "text-white/70" : "text-gray-400"
                   }`}
                 />
@@ -284,7 +312,6 @@ const RegistrationLogin = () => {
                     <span>{registErrors.email}</span>
                   </motion.div>
                 )}
-
                 {/* Ошибка существующей почты */}
                 {emailError && (
                   <motion.p
@@ -301,7 +328,7 @@ const RegistrationLogin = () => {
               {/* Класс */}
               <div className="relative mb-4">
                 <MdOutlineClass
-                  className={`absolute left-4 flex mt-4.5 z-10  ${
+                  className={`absolute left-4 flex mt-4.5 z-10 ${
                     isDarkMode ? "text-white/70" : "text-gray-400"
                   }`}
                 />
@@ -338,7 +365,7 @@ const RegistrationLogin = () => {
           {/* Поле пароля */}
           <div className="relative mb-4">
             <HiOutlineLockClosed
-              className={`absolute left-4 flex mt-4.5 z-10  ${
+              className={`absolute left-4 flex mt-4.5 z-10 ${
                 isDarkMode ? "text-white/70" : "text-gray-400"
               }`}
             />
@@ -350,11 +377,11 @@ const RegistrationLogin = () => {
               }
               onChange={isLogin ? handleSignInChange : handleInputChange}
               placeholder="Пароль"
-              autoComplete="current-password"
+              autoComplete={isLogin ? "current-password" : "new-password"}
               className={`w-full pl-12 pr-4 py-3 rounded-lg ${
                 isDarkMode
                   ? "bg-[#222] placeholder-white/50 focus:bg-[#333]"
-                  : "bg-white focus:bg-gray-50"
+                  : "bg-white placeholder-[#99a1af] focus:bg-gray-50"
               } border border-transparent focus:border-[#6E7BF2] transition-all ${
                 (isLogin ? signInErrors.password : registErrors.password)
                   ? "border-red-500"
@@ -382,19 +409,30 @@ const RegistrationLogin = () => {
             type="submit"
             className={`w-full bg-gradient-to-r from-[#6E7BF2] to-[#4a90e2] hover:from-[#3d37f0] hover:to-[#2d66d4] text-white py-3 rounded-full font-bold mb-1 shadow-lg ${
               isDarkMode ? "" : "shadow-blue-200"
-            }`}
+            } flex items-center justify-center gap-2`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            disabled={isLoading}
           >
-            {isLogin ? "Войти" : "Зарегистрироваться"}
+            {isLoading ? (
+              <>
+                <span>{isLogin ? "Вход..." : "Регистрация..."}</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </>
+            ) : isLogin ? (
+              "Войти"
+            ) : (
+              "Зарегистрироваться"
+            )}
           </motion.button>
 
-          {isLogin && (
+          {isLogin && loginError && (
             <p className="my-2 ml-2 flex items-center justify-center space-x-2 text-red-500 text-sm w-full">
               {loginError}
             </p>
           )}
 
+          {/* Ссылка на вход/регистрацию */}
           <div className="flex justify-between text-sm mt-3 mb-6">
             {!isLogin && (
               <button
@@ -417,12 +455,12 @@ const RegistrationLogin = () => {
 
           {!isLogin && (
             <motion.p
-              className={`text-center text-xs ${
-                isDarkMode ? "text-white/60" : "text-gray-400"
-              }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
+              className={`text-center text-xs ${
+                isDarkMode ? "text-white/60" : "text-gray-400"
+              }`}
             >
               Регистрируясь, вы соглашаетесь с <br />
               <Link

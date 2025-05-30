@@ -6,51 +6,74 @@ import HeaderNoButton from "../components/MainPageComponents/Header";
 
 const PleaseCheckEmail = () => {
   const { isDarkMode } = useContext(ThemeContext);
-  const [isLoading, setIsLoading] = useState(true); // Для начального лоадера
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const maxAttempts = 15; 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      navigate("/"); 
+      navigate("/");
       return;
     }
 
+    let isMounted = true;
+    let intervalId;
+
     const checkProfile = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API}/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API}/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        const userData = response.data;
-
-        if (userData.verified) {
-          navigate("/main");
-        } else {
-          setIsLoading(false); 
+        if (isMounted) {
+          const userData = response.data;
+          
+          if (userData.verified) {
+            navigate("/main");
+          } else if (attemptCount < maxAttempts) {
+            setAttemptCount(prev => prev + 1);
+            setIsLoading(false);
+          }
         }
       } catch (err) {
         console.error("Ошибка получения профиля:", err);
-        navigate("/");
+        
+        if (isMounted) {
+          if (attemptCount < maxAttempts) {
+            setAttemptCount(prev => prev + 1);
+            setIsLoading(false);
+          } else {
+            setError("Не удалось проверить статус верификации. Пожалуйста, попробуйте позже.");
+          }
+        }
       }
     };
 
     checkProfile();
 
-   
-    const intervalId = setInterval(checkProfile, 10000);
+    intervalId = setInterval(checkProfile, 5000);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
   }, [navigate]);
+
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <div className={`flex ${isDarkMode ? 'bg-[#0e0e0e]' : 'bg-[#f6f6f6]'} items-center justify-center min-h-screen`}>
+        <div className={`text-center  ${isDarkMode ? 'text-[#fff]' : 'text-[#000]'}`}>
+          <div className={`w-12 h-12 border-4 border-blue-500  border-t-transparent rounded-full animate-spin mx-auto mb-4`}></div>
           <p>Проверяем статус подтверждения...</p>
         </div>
       </div>
@@ -67,27 +90,35 @@ const PleaseCheckEmail = () => {
         }`}
       >
         <div
-          className={`max-w-md w-full p-8 rounded-xl shadow-lg transition-all duration-300 ${
+          className={`max-w-md w-full py-6 px-2 rounded-xl shadow-lg transition-all duration-300 ${
             isDarkMode ? "bg-[#1e1e1e] text-white" : "bg-white text-gray-800"
           }`}
         >
           <h2 className="text-2xl font-bold mb-6 text-center">Подтвердите вашу почту</h2>
 
-          <p className="mb-6 text-center">
+          <p className="mb-4 text-center">
             Мы отправили ссылку для подтверждения на вашу электронную почту.
+            (После подтверждения вы будете перенаправлены в личный кабинет.)
+            
           </p>
 
-          {/* Кнопка "Назад" */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+        <div className="text-center">
           <button
             onClick={() => navigate("/")}
-            className={`mt-4 w-full py-2 rounded-lg ${
+            className={`mx-auto mt-4  w-full py-2 rounded-lg ${
               isDarkMode
-                ? "bg-gray-700 hover:bg-gray-600"
-                : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-[#6e7bf2] hover:bg-gray-600"
+                : "bg-[#bedbff] hover:bg-gray-300"
             } transition-colors`}
           >
             Назад
           </button>
+          </div>
         </div>
       </div>
     </div>

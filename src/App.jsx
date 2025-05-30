@@ -6,6 +6,7 @@ import RegistrationLogin from "./pages/RegistrationLogin";
 import { ThemeProvider } from "./ThemeContext";
 import EmailVerification from "./pages/EmailVerification";
 import PleaseCheckEmail from "./pages/PleaseCheckEmail";
+import PrivacyPolicy from "./pages/Terms";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/sign" element={<RegistrationLogin />} />
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/check-email" element={<PleaseCheckEmail />} />
+          <Route path="/terms" element={<PrivacyPolicy />} />
         </Routes>
       </Router>
     </ThemeProvider>

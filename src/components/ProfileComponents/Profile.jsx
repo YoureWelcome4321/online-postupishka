@@ -41,7 +41,6 @@ export default function Profile({ onClose = () => {} }) {
     subjects: [{ subject: "", current_score: "", desired_score: "" }],
   });
 
-  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -100,7 +99,7 @@ export default function Profile({ onClose = () => {} }) {
     const initialData = {
       first_name: profileData.first_name || "",
       email: profileData.email || "",
-      class_number: profileData.class_number || "" ,
+      class_number: profileData.class_number || "",
       password_old: editableData.password_old || "",
       password_new: editableData.password_new || "",
       telegram: profileData.username || "",
@@ -118,7 +117,7 @@ export default function Profile({ onClose = () => {} }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "class_number" ) {
+    if (name === "class_number") {
       setEditableData((prev) => ({ ...prev, [name]: Number(value) }));
     } else {
       setEditableData((prev) => ({ ...prev, [name]: value }));
@@ -170,7 +169,9 @@ export default function Profile({ onClose = () => {} }) {
   return (
     <motion.div
       className={`absolute mt-18 inset-0 min-[1025px]:relative sm:mx-auto  min-[1025px]:my-4  min-[1025px]:w-[50%] sm:rounded-2xl transition-all  ${
-        isDarkMode ? "bg-[#141414] text-white" : "bg-[#f6f6f6] sm:bg-white text-gray-900"
+        isDarkMode
+          ? "bg-[#141414] text-white"
+          : "bg-[#f6f6f6] sm:bg-white text-gray-900"
       }`}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
@@ -357,24 +358,22 @@ export default function Profile({ onClose = () => {} }) {
                     if (changePassword) {
                       setValidate(false);
 
-                      if (editableData.password_old === '' && editableData.password_new === '' ){
-                        setNewPassword(false)
-                        setValidate(false)
-                      }
-
-                      else if (
+                      if (
+                        editableData.password_old === "" &&
+                        editableData.password_new === ""
+                      ) {
+                        setNewPassword(false);
+                        setValidate(false);
+                      } else if (
                         !editableData.password_old ||
                         !editableData.password_new
                       ) {
                         setValidate(true);
                         return;
-                      }
-
-                      else if (editableData.password_new.length < 6) {
+                      } else if (editableData.password_new.length < 6) {
                         setValidate(true);
                         return;
                       }
-
 
                       setIsEditing(false);
                       sendEditedProfile();
@@ -449,7 +448,11 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className={`ml-1  ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"}  px-2 py-1 rounded-lg `}
+                    className={`ml-1  ${
+                      isDarkMode
+                        ? "bg-[#222222] peer-checked:bg-[#6e7bf2]"
+                        : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"
+                    }  px-2 py-1 rounded-lg `}
                     htmlFor="class9"
                   >
                     9 класс
@@ -465,7 +468,11 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className={`ml-1   ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"} px-2 py-1 rounded-lg `}
+                    className={`ml-1   ${
+                      isDarkMode
+                        ? "bg-[#222222] peer-checked:bg-[#6e7bf2]"
+                        : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"
+                    } px-2 py-1 rounded-lg `}
                     htmlFor="class10"
                   >
                     10 класс
@@ -481,7 +488,11 @@ export default function Profile({ onClose = () => {} }) {
                     onChange={handleChange}
                   />
                   <label
-                    className={`ml-1  ${isDarkMode ? 'bg-[#222222] peer-checked:bg-[#6e7bf2]' : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"}  px-2 py-1 rounded-lg `}
+                    className={`ml-1  ${
+                      isDarkMode
+                        ? "bg-[#222222] peer-checked:bg-[#6e7bf2]"
+                        : "bg-[#f6f6f6]  peer-checked:bg-[#2b7fff] peer-checked:text-white"
+                    }  px-2 py-1 rounded-lg `}
                     htmlFor="class11"
                   >
                     11 класс
@@ -490,8 +501,6 @@ export default function Profile({ onClose = () => {} }) {
               </div>
             )}
           </div>
-
-          
         </div>
 
         {/* Предметы ЕГЭ */}
@@ -595,55 +604,63 @@ export default function Profile({ onClose = () => {} }) {
                       )}
                     </div>
                     <div className="flex space-x-4 mt-2 ">
-                       <div >
-                      <h3 className="mb-2">Текущий балл:</h3>
-                      <input
-                        type="text"
-                        placeholder="Текущий балл"
-                        value={subj.current_score}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (
-                            value === "" ||
-                            (Number(value) >= 0 && Number(value) <= 100)
-                          ) {
-                            handleSubjectChange(index, "current_score", Number(value));
-                          }
-                        }}
-                        className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
-                          isDarkMode
-                            ? "text-white border-[#3f4753]"
-                            : "border-[#d1d5dc] bg-white text-black"
-                        }`}
-                        disabled={!isEditing}
-                        min="0"
-                        max="100"
-                      />
+                      <div>
+                        <h3 className="mb-2">Текущий балл:</h3>
+                        <input
+                          type="text"
+                          placeholder="Текущий балл"
+                          value={subj.current_score}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value === "" ||
+                              (Number(value) >= 0 && Number(value) <= 100)
+                            ) {
+                              handleSubjectChange(
+                                index,
+                                "current_score",
+                                Number(value)
+                              );
+                            }
+                          }}
+                          className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
+                            isDarkMode
+                              ? "text-white border-[#3f4753]"
+                              : "border-[#d1d5dc] bg-white text-black"
+                          }`}
+                          disabled={!isEditing}
+                          min="0"
+                          max="100"
+                        />
                       </div>
                       <div>
-                      <h3 className="mb-2">Желаемый балл:</h3>
-                      <input
-                        type="text"
-                        placeholder="Желаемый балл"
-                        value={subj.desired_score}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (
-                            value === "" ||
-                            (Number(value) >= 0 && Number(value) <= 100)
-                          ) {
-                            handleSubjectChange(index, "desired_score", Number(value));
-                          }
-                        }}
-                        className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
-                          isDarkMode
-                            ? " border-[#3f4753] text-white"
-                            : "border-[#d1d5dc] bg-white text-black"
-                        }`}
-                        disabled={!isEditing}
-                        min="0"
-                        max="100"
-                      />
+                        <h3 className="mb-2">Желаемый балл:</h3>
+                        <input
+                          type="text"
+                          placeholder="Желаемый балл"
+                          value={subj.desired_score}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              value === "" ||
+                              (Number(value) >= 0 && Number(value) <= 100)
+                            ) {
+                              handleSubjectChange(
+                                index,
+                                "desired_score",
+                                Number(value)
+                              );
+                            }
+                          }}
+                          className={`w-40 max-sm:w-32 px-3 py-1 rounded border ${
+                            isDarkMode
+                              ? " border-[#3f4753] text-white"
+                              : "border-[#d1d5dc] bg-white text-black"
+                          }`}
+                          disabled={!isEditing}
+                          min="0"
+                          max="100"
+                        />
                       </div>
                     </div>
                   </div>

@@ -21,7 +21,7 @@ const Schedule = ({ onClose = () => {} }) => {
     "Четверг",
     "Пятница",
     "Суббота",
-    "Воскресенье"
+    "Воскресенье",
   ];
 
   // Получаем текущую дату
@@ -35,8 +35,7 @@ const Schedule = ({ onClose = () => {} }) => {
 
   const adjustedToday = (today.getDay() + 6) % 7;
 
-
-  const initialDays = weekDates.map(date => ({
+  const initialDays = weekDates.map((date) => ({
     day_in_month: date.getDate(),
     schedule: [],
   }));
@@ -69,12 +68,9 @@ const Schedule = ({ onClose = () => {} }) => {
   const handleGetSchedule = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${import.meta.env.VITE_API}/schedule`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${import.meta.env.VITE_API}/schedule`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.data && response.data.length > 0) {
         const updatedSchedule = [...initialDays];
@@ -83,7 +79,8 @@ const Schedule = ({ onClose = () => {} }) => {
           week.info.forEach((dayData) => {
             const dayIndexFromServer = dayData.day - 1; // 1 = ПН → index 0
             if (updatedSchedule[dayIndexFromServer]) {
-              updatedSchedule[dayIndexFromServer].schedule = dayData.schedule || [];
+              updatedSchedule[dayIndexFromServer].schedule =
+                dayData.schedule || [];
             }
           });
         });
@@ -100,8 +97,7 @@ const Schedule = ({ onClose = () => {} }) => {
     try {
       const token = localStorage.getItem("token");
 
-      const fullContent = `${userSchedule.content} в ${
-        dayNamesFull[selectedDayIndex]}`; 
+      const fullContent = `${userSchedule.content} в ${dayNamesFull[selectedDayIndex]}`;
 
       await axios.post(
         `${import.meta.env.VITE_API}/schedule`,
@@ -225,7 +221,9 @@ const Schedule = ({ onClose = () => {} }) => {
             ))}
           </ul>
         ) : (
-          <p className={` ${isDarkMode ? 'text-gray-200 ' : 'text-gray-800'}`}>Занятий нет</p>
+          <p className={` ${isDarkMode ? "text-gray-200 " : "text-gray-800"}`}>
+            Занятий нет
+          </p>
         )}
       </div>
 
@@ -258,7 +256,9 @@ const Schedule = ({ onClose = () => {} }) => {
         <div className="my-4 w-full">
           <label
             htmlFor="scheduleInput"
-            className= {`block text-sm font-medium mb-4 ${isDarkMode ? 'text-gray-200 ' : 'text-gray-800'}`}
+            className={`block text-sm font-medium mb-4 ${
+              isDarkMode ? "text-gray-200 " : "text-gray-800"
+            }`}
           >
             Напишите свои занятия на день — настроим расписание под вас
           </label>
@@ -283,7 +283,11 @@ const Schedule = ({ onClose = () => {} }) => {
             id="scheduleInput"
             placeholder="Ваши занятия на сегодня..."
             rows={4}
-            className={`w-full px-4 py-3 rounded-lg ${isDarkMode ? 'bg-[#222222]' : 'bg-[#fff] min-[1025px]:bg-[#f6f6f6]'} text-white placeholder-gray-500 
+            className={`w-full px-4 py-3 rounded-lg ${
+              isDarkMode
+                ? "bg-[#222222]"
+                : "bg-[#fff] min-[1025px]:bg-[#f6f6f6]"
+            } text-white placeholder-gray-500 
                      border border-transparent focus:border-blue-500 focus:outline-none 
                      shadow-md focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-y`}
           />

@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {
-  HiOutlineUserCircle,
-} from "react-icons/hi";
+import { HiOutlineUserCircle } from "react-icons/hi";
 import { FaTasks } from "react-icons/fa";
 import { IoAccessibilityOutline } from "react-icons/io5";
 import { MdOutlinePsychologyAlt } from "react-icons/md";
-import {
-  CgSmileMouthOpen,
-  CgSmileNeutral,
-  CgSmileSad,
-} from "react-icons/cg";
+import { CgSmileMouthOpen, CgSmileNeutral, CgSmileSad } from "react-icons/cg";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { PiSmileyAngry } from "react-icons/pi";
 import { ThemeContext } from "../ThemeContext";
@@ -23,6 +18,7 @@ import Psychologist from "../components/Psychologist";
 import SelectUniversity from "../components/materials/SelectUniversity";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [materials] = useState([
     {
       id: 1,
@@ -55,16 +51,17 @@ const HomePage = () => {
   const getUser = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://api.online-postupishka.ru/profile ",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setProfileData(response.data);
+      const response = await axios.get(`${import.meta.env.VITE_API}/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.verified === false) {
+        navigate("/check-email");
+      } else {
+        setProfileData(response.data);
+      }
     } catch (error) {
       console.error("Ошибка загрузки профиля:", error);
-      alert(`Ошибка: ${error.response?.data?.message || error.message}`);
+      alert(`Ошибка загрузки, пожалуйста попробуйте позже`);
     }
   };
 
@@ -105,20 +102,20 @@ const HomePage = () => {
 
       if (!showPsychologist) {
         setShowPsychologist(true);
-        setShowSchedule(false)
+        setShowSchedule(false);
       }
 
-      setSelectedMood(null)
+      setSelectedMood(null);
 
       setTimeout(() => {
-        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      }, 100);
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 1);
     } catch (error) {
       console.error("Ошибка отправки настроения:", error);
     }
-
-    
-    
   };
 
   // Обработка выбора настроения
@@ -181,10 +178,22 @@ const HomePage = () => {
             {/* Кнопки настроения */}
             <div className="flex justify-around mt-4">
               {[
-                { emoji: <CgSmileMouthOpen />, label: "Очень хорошо", value: "очень хорошо" },
-                { emoji: <CgSmileNeutral />, label: "Нормально", value: "нормально" },
+                {
+                  emoji: <CgSmileMouthOpen />,
+                  label: "Очень хорошо",
+                  value: "очень хорошо",
+                },
+                {
+                  emoji: <CgSmileNeutral />,
+                  label: "Нормально",
+                  value: "нормально",
+                },
                 { emoji: <CgSmileSad />, label: "Плохо", value: "плохо" },
-                { emoji: <PiSmileyAngry />, label: "Очень плохо", value: "очень плохо" },
+                {
+                  emoji: <PiSmileyAngry />,
+                  label: "Очень плохо",
+                  value: "очень плохо",
+                },
               ].map((mood) => (
                 <button
                   key={mood.value}
@@ -203,12 +212,23 @@ const HomePage = () => {
 
             {/* Вопрос после выбора настроения */}
             {selectedMood && (
-              <div className="mt-6 text-center">
-                <p className="text-lg mb-4">Хотите обсудить как проходит ваш день?</p>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-6 text-center"
+              >
+                <p className="text-lg mb-4">
+                  Хотите обсудить как проходит ваш день?
+                </p>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={sendMoodToPsychologist}
-                    className={`px-6 py-2 ${isDarkMode ? "bg-[#3d37f0] " : 'bg-blue-600 hover:bg-blue-700'} cursor-pointer text-white rounded-lg  transition`}
+                    className={`px-6 py-2 ${
+                      isDarkMode
+                        ? "bg-[#3d37f0] "
+                        : "bg-blue-600 hover:bg-blue-700"
+                    } cursor-pointer text-white rounded-lg  transition`}
                   >
                     Да
                   </button>
@@ -223,7 +243,7 @@ const HomePage = () => {
                     Нет
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )}
           </header>
 
@@ -234,7 +254,7 @@ const HomePage = () => {
                 setShowSpecialties(false);
                 setShowSchedule(false);
                 setShowPsychologist(false);
-                setShowMaterials(false)
+                setShowMaterials(false);
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -251,7 +271,7 @@ const HomePage = () => {
                 setShowProfile(false);
                 setShowSpecialties(false);
                 setShowSchedule(false);
-                setShowMaterials(false)
+                setShowMaterials(false);
               }}
               className={`  cursor-pointer flex items-center w-full py-2 p-2 ${
                 isDarkMode
@@ -268,7 +288,7 @@ const HomePage = () => {
                 setShowProfile(false);
                 setShowSchedule(false);
                 setShowPsychologist(false);
-                setShowMaterials(false)
+                setShowMaterials(false);
               }}
               className={`flex items-center py-2 w-full cursor-pointer ${
                 isDarkMode
@@ -352,9 +372,7 @@ const HomePage = () => {
                               <div className="grid grid-cols-3 gap-2 text-center">
                                 <div
                                   className={`p-2 rounded-md ${
-                                    isDarkMode
-                                      ? "bg-[#3d37f0]"
-                                      : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm">Мин. Балл</p>
@@ -364,9 +382,7 @@ const HomePage = () => {
                                 </div>
                                 <div
                                   className={`p-2 rounded-md ${
-                                    isDarkMode
-                                      ? "bg-[#3d37f0]"
-                                      : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm">Ср. Балл</p>
@@ -376,9 +392,7 @@ const HomePage = () => {
                                 </div>
                                 <div
                                   className={`p-2 rounded-md ${
-                                    isDarkMode
-                                      ? "bg-[#3d37f0]"
-                                      : "bg-[#bedbff]"
+                                    isDarkMode ? "bg-[#3d37f0]" : "bg-[#bedbff]"
                                   }`}
                                 >
                                   <p className="text-sm">Бюджет</p>
@@ -400,7 +414,7 @@ const HomePage = () => {
                           setShowProfile(false);
                           setShowSchedule(false);
                           setShowPsychologist(false);
-                          setShowMaterials(false)
+                          setShowMaterials(false);
                         }}
                         className={` cursor-pointer w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                           isDarkMode
@@ -453,7 +467,9 @@ const HomePage = () => {
                     </div>
                   ))}
                   <button
-                    onClick={() => {setShowProfile(true),setShowSchedule(false)}}
+                    onClick={() => {
+                      setShowProfile(true), setShowSchedule(false);
+                    }}
                     className={`my-3 flex items-center text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
                         ? "bg-[#3d37f0]"
@@ -477,11 +493,13 @@ const HomePage = () => {
                     {materials.map((material) => (
                       <button
                         key={material.id}
-                        onClick={() => {setShowMaterials(true);
+                        onClick={() => {
+                          setShowMaterials(true);
                           setShowSpecialties(false);
                           setShowProfile(false);
                           setShowSchedule(false);
-                          setShowPsychologist(false);}}
+                          setShowPsychologist(false);
+                        }}
                         className={`cursor-pointer block p-4 rounded-lg ${
                           isDarkMode
                             ? "bg-[#222222] hover:bg-[#3d37f0]"
@@ -502,7 +520,13 @@ const HomePage = () => {
                     ))}
                   </div>
                   <div className="flex justify-center my-5">
-                      <p className={`mx-0 text-sm ${isDarkMode ? 'text-[#fff]' : "text-[#000]"}`}>Следите за обновлениями, здесь будет много интересного.</p>
+                    <p
+                      className={`mx-0 text-sm ${
+                        isDarkMode ? "text-[#fff]" : "text-[#000]"
+                      }`}
+                    >
+                      Следите за обновлениями, здесь будет много интересного.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -545,12 +569,18 @@ const HomePage = () => {
         )}
 
         {showMaterials && (
-          <SelectUniversity onClose={() => {setShowMaterials(false);if (window.innerWidth >= 1025) setShowSchedule(true);}}/>
+          <SelectUniversity
+            onClose={() => {
+              setShowMaterials(false);
+              if (window.innerWidth >= 1025) setShowSchedule(true);
+            }}
+          />
         )}
       </div>
 
       {/*Блок Цели */}
-      {!showProfile && !showMaterials &&
+      {!showProfile &&
+        !showMaterials &&
         !showSpecialties &&
         !showSchedule &&
         !showPsychologist && (
@@ -668,7 +698,9 @@ const HomePage = () => {
                 <div className=" flex justify-center min-[1025px]:hidden">
                   <button
                     onClick={() => {
-                      setShowSpecialties(true), setShowProfile(false), setShowMaterials(false)
+                      setShowSpecialties(true),
+                        setShowProfile(false),
+                        setShowMaterials(false);
                     }}
                     className={`flex items-center mx-6 text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
@@ -724,13 +756,10 @@ const HomePage = () => {
                 })}
                 <button
                   onClick={() => {
-                    setShowProfile(true),
-                    setShowSchedule(false)
+                    setShowProfile(true), setShowSchedule(false);
                   }}
                   className={`my-3 flex items-center  text-center w-full py-2 justify-center cursor-pointer ${
-                    isDarkMode
-                      ? "bg-[#3d37f0] "
-                      : "bg-[#155dfc] text-white "
+                    isDarkMode ? "bg-[#3d37f0] " : "bg-[#155dfc] text-white "
                   } p-2 transition-all rounded-lg`}
                 >
                   Добавить/изменить предметы
@@ -747,36 +776,44 @@ const HomePage = () => {
                 </h2>
 
                 <div className="space-y-4">
-                    {materials.map((material) => (
-                      <button
-                        key={material.id}
-                        onClick={() => {setShowMaterials(true);
-                          setShowSpecialties(false);
-                          setShowProfile(false);
-                          setShowSchedule(false);
-                          setShowPsychologist(false);}}
-                        className={`w-full block p-4 rounded-lg ${
-                          isDarkMode
-                            ? "bg-[#222222] hover:bg-gray-700"
-                            : "bg-white hover:bg-gray-50 shadow"
-                        } transition-all`}
+                  {materials.map((material) => (
+                    <button
+                      key={material.id}
+                      onClick={() => {
+                        setShowMaterials(true);
+                        setShowSpecialties(false);
+                        setShowProfile(false);
+                        setShowSchedule(false);
+                        setShowPsychologist(false);
+                      }}
+                      className={`w-full block p-4 rounded-lg ${
+                        isDarkMode
+                          ? "bg-[#222222] hover:bg-gray-700"
+                          : "bg-white hover:bg-gray-50 shadow"
+                      } transition-all`}
+                    >
+                      <h3 className="text-left text-lg font-medium">
+                        {material.title}
+                      </h3>
+                      <p
+                        className={`mt-1  text-left text-sm ${
+                          isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }`}
                       >
-                        <h3 className="text-left text-lg font-medium">
-                          {material.title}
-                        </h3>
-                        <p
-                          className={`mt-1  text-left text-sm ${
-                            isDarkMode ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {material.description}
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex text-center justify-center my-5">
-                      <p className={`mx-0 text-sm ${isDarkMode ? 'text-[#fff]' : "text-[#000]"}`}>Следите за обновлениями, здесь будет много интересного.</p>
-                  </div>
+                        {material.description}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+                <div className="flex text-center justify-center my-5">
+                  <p
+                    className={`mx-0 text-sm ${
+                      isDarkMode ? "text-[#fff]" : "text-[#000]"
+                    }`}
+                  >
+                    Следите за обновлениями, здесь будет много интересного.
+                  </p>
+                </div>
               </div>
             </motion.div>
           </>
@@ -797,7 +834,7 @@ const HomePage = () => {
               setShowSchedule(false);
               setShowProfile(false);
               setShowSpecialties(false);
-              setShowMaterials(false)
+              setShowMaterials(false);
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -812,7 +849,7 @@ const HomePage = () => {
               setShowProfile(false);
               setShowSpecialties(false);
               setShowPsychologist(false);
-              setShowMaterials(false)
+              setShowMaterials(false);
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -827,7 +864,7 @@ const HomePage = () => {
               setShowProfile(false);
               setShowSchedule(false);
               setShowPsychologist(false);
-              setShowMaterials(false)
+              setShowMaterials(false);
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
@@ -842,7 +879,7 @@ const HomePage = () => {
               setShowSpecialties(false);
               setShowSchedule(false);
               setShowPsychologist(false);
-              setShowMaterials(false)
+              setShowMaterials(false);
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
