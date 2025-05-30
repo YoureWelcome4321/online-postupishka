@@ -1,12 +1,43 @@
-# React + Vite
+# 🐬 Умный помощник выбора вуза - Онлайн-Поступишка
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🎓 Помощник, который поможет абитуриентам найти подходящий университет и морално поддержит.
 
-Currently, two official plugins are available:
+![Логотип](image.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> **"Выбор вуза — дело важное! Мы делаем его проще."**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 💡 О проекте
+
+**Онлайн-Поступишка** — это интерактивный веб-инструмент, помогающий школьникам и абитуриентам выбрать подходящее высшее учебное заведение. На основе ваших предпочтений (направление, бюджет, город, специальность) приложение предлагает рекомендации и полезную информацию о каждом вузе.
+
+---
+
+## 🔧 Технологии
+
+Проект реализован с использованием следующих технологий:
+
+- **React + Vite** – для быстрой разработки интерфейса
+- **Framer-motion** - для создания плавных анимаций
+- **Tailwind CSS** – для создания адаптивного и чистого дизайна  
+- **JavaScript / JSX** – для логики приложения  
+
+---
+
+## 📦 Как запустить локально
+
+1. Склонируйте репозиторий:
+   ```bash
+   git clone https://github.com/YoureWelcome4321/online-postupishka
+
+2. Установите зависимости:
+   ```bash
+   npm install
+
+3. Запустите локальный сервер:
+   ```bash
+   npm start
+
+4. Откройте http://localhost:5173 в браузере.
+   
