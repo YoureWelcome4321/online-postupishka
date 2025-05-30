@@ -38,14 +38,13 @@ const PleaseCheckEmail = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      navigate("/"); // Если нет токена — редирект
+      navigate("/"); 
       return;
     }
 
-    // Первый запрос: отправка письма
     sendVerificationEmail().then(() => setIsLoading(false));
 
-    // Функция проверки профиля
+
     const checkProfile = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API}/profile`, {
@@ -67,7 +66,7 @@ const PleaseCheckEmail = () => {
 
     
     const intervalId = setInterval(checkProfile, 15000);
-    checkProfile(); // Проверяем сразу
+    checkProfile();
 
     
     return () => clearInterval(intervalId);

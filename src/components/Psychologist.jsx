@@ -17,7 +17,6 @@ const Psychologist = ({ onClose = () => {} }) => {
   useEffect(() => {
     const scrollChatToBottom = () => {
       if (chatBoxRef.current) {
-        // Небольшая задержка, чтобы DOM успел обновиться
         setTimeout(() => {
           chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }, 50);
@@ -58,7 +57,7 @@ const Psychologist = ({ onClose = () => {} }) => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "https://api.online-postupishka.ru/psychologist ",
+        `${import.meta.env.VITE_API}/psychologist`,
         { question: query },
         {
           headers: {
@@ -90,7 +89,7 @@ const Psychologist = ({ onClose = () => {} }) => {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "https://api.online-postupishka.ru/psychologist ",
+        `${import.meta.env.VITE_API}/psychologist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

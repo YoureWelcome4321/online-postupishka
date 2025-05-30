@@ -28,7 +28,7 @@ export default function Profession({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/specialization/question", 
+        `${import.meta.env.VITE_API}/specialization/question`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuestionsData(response.data);
@@ -44,7 +44,7 @@ export default function Profession({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "https://api.online-postupishka.ru/specialization/answer", 
+        `${import.meta.env.VITE_API}/specialization/answer`, 
         userAnswer,
         {
           headers: {
@@ -66,7 +66,7 @@ export default function Profession({ onClose = () => {} }) {
       const token = localStorage.getItem("token");
       try {
         const res = await axios.get(
-          "https://api.online-postupishka.ru/specialization/result",
+          `${import.meta.env.VITE_API}/specialization/result`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 

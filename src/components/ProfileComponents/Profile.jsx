@@ -47,7 +47,7 @@ export default function Profile({ onClose = () => {} }) {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://api.online-postupishka.ru/profile",
+          `${import.meta.env.VITE_API}/profile`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setProfileData(response.data);
@@ -62,7 +62,7 @@ export default function Profile({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.patch(
-        "https://api.online-postupishka.ru/profile",
+        `${import.meta.env.VITE_API}/profile`,
         editableData,
         {
           headers: {
@@ -85,7 +85,7 @@ export default function Profile({ onClose = () => {} }) {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete("https://api.online-postupishka.ru/profile", {
+      await axios.delete(`${import.meta.env.VITE_API}/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       localStorage.removeItem("token");

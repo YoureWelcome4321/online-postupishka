@@ -70,7 +70,7 @@ const Schedule = ({ onClose = () => {} }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://api.online-postupishka.ru/schedule ",
+        `${import.meta.env.VITE_API}/schedule`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -104,7 +104,7 @@ const Schedule = ({ onClose = () => {} }) => {
         dayNamesFull[selectedDayIndex]}`; 
 
       await axios.post(
-        "https://api.online-postupishka.ru/schedule ",
+        `${import.meta.env.VITE_API}/schedule`,
         { content: fullContent },
         {
           headers: { Authorization: `Bearer ${token}` },

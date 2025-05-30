@@ -77,7 +77,7 @@ const RegistrationLogin = () => {
       if (isLogin) {
         if (validateSignIn()) {
           const response = await axios.post(
-            process.env.API + "/auth",
+            `${import.meta.env.VITE_API}/auth`,
             {
               ...formSignInData,
             },
@@ -93,7 +93,7 @@ const RegistrationLogin = () => {
       } else {
         if (validateRegistration()) {
           const response = await axios.post(
-            "https://api.online-postupishka.ru/reg", 
+            `${import.meta.env.VITE_API}/reg`, 
             {
               ...formRegistData,
             },
