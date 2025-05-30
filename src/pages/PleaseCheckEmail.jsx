@@ -6,33 +6,8 @@ import HeaderNoButton from "../components/MainPageComponents/Header";
 
 const PleaseCheckEmail = () => {
   const { isDarkMode } = useContext(ThemeContext);
-  const [isLoading, setIsLoading] = useState(true); // Состояние загрузки
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Для начального лоадера
   const navigate = useNavigate();
-
-  // Функция отправки письма подтверждения
-  const sendVerificationEmail = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_API}/email`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 4000);
-    } catch (err) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 4000);
-    }
-  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,9 +16,6 @@ const PleaseCheckEmail = () => {
       navigate("/"); 
       return;
     }
-
-    sendVerificationEmail().then(() => setIsLoading(false));
-
 
     const checkProfile = async () => {
       try {
@@ -55,30 +27,31 @@ const PleaseCheckEmail = () => {
 
         const userData = response.data;
 
-        if (userData.email_verified) {
-          clearInterval(intervalId); 
+        if (userData.verified) {
           navigate("/main");
+        } else {
+          setIsLoading(false); 
         }
       } catch (err) {
         console.error("Ошибка получения профиля:", err);
+        navigate("/");
       }
     };
 
-    
-    const intervalId = setInterval(checkProfile, 15000);
     checkProfile();
 
-    
+   
+    const intervalId = setInterval(checkProfile, 10000);
+
     return () => clearInterval(intervalId);
   }, [navigate]);
 
- 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p>Отправляем письмо для подтверждения...</p>
+          <p>Проверяем статус подтверждения...</p>
         </div>
       </div>
     );
@@ -100,11 +73,9 @@ const PleaseCheckEmail = () => {
         >
           <h2 className="text-2xl font-bold mb-6 text-center">Подтвердите вашу почту</h2>
 
-          <p className="mb-6 ">
+          <p className="mb-6 text-center">
             Мы отправили ссылку для подтверждения на вашу электронную почту.
-            Если вы не получили письмо, нажмите кнопку ниже.
           </p>
-
 
           {/* Кнопка "Назад" */}
           <button
@@ -119,25 +90,6 @@ const PleaseCheckEmail = () => {
           </button>
         </div>
       </div>
-
-      {showSuccess && (
-        <div
-          className="fixed top-25 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out"
-          style={{ animation: "fadeInOut 3s ease forwards" }}
-        >
-          Письмо успешно отправлено!
-        </div>
-      )}
-
-
-      {showError && (
-        <div
-          className="fixed bottom-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in-out"
-          style={{ animation: "fadeInOut 3s ease forwards" }}
-        >
-          Не удалось отправить письмо. Попробуйте позже.
-        </div>
-      )}
     </div>
   );
 };

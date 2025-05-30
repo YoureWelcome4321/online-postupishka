@@ -594,7 +594,9 @@ export default function Profile({ onClose = () => {} }) {
                         </svg>
                       )}
                     </div>
-                    <div className="flex space-x-4 mt-3 ">
+                    <div className="flex space-x-4 mt-2 ">
+                       <div >
+                      <h3 className="mb-2">Текущий балл:</h3>
                       <input
                         type="text"
                         placeholder="Текущий балл"
@@ -617,6 +619,9 @@ export default function Profile({ onClose = () => {} }) {
                         min="0"
                         max="100"
                       />
+                      </div>
+                      <div>
+                      <h3 className="mb-2">Желаемый балл:</h3>
                       <input
                         type="text"
                         placeholder="Желаемый балл"
@@ -639,6 +644,7 @@ export default function Profile({ onClose = () => {} }) {
                         min="0"
                         max="100"
                       />
+                      </div>
                     </div>
                   </div>
                   {!isRequired && isEditing && (

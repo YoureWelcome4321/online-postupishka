@@ -13,33 +13,40 @@ const EmailVerification = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       const params = new URLSearchParams(location.search);
-      const token = params.get("token");
+      const tokenFromURL = params.get("token");
 
-      if (!token) {
+      if (!tokenFromURL) {
         setStatus("error");
         return;
       }
 
       try {
-        const response = await axios.get(
-          `https://api.online-postupishka.ru/verify-email?token=${token}`
+        const response = await axios.post(
+          `${import.meta.env.VITE_API}/email`,{},
+          {
+            headers: {
+              Authorization: `Bearer ${tokenFromURL}`,
+              "Content-Type": "application/json"
+            },
+          }
         );
 
-        if (response.status === 200) {
+        if (response.status >= 200) {
           setStatus("success");
         } else {
           setStatus("error");
         }
       } catch (err) {
+        console.error("Ошибка верификации:", err);
         setStatus("error");
       }
     };
 
     verifyEmail();
-  }, [location]);
+  }, [location, navigate]);
 
   return (
-    <div className={`${isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6]"} min-h-screen flex flex-col`}> 
+    <div className={`${isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6]"} min-h-screen flex flex-col`}>
       <HeaderNoButton />
       <div className="flex-grow flex items-center justify-center px-4">
         <div

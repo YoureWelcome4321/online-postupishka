@@ -19,7 +19,6 @@ const UniversityCard = (
 
   const currentDirection = directions?.[selectedDirection] || {};
   
-  // Получаем актуальные scores, с fallback на пустые значения
   const scores = currentDirection.scores || { min: "—", avg: "—", bud: "—" };
 
   const isSelected = selectedUniversities.some(
@@ -44,7 +43,6 @@ const UniversityCard = (
         },
       };
 
-      // Вызываем внешний обработчик, например, в родительском компоненте
       await onSaveUniversity(payload);
     } catch (error) {
       console.error("Ошибка при сохранении данных:", error);

@@ -73,7 +73,7 @@ const HomePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        process.env.API + '/university',
+        `${import.meta.env.VITE_API}/university`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -94,7 +94,7 @@ const HomePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "https://api.online-postupishka.ru/psychologist ",
+        `${import.meta.env.VITE_API}/psychologist`,
         {
           question: `Мое настроение сегодня: ${selectedMood}`,
         },

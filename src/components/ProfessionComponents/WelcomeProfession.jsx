@@ -1,75 +1,41 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../../ThemeContext";
+import axios from "axios";
 import { FaGraduationCap, FaRegLightbulb, FaChartLine } from "react-icons/fa";
 
 export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => {
   const { isDarkMode } = useContext(ThemeContext);
-  const [remainingTime, setRemainingTime] = useState(0);
-  const [isTimerComplete, setIsTimerComplete] = useState(false);
-  const [showTimer, setShowTimer] = useState(false);
 
 
-  const TIMER_KEY = "testTimerStart";
-  const TIMER_DURATION = 7 * 24 * 60 * 60 * 1000; 
-
-  useEffect(() => {
-    const savedStartTime = localStorage.getItem(TIMER_KEY);
-    
-    if (!savedStartTime) {
-      setIsTimerComplete(true);
-      return;
-    }
-
-    const startTime = parseInt(savedStartTime);
-    const now = Date.now();
-    const timeElapsed = now - startTime;
-
-    if (timeElapsed >= TIMER_DURATION) {
-      setIsTimerComplete(true);
-    } else {
-      const endTime = startTime + TIMER_DURATION;
-      setRemainingTime(endTime - now);
-      setShowTimer(true);
-      
-      const timer = setInterval(() => {
-        setRemainingTime(prev => {
-          if (prev <= 1000) {
-            clearInterval(timer);
-            setIsTimerComplete(true);
-            setShowTimer(false);
-            return 0;
+  const GetTimer = async() => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${import.meta.env.VITE_API}/specialization`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           }
-          return prev - 1000;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
+        }
+      )
+      console.log(response)
+    }catch(error){
+      console.log(error.response)
     }
-  }, []);
 
-  const formatTime = (ms) => {
-    const days = Math.floor(ms / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
-    
-    return `${days}д ${hours}ч ${minutes}м`;
-  };
+  }
 
   const handleTestStart = () => {
-    const now = Date.now();
-    localStorage.setItem(TIMER_KEY, now);
-    
-    // состояние
-    const endTime = now + TIMER_DURATION;
-    setRemainingTime(endTime - now);
-    setIsTimerComplete(false);
-    setShowTimer(true);
-    
     // Переход к тесту
     setStage("test");
     handleGetQuestion();
   };
+
+  GetTimer()
+  
+  useEffect(()=>{
+    GetTimer()
+  })
 
   return (
     <div
@@ -105,8 +71,8 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
       <motion.div
         className="flex justify-center mb-6 sm:mb-8 rounded-xl"
         initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
         <div className="relative group">
           <motion.div
@@ -219,34 +185,23 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
             </motion.div>
           </div>
 
-          {isTimerComplete ? (
-            <motion.button
-              onClick={handleTestStart}
-              className={`
-                w-full px-4 py-3 sm:px-6 sm:py-3
-                bg-gradient-to-r from-blue-500 to-indigo-600 
-                text-white rounded-xl shadow-md
-                hover:shadow-xl transform hover:-translate-y-0.5
-                transition-all duration-300 text-sm sm:text-base
-                focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
-                relative overflow-hidden
-              `}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="relative z-10">Начать тест</span>
-              <span className="absolute inset-0 bg-white bg-opacity-20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out"></span>
-            </motion.button>
-          ) : (
-            <div className="text-center py-3">
-              <p className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"} mb-2`}>
-                Следующая возможность прохождения станет доступной через:
-              </p>
-              <p className={`text-lg font-bold ${isDarkMode ? "text-[#6e7bf2]" :"text-blue-500"}`}>
-                {formatTime(remainingTime)}
-              </p>
-            </div>
-          )}
+          {/* Кнопка всегда отображается */}
+          <motion.button
+            onClick={handleTestStart}
+            className={`
+              w-full px-4 py-3 sm:px-6 sm:py-3
+              bg-gradient-to-r from-blue-500 to-indigo-600 
+              text-white rounded-xl shadow-md
+              hover:shadow-xl transform hover:-translate-y-0.5
+              transition-all duration-300 text-sm sm:text-base
+              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
+              relative overflow-hidden
+            `}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="relative z-10">Начать тест</span>
+          </motion.button>
         </div>
       </motion.div>
 
@@ -256,8 +211,7 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.5 }}
       >
-        Отвечайте максимально честно, ведь от ваших ответов зависит точность
-        результатов
+        Отвечайте максимально честно, ведь от ваших ответов зависит точность результатов
       </motion.div>
     </div>
   );
