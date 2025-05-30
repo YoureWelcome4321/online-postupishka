@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../ThemeContext";
+import {motion} from "framer-motion";
 import HeaderNoButton from "../components/MainPageComponents/Header";
 
 const PleaseCheckEmail = () => {
@@ -89,12 +90,18 @@ const PleaseCheckEmail = () => {
           isDarkMode ? "bg-[#141414]" : "bg-[#f6f6f6]"
         }`}
       >
+        
         <div
           className={`max-w-md w-full py-6 px-2 rounded-xl shadow-lg transition-all duration-300 ${
             isDarkMode ? "bg-[#1e1e1e] text-white" : "bg-white text-gray-800"
           }`}
-        >
+        > 
+          
+          
+        
           <h2 className="text-2xl font-bold mb-6 text-center">Подтвердите вашу почту</h2>
+
+
 
           <p className="mb-4 text-center">
             Мы отправили ссылку для подтверждения на вашу электронную почту.
@@ -109,11 +116,11 @@ const PleaseCheckEmail = () => {
           )}
         <div className="text-center">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/sign")}
             className={`mx-auto mt-4  w-full py-2 rounded-lg ${
               isDarkMode
-                ? "bg-[#6e7bf2] hover:bg-gray-600"
-                : "bg-[#bedbff] hover:bg-gray-300"
+                ? " bg-gray-600 hover:bg-[#6e7bf2]"
+                : "  bg-gray-300 hover:bg-[#bedbff]"
             } transition-colors`}
           >
             Назад

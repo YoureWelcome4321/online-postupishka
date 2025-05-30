@@ -23,7 +23,7 @@ export const Result = ({ results, loadingStatus, onClose = () => {} }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API}/add`,universityData,{
+        `${import.meta.env.VITE_API}/university/add`,universityData,{
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
