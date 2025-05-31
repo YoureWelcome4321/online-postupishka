@@ -117,6 +117,7 @@ const MainPage = () => {
           Что беспокоит абитуриентов?
         </motion.h2>
         <StressChart isDarkMode={isDarkMode} />
+        <p className={`text-center ${isDarkMode ? 'text-[#fff]' : "text-[#596065]"} py-3`}>Результаты через Google опрос 73 абитуриентов 10-11 классов и студентов 1 курсов</p>
       </section>
 
       <section className="container mx-auto mt-25 px-4 mb-10">

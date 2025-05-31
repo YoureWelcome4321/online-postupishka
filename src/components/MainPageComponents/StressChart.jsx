@@ -59,6 +59,7 @@ const StressChart = ({ isDarkMode }) => {
       style={{ height: '400px' }}
     >
       <Bar data={data} options={options} />
+      
     </div>
   );
 };

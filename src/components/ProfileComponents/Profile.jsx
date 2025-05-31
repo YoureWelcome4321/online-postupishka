@@ -298,14 +298,13 @@ export default function Profile({ onClose = () => {} }) {
               id="email"
               name="email"
               value={editableData.email}
-              onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
                   ? "bg-[#222222] border-gray-600 text-white"
                   : "bg-white border-gray-300"
               }`}
               placeholder="Email"
-              disabled={!isEditing}
+              disabled
             />
           </div>
           {/* Пароль */}
