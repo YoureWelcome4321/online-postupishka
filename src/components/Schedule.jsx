@@ -52,6 +52,11 @@ const Schedule = ({ onClose = () => {} }) => {
   // Устанавливаем текущий день при монтировании
   useEffect(() => {
     setSelectedDayIndex(adjustedToday);
+
+    const handleTouchMove = (e) => e.preventDefault();
+  window.addEventListener('touchmove', handleTouchMove, { passive: false });
+  return () =>
+    window.removeEventListener('touchmove', handleTouchMove, { passive: false });
   }, []);
 
   // Для свайпов
@@ -61,6 +66,7 @@ const Schedule = ({ onClose = () => {} }) => {
   const swipeHandlers = useSwipeable({
     onSwipedLeft: handleNextDay,
     onSwipedRight: handlePrevDay,
+    preventDefaultTouchmoveEvent: true,
     trackMouse: true,
   });
 

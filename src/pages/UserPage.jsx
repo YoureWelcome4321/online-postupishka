@@ -838,7 +838,7 @@ const HomePage = () => {
             }}
             className={`flex flex-col items-center ${
               isDarkMode ? "text-white" : "text-[#363e45]"
-            } hover:text-blue-500`}
+            } `}
           >
             <MdOutlinePsychologyAlt size={24} />
             <span className="text-xs mt-1">Психолог</span>
