@@ -33,7 +33,6 @@ export default function Profile({ onClose = () => {} }) {
 
   const [editableData, setEditableData] = useState({
     first_name: "",
-    email: "",
     password_old: "",
     password_new: "",
     class_number: 0,
@@ -98,7 +97,7 @@ export default function Profile({ onClose = () => {} }) {
   useEffect(() => {
     const initialData = {
       first_name: profileData.first_name || "",
-      email: profileData.email || "",
+      email: editableData.email ,
       class_number: profileData.class_number || "",
       password_old: editableData.password_old || "",
       password_new: editableData.password_new || "",
@@ -297,7 +296,7 @@ export default function Profile({ onClose = () => {} }) {
               type="email"
               id="email"
               name="email"
-              value={editableData.email}
+              value={profileData.email}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
                   ? "bg-[#222222] border-gray-600 text-white"
