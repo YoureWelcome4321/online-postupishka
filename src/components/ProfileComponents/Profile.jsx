@@ -59,9 +59,15 @@ export default function Profile({ onClose = () => {} }) {
   const sendEditedProfile = async () => {
     try {
       const token = localStorage.getItem("token");
+      const dataToSend = { ...editableData };
+      
+      if (dataToSend.first_name === profileData.first_name) {
+        dataToSend.first_name = "";
+      }
+  
       const response = await axios.patch(
         `${import.meta.env.VITE_API}/profile`,
-        editableData,
+        dataToSend,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,7 +102,7 @@ export default function Profile({ onClose = () => {} }) {
 
   useEffect(() => {
     const initialData = {
-      first_name: profileData.first_name || "",
+      first_name: editableData.first_name,
       email: editableData.email ,
       class_number: profileData.class_number || "",
       password_old: editableData.password_old || "",
@@ -272,7 +278,7 @@ export default function Profile({ onClose = () => {} }) {
               type="text"
               id="first_name"
               name="first_name"
-              value={editableData.first_name}
+              value={profileData.first_name}
               onChange={handleChange}
               className={`w-full px-3 py-2 rounded-md border ${
                 isDarkMode
@@ -280,7 +286,7 @@ export default function Profile({ onClose = () => {} }) {
                   : "bg-white border-gray-300"
               }`}
               placeholder="Логин пользователя"
-              disabled={!isEditing}
+              disabled
             />
           </div>
 
