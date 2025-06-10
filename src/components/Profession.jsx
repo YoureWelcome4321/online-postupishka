@@ -16,8 +16,9 @@ export default function Profession({ onClose = () => {} }) {
   const [userAnswer, setAnswer] = useState({ answer: "" });
   const [stage, setStage] = useState("welcome");
   const [results, setResults] = useState([]);
-  const [loadingStatus, setLoadingStatus] = useState("idle"); 
+  const [loadingStatus, setLoadingStatus] = useState("idle");
   const [pollingInterval, setPollingInterval] = useState(null);
+  const [isLoadingQuestion, setIsLoadingQuestion] = useState(false); // Новое состояние для загрузки
 
   const handleAnswerChange = (e) => {
     const { value } = e.target;
@@ -25,10 +26,11 @@ export default function Profession({ onClose = () => {} }) {
   };
 
   const handleGetQuestion = async () => {
+    setIsLoadingQuestion(true);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${import.meta.env.VITE_API}/specialization/question`, 
+        `${import.meta.env.VITE_API}/specialization/question`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuestionsData(response.data);
@@ -37,6 +39,8 @@ export default function Profession({ onClose = () => {} }) {
         setStage("result");
         setLoadingStatus("success");
       }
+    } finally {
+      setIsLoadingQuestion(false);
     }
   };
 
@@ -44,7 +48,7 @@ export default function Profession({ onClose = () => {} }) {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API}/specialization/answer`, 
+        `${import.meta.env.VITE_API}/specialization/answer`,
         userAnswer,
         {
           headers: {
@@ -57,7 +61,6 @@ export default function Profession({ onClose = () => {} }) {
       console.error("Ошибка отправки ответа:", error);
     }
   };
-
 
   const handleEndTest = async () => {
     setLoadingStatus("loading");
@@ -119,70 +122,89 @@ export default function Profession({ onClose = () => {} }) {
     return (
       <motion.div
         className={`min-h-screen absolute sm:pt-0 sm:my-0 my-18 px-8 pt-8 inset-0 sm:relative sm:rounded-xl transition-all duration-300 ${
-          isDarkMode ? "bg-[#141414] text-white" : "bg-white text-gray-900"
+          isDarkMode ? "bg-[#141414] text-white" : "bg-[#f6f6f6] text-gray-900"
         }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        
-
-        <div className=" flex mb-2 sm:mb-4">
+        <div className="flex mb-2 sm:mb-4">
           <span className="font-medium text-xl sm:text-base">
-            Осталось вопросов: {questionsData.counts_remaind}
+            {`Осталось вопросов: ${isLoadingQuestion ? "-" : questionsData.counts_remaind}`}
           </span>
 
           <motion.button
-          className="ml-auto rounded-full transition-colors"
-          onClick={onClose}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 float-right w-5 sm:h-6 sm:w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke={isDarkMode ? "#e2e8f0" : "#334155"}
+            className="ml-auto rounded-full transition-colors"
+            onClick={onClose}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </motion.button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 float-right w-5 sm:h-6 sm:w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke={isDarkMode ? "#e2e8f0" : "#334155"}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </motion.button>
         </div>
 
-        <h2 className="text-2xl sm:text-xl font-medium mb-6 sm:mb-4">
-          {questionsData.question}
-        </h2>
+        {isLoadingQuestion ? (
+          <div className="text-center py-8">
+            <div className="animate-spin inline-block w-12 h-12 border-[3px] border-current border-t-transparent text-blue-500 rounded-full" role="status" aria-label="loading">
+              <span className="sr-only">Загрузка...</span>
+            </div>
+            <p className="mt-2">Загружаем следующий вопрос...</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-2xl sm:text-xl font-medium mb-6 sm:mb-4">
+              {questionsData.question}
+            </h2>
 
-        <textarea
-          value={userAnswer.answer}
-          onChange={handleAnswerChange}
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm sm:text-base"
-          placeholder="Введите ваш ответ здесь..."
-          rows={4}
-        />
+            <textarea
+              value={userAnswer.answer}
+              onChange={handleAnswerChange}
+              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm sm:text-base"
+              placeholder="Введите ваш ответ здесь..."
+              rows={4}
+            />
+          </>
+        )}
 
         <div className="flex justify-between mt-4 sm:mt-8">
           <motion.button
             onClick={async () => {
               await handleSendAnswer();
               setAnswer({ answer: "" });
+              setIsLoadingQuestion(true);
 
               if (questionsData.counts_remaind > 1) {
-                handleGetQuestion();
+                await handleGetQuestion();
               } else {
-                handleEndTest(); 
+                handleEndTest();
                 setStage("result");
               }
+
+              setIsLoadingQuestion(false);
             }}
-            className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-md transform hover:-translate-y-0.5 transition duration-300 text-sm sm:text-base"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={isLoadingQuestion}
+            className={`w-full px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-md transform hover:-translate-y-0.5 transition duration-300 text-sm sm:text-base ${
+              isLoadingQuestion ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            whileHover={isLoadingQuestion ? {} : { scale: 1.02 }}
+            whileTap={isLoadingQuestion ? {} : { scale: 0.98 }}
           >
-            {questionsData.counts_remaind <= 1 ? "Завершить" : "Далее"}
+            {isLoadingQuestion
+              ? "Загрузка..."
+              : questionsData.counts_remaind <= 1
+              ? "Завершить"
+              : "Далее"}
           </motion.button>
         </div>
       </motion.div>

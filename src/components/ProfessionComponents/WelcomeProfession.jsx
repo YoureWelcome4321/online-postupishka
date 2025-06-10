@@ -8,33 +8,14 @@ export const Welcome = ({ setStage, handleGetQuestion, onClose = () => {} }) => 
   const { isDarkMode } = useContext(ThemeContext);
 
 
-  const GetTimer = async() => {
-    try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get(`${import.meta.env.VITE_API}/specialization`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      )
-      console.log(response)
-    }catch(error){
-      console.log(error.response)
-    }
-
-  }
-
   const handleTestStart = () => {
     // Переход к тесту
     setStage("test");
     handleGetQuestion();
   };
 
-  GetTimer()
   
   useEffect(()=>{
-    GetTimer()
   })
 
   return (
