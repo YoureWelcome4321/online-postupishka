@@ -179,7 +179,7 @@ const Schedule = ({ onClose = () => {} }) => {
                 className={`cursor-pointer w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all ${
                   selectedDayIndex === index
                     ? isDarkMode
-                      ? "bg-[#3d37f0] text-white"
+                      ? "bg-[#3d37f0] hover:bg-[#3d15f0] text-white"
                       : "bg-blue-600 text-white"
                     : isDarkMode
                     ? "bg-[#222222] text-white"
@@ -249,7 +249,7 @@ const Schedule = ({ onClose = () => {} }) => {
       ) : (
         <button
           className={`cursor-pointer mt-6 w-full py-2 ${
-            isDarkMode ? "bg-[#3d37f0]" : "bg-blue-600 hover:bg-blue-700"
+            isDarkMode ? "bg-[#3d37f0] hover:bg-[#3d15f0]" : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-lg transition-colors`}
           onClick={() => setEditing(true)}
         >

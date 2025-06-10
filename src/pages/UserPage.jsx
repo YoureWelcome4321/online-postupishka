@@ -310,7 +310,7 @@ const HomePage = () => {
             className="max-w-xl ml-auto p-6 max-[1026px]:hidden min-[1027px]:flex "
           >
             <div
-              className={`rounded-xl sm:block p-6 ${
+              className={`rounded-xl shadow-lg sm:block p-6 ${
                 isDarkMode ? "bg-[#141414]" : "bg-white"
               }`}
             >
@@ -418,8 +418,8 @@ const HomePage = () => {
                         }}
                         className={` cursor-pointer w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 ${
                           isDarkMode
-                            ? "bg-[#3d37f0] text-white"
-                            : "bg-[#1556f5] text-white"
+                            ? "bg-[#3d37f0] hover:bg-[#3d15f0] text-white"
+                            : "bg-[#1556f5] hover:bg-[#1535f5] text-white"
                         } transition-colors`}
                       >
                         <span>Добавить цель (Пройти тест)</span>
@@ -472,8 +472,8 @@ const HomePage = () => {
                     }}
                     className={`my-3 flex items-center text-center w-full py-2 justify-center cursor-pointer ${
                       isDarkMode
-                        ? "bg-[#3d37f0]"
-                        : "bg-[#155dfc] text-white hover:text-[#193cb8]"
+                        ? "bg-[#3d37f0] hover:bg-[#3d15f0] "
+                        : "bg-[#155dfc] text-white hover:bg-[#1535f5]"
                     } p-2 transition-all rounded-lg`}
                   >
                     Добавить/изменить предметы
@@ -503,7 +503,7 @@ const HomePage = () => {
                         className={`cursor-pointer block p-4 rounded-lg ${
                           isDarkMode
                             ? "bg-[#222222] hover:bg-[#3d37f0]"
-                            : "bg-white hover:bg-gray-50 shadow"
+                            : "bg-white hover:bg-[#1535f5]  shadow"
                         } transition-all`}
                       >
                         <h3 className="text-left text-lg font-medium">
@@ -511,7 +511,7 @@ const HomePage = () => {
                         </h3>
                         <p
                           className={`mt-1  text-left text-sm ${
-                            isDarkMode ? "text-gray-300" : "text-gray-600"
+                            isDarkMode ? "text-gray-300 " : "text-gray-600 hover:text-white"
                           }`}
                         >
                           {material.description}
