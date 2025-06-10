@@ -156,7 +156,7 @@ export default function Profession({ onClose = () => {} }) {
 
         {isLoadingQuestion ? (
           <div className="text-center py-8">
-            <div className="animate-spin inline-block w-12 h-12 border-[3px] border-current border-t-transparent text-blue-500 rounded-full" role="status" aria-label="loading">
+            <div className="animate-spin inline-block w-36 h-36 border-[3px] border-current border-t-transparent text-blue-500 rounded-full" role="status" aria-label="loading">
               <span className="sr-only">Загрузка...</span>
             </div>
             <p className="mt-2">Загружаем следующий вопрос...</p>
